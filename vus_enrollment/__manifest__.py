@@ -14,11 +14,14 @@
     'depends': [
         'base',
         'vus_student',
+        'vus_course',
+        'vus_class',
         'account',
     ],
     'data': [
         'security/ir.model.access.csv',
         'views/enrollment_view.xml',
+        'views/enrollment_menu.xml',
     ],
     'installable': True,
     'application': True,

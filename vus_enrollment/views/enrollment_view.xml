@@ -1,58 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- ================= COURSE VIEWS ================= -->
-    <!-- Course Tree View -->
-    <record id="view_vus_course_tree" model="ir.ui.view">
-        <field name="name">vus.course.tree</field>
-        <field name="model">vus.course</field>
-        <field name="arch" type="xml">
-            <tree string="Khóa học VUS">
-                <field name="code"/>
-                <field name="name"/>
-                <field name="tuition_fee"/>
-            </tree>
-        </field>
-    </record>
-
-    <!-- Course Form View -->
-    <record id="view_vus_course_form" model="ir.ui.view">
-        <field name="name">vus.course.form</field>
-        <field name="model">vus.course</field>
-        <field name="arch" type="xml">
-            <form string="Khóa học VUS">
-                <sheet>
-                    <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
-                        <h1>
-                            <field name="name" placeholder="Ví dụ: IELTS Intermediate 5.5"/>
-                        </h1>
-                    </div>
-                    <group>
-                        <group>
-                            <field name="code"/>
-                        </group>
-                        <group>
-                            <field name="tuition_fee" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                        </group>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <!-- Course Action -->
-    <record id="action_vus_course" model="ir.actions.act_window">
-        <field name="name">Khóa học</field>
-        <field name="res_model">vus.course</field>
-        <field name="view_mode">tree,form</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Tạo khóa học mới đầu tiên!
-            </p>
-        </field>
-    </record>
-
-
     <!-- ================= ENROLLMENT VIEWS ================= -->
     <!-- Enrollment Tree View -->
     <record id="view_vus_enrollment_tree" model="ir.ui.view">
@@ -61,10 +8,11 @@
         <field name="arch" type="xml">
             <tree string="Phiếu ghi danh VUS">
                 <field name="name"/>
+                <field name="enrollment_date"/>
                 <field name="student_id"/>
                 <field name="course_id"/>
                 <field name="amount" sum="Tổng doanh thu ghi danh"/>
-                <field name="invoice_id" widget="many2one_clickable"/>
+                <field name="invoice_id"/>
                 <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'confirmed'" decoration-success="state == 'paid'"/>
             </tree>
         </field>
@@ -77,12 +25,19 @@
         <field name="arch" type="xml">
             <form string="Phiếu ghi danh VUS">
                 <header>
-                    <!-- Nút Xác nhận chỉ hiện khi ở trạng thái draft -->
                     <button name="action_confirm" string="Xác nhận &amp; Tạo hóa đơn" type="object" class="oe_highlight" invisible="state != 'draft'"/>
-                    <!-- Statusbar bar -->
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,paid"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_invoice" id="action_view_invoice"
+                                type="object" class="oe_stat_button" icon="fa-pencil-square-o"
+                                invisible="not invoice_id" help="Xem hóa đơn liên kết">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Hóa đơn</span>
+                            </div>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <h1>
                             <field name="name"/>
@@ -92,10 +47,12 @@
                         <group string="Thông tin ghi danh">
                             <field name="student_id" placeholder="Chọn học viên..."/>
                             <field name="course_id" placeholder="Chọn khóa học..."/>
+                            <field name="class_id" placeholder="Chọn lớp học (không bắt buộc)..."/>
+                            <field name="enrollment_date"/>
                         </group>
                         <group string="Thông tin thanh toán &amp; Hóa đơn">
                             <field name="amount" readonly="1" force_save="1"/>
-                            <field name="invoice_id" context="{'form_view_ref': 'account.view_move_form'}"/>
+                            <field name="invoice_id" readonly="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -114,18 +71,4 @@
             </p>
         </field>
     </record>
-
-
-    <!-- ================= MENUS ================= -->
-    <!-- Menu chính VUS -->
-    <menuitem id="menu_vus_root" name="VUS" web_icon="vus_enrollment,static/description/icon.png" sequence="10"/>
-
-    <!-- Nhóm Menu Ghi danh -->
-    <menuitem id="menu_vus_enrollment_group" name="Ghi danh học viên" parent="menu_vus_root" sequence="10"/>
-
-    <!-- Menu con Phiếu ghi danh -->
-    <menuitem id="menu_vus_enrollment" name="Phiếu ghi danh" parent="menu_vus_enrollment_group" action="action_vus_enrollment" sequence="10"/>
-
-    <!-- Menu con Khóa học -->
-    <menuitem id="menu_vus_course" name="Khóa học" parent="menu_vus_enrollment_group" action="action_vus_course" sequence="20"/>
 </odoo>

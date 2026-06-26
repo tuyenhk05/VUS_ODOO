@@ -1,0 +1,101 @@
+# -*- coding: utf-8 -*-
+from odoo import models, fields, api
+from odoo.exceptions import ValidationError
+
+class VusAttendance(models.Model):
+    _name = 'vus.attendance'
+    _description = 'Điểm danh học viên'
+    _rec_name = 'student_id'
+    _order = 'date desc'
+
+    class_id = fields.Many2one(
+        'vus.class', 
+        string='Lớp học', 
+        required=True
+    )
+    enrollment_id = fields.Many2one(
+        'vus.enrollment', 
+        string='Học viên', 
+        domain="[('class_id', '=', class_id), ('state', 'in', ['confirmed', 'paid'])]",
+        required=True
+    )
+    student_id = fields.Many2one(
+        'res.partner',
+        related='enrollment_id.student_id',
+        string='Học viên',
+        store=True
+    )
+    student_name = fields.Char(
+        related='student_id.name',
+        string='Tên học viên',
+        store=True
+    )
+    class_name = fields.Char(
+        related='class_id.class_name',
+        string='Tên lớp',
+        store=True
+    )
+    
+    date = fields.Date(
+        string='Ngày học',
+        required=True,
+        default=fields.Date.today
+    )
+    session = fields.Char(
+        string='Buổi học',
+        help='VD: Buổi 1 - Ngày 01/06/2025'
+    )
+    
+    status = fields.Selection([
+        ('present', 'Có mặt'),
+        ('absent', 'Vắng'),
+        ('late', 'Đi trễ'),
+        ('permission', 'Xin phép'),
+    ], string='Trạng thái', required=True, default='present')
+    
+    note = fields.Text(string='Ghi chú')
+    
+    teacher_id = fields.Many2one(
+        'res.partner',
+        related='class_id.teacher_id',
+        string='Giảng viên',
+        store=True
+    )
+
+    state = fields.Selection([
+        ('draft', 'Mới'),
+        ('done', 'Đã xác nhận'),
+    ], string='Trạng thái', default='draft', required=True)
+
+    def action_confirm(self):
+        for rec in self:
+            rec.state = 'done'
+
+    @api.depends('enrollment_id', 'class_id', 'date')
+    def _compute_display_name(self):
+        for record in self:
+            date_str = record.date.strftime('%d/%m/%Y') if record.date else ''
+            student_name = record.enrollment_id.student_id.name if record.enrollment_id else 'Mới'
+            class_name = record.class_id.class_name if record.class_id else 'Chưa chọn lớp'
+            record.display_name = f"{student_name} - {class_name} ({date_str})"
+
+    @api.constrains('date')
+    def _check_date(self):
+        for rec in self:
+            if rec.date > fields.Date.today():
+                raise ValidationError('Không thể điểm danh cho ngày trong tương lai!')
+    
+    @api.model
+    def create(self, vals):
+        if 'date' in vals and 'session' not in vals:
+            vals['session'] = f"Buổi học ngày {fields.Date.from_string(vals['date']).strftime('%d/%m/%Y')}"
+        return super(VusAttendance, self).create(vals)
+
+class VusEnrollmentInherit(models.Model):
+    _inherit = 'vus.enrollment'
+
+    attendance_ids = fields.One2many(
+        'vus.attendance',
+        'enrollment_id',
+        string='Điểm danh'
+    )

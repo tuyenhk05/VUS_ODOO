@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree View -->
+    <record id="view_vus_attendance_tree" model="ir.ui.view">
+        <field name="name">vus.attendance.tree</field>
+        <field name="model">vus.attendance</field>
+        <field name="arch" type="xml">
+            <tree string="Điểm danh" 
+                  decoration-success="status == 'present'" 
+                  decoration-danger="status == 'absent'" 
+                  decoration-warning="status == 'late'" 
+                  decoration-info="status == 'permission'">
+                <field name="date"/>
+                <field name="student_id"/>
+                <field name="class_id"/>
+                <field name="status" widget="badge" 
+                       decoration-success="status == 'present'" 
+                       decoration-danger="status == 'absent'" 
+                       decoration-warning="status == 'late'" 
+                       decoration-info="status == 'permission'"/>
+                <field name="note"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_vus_attendance_form" model="ir.ui.view">
+        <field name="name">vus.attendance.form</field>
+        <field name="model">vus.attendance</field>
+        <field name="arch" type="xml">
+            <form string="Điểm danh">
+                <header>
+                    <button name="action_confirm" string="Xác nhận điểm danh" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Thông tin lớp học">
+                            <field name="class_id" placeholder="BƯỚC 1: Chọn lớp học trước..."/>
+                            <field name="enrollment_id" placeholder="BƯỚC 2: Chọn học viên..."/>
+                            <field name="teacher_id"/>
+                        </group>
+                        <group string="Thông tin buổi học">
+                            <field name="date"/>
+                            <field name="session"/>
+                            <field name="status" widget="radio" options="{'horizontal': true}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="note" placeholder="Nhập ghi chú nếu có..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_vus_attendance_search" model="ir.ui.view">
+        <field name="name">vus.attendance.search</field>
+        <field name="model">vus.attendance</field>
+        <field name="arch" type="xml">
+            <search string="Tìm kiếm điểm danh">
+                <field name="student_id"/>
+                <field name="class_id"/>
+                <field name="date"/>
+                <separator/>
+                <filter name="group_by_class" string="Lớp học" context="{'group_by': 'class_id'}"/>
+                <filter name="filter_today" string="Hôm nay" domain="[('date', '=', context_today())]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_vus_attendance" model="ir.actions.act_window">
+        <field name="name">Điểm danh</field>
+        <field name="res_model">vus.attendance</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Điểm danh học viên!
+            </p>
+        </field>
+    </record>
+
+</odoo>

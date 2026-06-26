@@ -1,2 +1,2 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_vus_enrollment,access_vus_enrollment,model_vus_enrollment,,1,1,1,1
+access_vus_attendance,access_vus_attendance,model_vus_attendance,,1,1,1,1

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menu: Lớp học -->
+    <menuitem id="menu_vus_class" name="Lớp học" parent="vus_student.menu_vus_root" sequence="20"/>
+    <menuitem id="menu_vus_class_list" 
+              name="Danh sách lớp học" 
+              parent="menu_vus_class" 
+              action="action_vus_class"
+              sequence="10"/>
+</odoo>

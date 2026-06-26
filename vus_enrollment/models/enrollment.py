@@ -14,6 +14,14 @@ class VusEnrollment(models.Model):
         copy=False,
         default='New'
     )
+
+    @api.depends('name', 'student_id.name')
+    def _compute_display_name(self):
+        for record in self:
+            if record.student_id.name:
+                record.display_name = record.student_id.name
+            else:
+                record.display_name = record.name or 'New'
     student_id = fields.Many2one(
         'res.partner',
         string='Học viên',
@@ -25,6 +33,16 @@ class VusEnrollment(models.Model):
         string='Khóa học đăng ký',
         required=True
     )
+    class_id = fields.Many2one(
+        'vus.class',
+        string='Lớp học đăng ký',
+        domain="[('course_id', '=', course_id)]"
+    )
+    enrollment_date = fields.Date(
+        string='Ngày ghi danh',
+        default=fields.Date.today,
+        required=True
+    )
     amount = fields.Float(
         string='Số tiền phải nộp',
         compute='_compute_amount',
@@ -33,9 +51,30 @@ class VusEnrollment(models.Model):
     )
     state = fields.Selection([
         ('draft', 'Nháp'),
-        ('confirmed', 'Đã xác nhận'),
-        ('paid', 'Đã đóng tiền')
-    ], string='Trạng thái', default='draft', readonly=True, copy=False)
+        ('confirmed', 'Chờ thanh toán'),
+        ('paid', 'Đã thanh toán')
+    ], string='Trạng thái', compute='_compute_state', store=True, default='draft')
+
+    @api.depends('invoice_id.payment_state', 'invoice_id.state')
+    def _compute_state(self):
+        for record in self:
+            if record.invoice_id:
+                if record.invoice_id.payment_state in ['paid', 'in_payment']:
+                    record.state = 'paid'
+                elif record.invoice_id.state == 'posted':
+                    record.state = 'confirmed'
+                else:
+                    record.state = 'draft'
+            else:
+                if not record.state:
+                    record.state = 'draft'
+            
+            # Logic: Tạo hồ sơ học viên (Đánh dấu chính thức) khi đã thanh toán
+            if record.state == 'paid' and record.student_id:
+                record.student_id.write({
+                    'is_student': True,
+                    'comment': f"Học viên chính thức từ phiếu ghi danh {record.name}"
+                })
 
     invoice_id = fields.Many2one(
         'account.move',
@@ -47,7 +86,7 @@ class VusEnrollment(models.Model):
     @api.depends('course_id')
     def _compute_amount(self):
         for record in self:
-            record.amount = record.course_id.tuition_fee if record.course_id else 0.0
+            record.amount = record.course_id.base_price if record.course_id else 0.0
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -96,7 +135,7 @@ class VusEnrollment(models.Model):
                 'invoice_date': fields.Date.context_today(record),
                 'invoice_line_ids': [
                     (0, 0, {
-                        'name': f"Học phí khóa học: {record.course_id.name} ({record.course_id.code})",
+                        'name': f"Học phí khóa học: {record.course_id.course_name} ({record.course_id.code})",
                         'price_unit': record.amount,
                         'quantity': 1.0,
                         'account_id': account.id,
@@ -111,3 +150,42 @@ class VusEnrollment(models.Model):
                 'state': 'confirmed'
             })
         return True
+
+    def action_view_invoice(self):
+        self.ensure_one()
+        return {
+            'name': 'Hóa đơn học phí',
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move',
+            'view_mode': 'form',
+            'res_id': self.invoice_id.id,
+            'target': 'current',
+        }
+
+class VusClassInherit(models.Model):
+    _inherit = 'vus.class'
+
+    enrollment_ids = fields.One2many('vus.enrollment', 'class_id', string='Danh sách ghi danh')
+    current_student_count = fields.Integer(
+        string='Số học viên hiện tại',
+        compute='_compute_student_count',
+        store=True
+    )
+    available_seats = fields.Integer(
+        string='Chỗ trống',
+        compute='_compute_available_seats',
+        store=True
+    )
+
+    @api.depends('enrollment_ids')
+    def _compute_student_count(self):
+        for rec in self:
+            rec.current_student_count = len(rec.enrollment_ids)
+
+    @api.depends('max_students', 'current_student_count')
+    def _compute_available_seats(self):
+        for rec in self:
+            rec.available_seats = rec.max_students - rec.current_student_count
+            # Tự động chuyển trạng thái nếu đầy
+            if rec.available_seats <= 0 and rec.state == 'opened':
+                rec.state = 'full'

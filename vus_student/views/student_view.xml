@@ -1,18 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Kế thừa form để thêm Học viên/Giảng viên -->
     <record id="view_partner_form_inherit_vus_student" model="ir.ui.view">
         <field name="name">res.partner.form.inherit.vus.student</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
-            <!-- Tìm đến trường category_id (Tags) và chèn vào phía sau -->
             <xpath expr="//field[@name='category_id']" position="after">
                 <field name="is_student" widget="boolean_toggle"/>
+                <field name="is_teacher" widget="boolean_toggle"/>
                 <field name="student_code" invisible="not is_student" required="is_student"/>
                 <field name="dob" invisible="not is_student"/>
                 <field name="student_status" invisible="not is_student"/>
             </xpath>
         </field>
     </record>
-</odoo>
 
+    <!-- Menu chính: Đào tạo VUS (Định nghĩa gốc tại đây) -->
+    <menuitem id="menu_vus_root" name="VUS Đào tạo" sequence="10"/>
+
+    <!-- Các Action Quản lý Nhân sự -->
+    <record id="action_vus_teacher" model="ir.actions.act_window">
+        <field name="name">Giảng viên</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('is_teacher', '=', True), ('parent_id', '=', False)]</field>
+        <field name="context">{'default_is_teacher': True, 'default_is_company': False}</field>
+    </record>
+
+    <record id="action_vus_student" model="ir.actions.act_window">
+        <field name="name">Học viên</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('is_student', '=', True), ('parent_id', '=', False)]</field>
+        <field name="context">{'default_is_student': True, 'default_is_company': False}</field>
+    </record>
+
+    <!-- Menu Cấu hình & Nhân sự -->
+    <menuitem id="menu_vus_config" name="Cấu hình" parent="menu_vus_root" sequence="100"/>
+    
+    <menuitem id="menu_vus_teacher" 
+              name="Giảng viên" 
+              parent="menu_vus_config" 
+              action="action_vus_teacher"
+              sequence="10"/>
+
+    <menuitem id="menu_vus_student" 
+              name="Học viên" 
+              parent="menu_vus_config" 
+              action="action_vus_student"
+              sequence="20"/>
+</odoo>

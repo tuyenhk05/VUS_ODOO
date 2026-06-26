@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menu: Điểm danh -->
+    <menuitem id="menu_vus_attendance" name="Điểm danh" parent="vus_student.menu_vus_root" sequence="30"/>
+    <menuitem id="menu_vus_attendance_list" 
+              name="Danh sách điểm danh" 
+              parent="menu_vus_attendance" 
+              action="action_vus_attendance"
+              sequence="10"/>
+</odoo>

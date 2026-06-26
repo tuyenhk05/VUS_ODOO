@@ -9,6 +9,11 @@ class ResPartner(models.Model):
         default=False,
         help="Đánh dấu đối tác này là học viên VUS"
     )
+    is_teacher = fields.Boolean(
+        string='Là giảng viên VUS',
+        default=False,
+        help="Đánh dấu đối tác này là giảng viên VUS"
+    )
     student_code = fields.Char(
         string='Mã học viên',
         help="Nhập mã định danh học viên VUS"

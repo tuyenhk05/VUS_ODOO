@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Kế thừa giao diện Phiếu ghi danh để chèn Tab điểm danh -->
+    <record id="view_vus_enrollment_form_inherit_attendance" model="ir.ui.view">
+        <field name="name">vus.enrollment.form.inherit.attendance</field>
+        <field name="model">vus.enrollment</field>
+        <field name="inherit_id" ref="vus_enrollment.view_vus_enrollment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <notebook>
+                    <page string="Lịch sử điểm danh">
+                        <field name="attendance_ids">
+                            <tree create="0" edit="0" delete="0">
+                                <field name="date"/>
+                                <field name="session"/>
+                                <field name="status" widget="badge" decoration-success="status == 'present'" decoration-danger="status == 'absent'" decoration-warning="status == 'late'" decoration-info="status == 'permission'"/>
+                                <field name="note"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+</odoo>
