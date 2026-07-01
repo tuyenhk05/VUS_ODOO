@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vus_placement_test,access_vus_placement_test,model_vus_placement_test,base.group_user,1,1,1,1
+access_vus_placement_test_line,access_vus_placement_test_line,model_vus_placement_test_line,base.group_user,1,1,1,1

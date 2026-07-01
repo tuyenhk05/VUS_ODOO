@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Giao diện Form Buổi thi đầu vào -->
+    <record id="view_vus_placement_test_form" model="ir.ui.view">
+        <field name="name">vus.placement.test.form</field>
+        <field name="model">vus.placement.test</field>
+        <field name="arch" type="xml">
+            <form string="Lịch kiểm tra đầu vào">
+                <header>
+                    <button name="action_confirm" string="Xác nhận lịch" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_complete" string="Hoàn thành buổi thi" type="object" class="oe_highlight" invisible="state != 'confirmed'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Tên buổi thi (VD: Kiểm tra IELTS tháng 7)..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="teacher_id"/>
+                        </group>
+                        <group>
+                            <field name="classroom"/>
+                            <field name="max_participants"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Danh sách Thí sinh &amp; Kết quả" name="candidates">
+                            <field name="line_ids">
+                                <tree editable="bottom">
+                                    <field name="partner_id"/>
+                                    <field name="listening_score"/>
+                                    <field name="reading_score"/>
+                                    <field name="writing_score"/>
+                                    <field name="speaking_score"/>
+                                    <field name="total_score"/>
+                                    <field name="recommended_course_id"/>
+                                    <field name="enrollment_id" widget="many2one_clickable"/>
+                                    <field name="state"/>
+                                    <button name="action_confirm_grade" string="Xác nhận điểm" type="object" icon="fa-check" invisible="state != 'registered'" title="Xác nhận điểm"/>
+                                    <button name="action_create_enrollment" string="Ghi danh" type="object" icon="fa-user-plus" invisible="state != 'graded' or enrollment_id != False" title="Tạo phiếu ghi danh"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Giao diện Tree Buổi thi đầu vào -->
+    <record id="view_vus_placement_test_tree" model="ir.ui.view">
+        <field name="name">vus.placement.test.tree</field>
+        <field name="model">vus.placement.test</field>
+        <field name="arch" type="xml">
+            <tree string="Lịch kiểm tra đầu vào" decoration-info="state == 'confirmed'" decoration-success="state == 'completed'">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="teacher_id"/>
+                <field name="classroom"/>
+                <field name="max_participants"/>
+                <field name="participant_count"/>
+                <field name="state" widget="badge" decoration-info="state == 'confirmed'" decoration-success="state == 'completed'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Giao diện Form Chi tiết Kết quả Thi -->
+    <record id="view_vus_placement_test_line_form" model="ir.ui.view">
+        <field name="name">vus.placement.test.line.form</field>
+        <field name="model">vus.placement.test.line</field>
+        <field name="arch" type="xml">
+            <form string="Chi tiết Kết quả Thi">
+                <header>
+                    <button name="action_confirm_grade" string="Xác nhận điểm" type="object" class="oe_highlight" invisible="state != 'registered'"/>
+                    <button name="action_create_enrollment" string="Ghi danh học viên" type="object" class="oe_highlight" invisible="state != 'graded' or enrollment_id != False"/>
+                    <button name="action_cancel" string="Hủy kết quả" type="object" invisible="state not in ('registered', 'attended')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="registered,attended,graded,cancelled"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Thông tin chung">
+                            <field name="test_id" readonly="1"/>
+                            <field name="partner_id"/>
+                            <field name="recommended_course_id"/>
+                            <field name="enrollment_id" widget="many2one_clickable"/>
+                        </group>
+                        <group string="Điểm kiểm tra (0 - 100)">
+                            <field name="listening_score"/>
+                            <field name="reading_score"/>
+                            <field name="writing_score"/>
+                            <field name="speaking_score"/>
+                            <field name="total_score" readonly="1" class="font-weight-bold"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Hành động Quản lý Thi Đầu Vào -->
+    <record id="action_vus_placement_test" model="ir.actions.act_window">
+        <field name="name">Kiểm tra đầu vào</field>
+        <field name="res_model">vus.placement.test</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo lịch kiểm tra đầu vào mới!
+            </p>
+        </field>
+    </record>
+
+    <!-- Định nghĩa Menus -->
+    <menuitem id="menu_vus_recruitment" name="Tuyển sinh &amp; Đăng ký" parent="vus_student.menu_vus_root" sequence="2"/>
+    <menuitem id="menu_vus_placement_test" name="Kiểm tra đầu vào" parent="menu_vus_recruitment" action="action_vus_placement_test" sequence="10"/>
+</odoo>

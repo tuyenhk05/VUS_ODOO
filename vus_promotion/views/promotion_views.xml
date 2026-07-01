@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Giao diện Form Chương trình Ưu đãi -->
+    <record id="view_vus_promotion_form" model="ir.ui.view">
+        <field name="name">vus.promotion.form</field>
+        <field name="model">vus.promotion</field>
+        <field name="arch" type="xml">
+            <form string="Chương trình ưu đãi/Học bổng">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Tên chương trình ưu đãi..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="type"/>
+                            <field name="value"/>
+                        </group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="max_uses"/>
+                            <field name="use_count" readonly="1"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Mô tả" name="description">
+                            <field name="description" placeholder="Nhập mô tả chi tiết chương trình khuyến mãi/học bổng tại đây..."/>
+                        </page>
+                        <page string="Lịch sử áp dụng" name="enrollments">
+                            <field name="enrollment_ids" readonly="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="student_id"/>
+                                    <field name="course_id"/>
+                                    <field name="enrollment_date"/>
+                                    <field name="amount"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Giao diện Tree Chương trình Ưu đãi -->
+    <record id="view_vus_promotion_tree" model="ir.ui.view">
+        <field name="name">vus.promotion.tree</field>
+        <field name="model">vus.promotion</field>
+        <field name="arch" type="xml">
+            <tree string="Chương trình ưu đãi/Học bổng" decoration-muted="not active">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="type"/>
+                <field name="value"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="max_uses"/>
+                <field name="use_count"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Hành động Quản lý Ưu đãi -->
+    <record id="action_vus_promotion" model="ir.actions.act_window">
+        <field name="name">Chương trình ưu đãi</field>
+        <field name="res_model">vus.promotion</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo chương trình ưu đãi hoặc học bổng mới!
+            </p>
+        </field>
+    </record>
+
+    <!-- Kế thừa giao diện Form Phiếu ghi danh để tích hợp Ưu đãi -->
+    <record id="view_vus_enrollment_form_inherit_vus_promotion" model="ir.ui.view">
+        <field name="name">vus.enrollment.form.inherit.vus.promotion</field>
+        <field name="model">vus.enrollment</field>
+        <field name="inherit_id" ref="vus_enrollment.view_vus_enrollment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='class_id']" position="after">
+                <field name="promotion_id" placeholder="Chọn ưu đãi/Học bổng..." readonly="state != 'draft'"/>
+            </xpath>
+            <xpath expr="//field[@name='amount']" position="before">
+                <field name="discount_amount" readonly="1" string="Số tiền giảm"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Định nghĩa Menus -->
+    <menuitem id="menu_vus_promotion" name="Học bổng &amp; Ưu đãi" parent="vus_placement_test.menu_vus_recruitment" action="action_vus_promotion" sequence="20"/>
+</odoo>

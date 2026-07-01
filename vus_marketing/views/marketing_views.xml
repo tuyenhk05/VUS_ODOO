@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Giao diện Form Chiến dịch Marketing -->
+    <record id="view_vus_marketing_campaign_form" model="ir.ui.view">
+        <field name="name">vus.marketing.campaign.form</field>
+        <field name="model">vus.marketing.campaign</field>
+        <field name="arch" type="xml">
+            <form string="Chiến dịch Marketing">
+                <header>
+                    <button name="action_start" string="Bắt đầu" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_complete" string="Hoàn thành" type="object" class="oe_highlight" invisible="state != 'running'"/>
+                    <button name="action_cancel" string="Hủy" type="object" invisible="state not in ('draft', 'running')"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,running,completed,cancelled"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(crm.crm_lead_action_pipeline)d" type="action" class="oe_stat_button" icon="fa-users" context="{'search_default_vus_campaign_id': active_id}">
+                            <field name="lead_count" widget="statinfo" string="Số Lead"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Tên chiến dịch..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="target_leads"/>
+                            <field name="conversion_rate" readonly="1" string="Tỷ lệ chuyển đổi (%)"/>
+                        </group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="budget" widget="monetary"/>
+                            <field name="actual_cost" widget="monetary"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Mô tả chi tiết" name="description">
+                            <field name="description" placeholder="Nhập mô tả chi tiết chiến dịch tại đây..."/>
+                        </page>
+                        <page string="Danh sách Leads tuyển sinh" name="leads">
+                            <field name="lead_ids" readonly="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="partner_id"/>
+                                    <field name="lead_source"/>
+                                    <field name="stage_id"/>
+                                    <field name="expected_revenue"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Giao diện Tree Chiến dịch Marketing -->
+    <record id="view_vus_marketing_campaign_tree" model="ir.ui.view">
+        <field name="name">vus.marketing.campaign.tree</field>
+        <field name="model">vus.marketing.campaign</field>
+        <field name="arch" type="xml">
+            <tree string="Chiến dịch Marketing" decoration-info="state == 'running'" decoration-success="state == 'completed'" decoration-muted="state == 'cancelled'">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="budget"/>
+                <field name="actual_cost"/>
+                <field name="lead_count"/>
+                <field name="conversion_count"/>
+                <field name="conversion_rate"/>
+                <field name="state" widget="badge" decoration-info="state == 'running'" decoration-success="state == 'completed'" decoration-muted="state == 'cancelled'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Hành động Quản lý Chiến dịch -->
+    <record id="action_vus_marketing_campaign" model="ir.actions.act_window">
+        <field name="name">Chiến dịch Marketing</field>
+        <field name="res_model">vus.marketing.campaign</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo chiến dịch Marketing mới của VUS!
+            </p>
+        </field>
+    </record>
+
+    <!-- Kế thừa giao diện CRM Lead Form -->
+    <record id="crm_lead_view_form_inherit_vus_marketing" model="ir.ui.view">
+        <field name="name">crm.lead.form.inherit.vus.marketing</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="vus_campaign_id"/>
+                <field name="lead_source"/>
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page string="VUS Chăm sóc &amp; Tuyển sinh" name="vus_marketing_info">
+                    <group>
+                        <field name="follow_up_notes" placeholder="Nhập thông tin chi tiết quá trình gọi điện chăm sóc, tư vấn học viên..."/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Kế thừa CRM Search View -->
+    <record id="view_crm_case_opportunities_filter_inherit_vus_marketing" model="ir.ui.view">
+        <field name="name">crm.lead.search.inherit.vus.marketing</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.view_crm_case_opportunities_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='stage']" position="before">
+                <filter string="Chiến dịch VUS" name="groupby_vus_campaign" context="{'group_by':'vus_campaign_id'}"/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="vus_campaign_id"/>
+                <field name="lead_source"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Định nghĩa Menus -->
+    <menuitem id="menu_vus_marketing_root" name="Marketing" parent="vus_student.menu_vus_root" sequence="1"/>
+    <menuitem id="menu_vus_marketing_campaign" name="Chiến dịch Marketing" parent="menu_vus_marketing_root" action="action_vus_marketing_campaign" sequence="10"/>
+</odoo>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Giao diện Pivot -->
+    <record id="view_vus_recruitment_report_pivot" model="ir.ui.view">
+        <field name="name">vus.recruitment.report.pivot</field>
+        <field name="model">vus.recruitment.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Báo cáo KPI Tuyển sinh &amp; Marketing">
+                <field name="campaign_id" type="row"/>
+                <field name="lead_count" type="measure"/>
+                <field name="test_count" type="measure"/>
+                <field name="enrollment_count" type="measure"/>
+                <field name="revenue" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Giao diện Graph -->
+    <record id="view_vus_recruitment_report_graph" model="ir.ui.view">
+        <field name="name">vus.recruitment.report.graph</field>
+        <field name="model">vus.recruitment.report</field>
+        <field name="arch" type="xml">
+            <graph string="Biểu đồ KPI Tuyển sinh &amp; Marketing" type="bar">
+                <field name="campaign_id"/>
+                <field name="revenue" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Hành động xem Báo cáo -->
+    <record id="action_vus_recruitment_report" model="ir.actions.act_window">
+        <field name="name">Báo cáo KPI</field>
+        <field name="res_model">vus.recruitment.report</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Báo cáo tổng hợp KPI Tuyển sinh và Marketing VUS!
+            </p>
+        </field>
+    </record>
+
+    <!-- Định nghĩa Menu Báo cáo -->
+    <menuitem id="menu_vus_recruitment_report" name="Báo cáo KPI" parent="vus_student.menu_vus_root" action="action_vus_recruitment_report" sequence="100"/>
+</odoo>

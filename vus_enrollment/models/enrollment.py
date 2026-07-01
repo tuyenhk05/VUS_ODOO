@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 class VusEnrollment(models.Model):
     _name = 'vus.enrollment'
@@ -102,6 +102,15 @@ class VusEnrollment(models.Model):
                     next_id = (last_enrollment.id + 1) if last_enrollment else 1
                     vals['name'] = f"VUS/ENR/{year}/{next_id:05d}"
         return super(VusEnrollment, self).create(vals_list)
+
+    @api.constrains('class_id', 'state')
+    def _check_class_capacity(self):
+        for record in self:
+            if record.class_id and record.state in ['confirmed', 'paid']:
+                # Đếm số học viên thực tế khác phiếu này
+                current_count = len(record.class_id.enrollment_ids.filtered(lambda e: e.id != record.id and e.state in ['confirmed', 'paid']))
+                if current_count >= record.class_id.max_students:
+                    raise ValidationError(f"Lớp {record.class_id.class_name} đã đạt giới hạn sĩ số tối đa ({record.class_id.max_students} học viên)!")
 
     def action_confirm(self):
         for record in self:
