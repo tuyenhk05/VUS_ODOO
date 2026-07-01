@@ -1,0 +1,222 @@
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+    body {
+        font-family: 'Calibri', 'Arial', sans-serif;
+        line-height: 1.6;
+        color: #333333;
+        margin: 40px;
+    }
+    h1 {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        color: #1e3a8a;
+        border-bottom: 2px solid #1e3a8a;
+        padding-bottom: 10px;
+        font-size: 24pt;
+        margin-top: 30px;
+    }
+    h2 {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        color: #2563eb;
+        font-size: 18pt;
+        margin-top: 25px;
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 5px;
+    }
+    h3 {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        color: #1d4ed8;
+        font-size: 14pt;
+        margin-top: 20px;
+    }
+    p {
+        font-size: 11pt;
+        margin-bottom: 10px;
+    }
+    ul, ol {
+        margin-bottom: 15px;
+        padding-left: 20px;
+    }
+    li {
+        font-size: 11pt;
+        margin-bottom: 5px;
+    }
+    code {
+        font-family: 'Consolas', monospace;
+        background-color: #f3f4f6;
+        padding: 2px 4px;
+        font-size: 10pt;
+        border-radius: 4px;
+    }
+    pre {
+        font-family: 'Consolas', monospace;
+        background-color: #f3f4f6;
+        padding: 15px;
+        font-size: 9.5pt;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        white-space: pre-wrap;
+        margin-bottom: 20px;
+    }
+    .blockquote {
+        border-left: 4px solid #3b82f6;
+        background-color: #eff6ff;
+        padding: 10px 15px;
+        margin: 15px 0;
+        font-style: italic;
+    }
+    .blockquote-important {
+        border-left: 4px solid #ef4444;
+        background-color: #fef2f2;
+        padding: 10px 15px;
+        margin: 15px 0;
+    }
+    .blockquote-note {
+        border-left: 4px solid #10b981;
+        background-color: #ecfdf5;
+        padding: 10px 15px;
+        margin: 15px 0;
+    }
+    strong {
+        color: #111827;
+    }
+</style>
+</head>
+<body>
+<h1>BÁO CÁO TỔNG QUAN VÀ HƯỚNG DẪN VẬN HÀNH HỆ THỐNG VUS ERP</h1>
+<p>Tài liệu này cung cấp báo cáo tổng quan về kiến trúc dự án ERP cho Trung tâm Ngoại ngữ VUS, chi tiết luồng hoạt động tích hợp, hướng dẫn thao tác nghiệp vụ, và phương pháp xác minh dữ liệu mẫu trên nền tảng Odoo 17.</p>
+<p>---</p>
+<h2>1. Tổng quan dự án & Kiến trúc Hệ thống</h2>
+<p>Hệ thống được chuyển đổi và thiết kế lại theo mô hình <strong>ERP chuyên biệt cho trung tâm ngoại ngữ</strong>, tập trung vào quản lý khép kín vòng đời khách hàng/học viên: <strong>Marketing → CRM → Tuyển sinh (Thi đầu vào & Ghi danh) → Đào tạo (Xếp lớp & Điểm danh) → Tài chính (Kế toán & Hóa đơn) → Dashboard</strong>.</p>
+<h3>Sơ đồ kiến trúc module tùy biến:</h3>
+<pre>graph TD
+    %% Định nghĩa các node
+    MC[vus_marketing&lt;br/&gt;Chiến dịch Marketing]
+    CRM[crm.lead&lt;br/&gt;Quản lý khách hàng tiềm năng]
+    PT[vus_placement_test&lt;br/&gt;Thi tuyển đầu vào]
+    EN[vus_enrollment&lt;br/&gt;Phiếu ghi danh học viên]
+    PRO[vus_promotion&lt;br/&gt;Học bổng &amp; Khuyến mãi]
+    CL[vus_class&lt;br/&gt;Quản lý lớp học &amp; Sĩ số]
+    AT[vus_attendance&lt;br/&gt;Điểm danh hàng ngày]
+    ACC[account.move&lt;br/&gt;Hóa đơn &amp; Kế toán]
+    DB[vus_dashboard&lt;br/&gt;Báo cáo phân tích KPI]
+
+    %% Luồng liên kết dữ liệu
+    MC --&gt;|Tạo Leads| CRM
+    CRM --&gt;|Đăng ký thi| PT
+    PT --&gt;|Đề xuất khóa học &amp; Tạo| EN
+    PRO --&gt;|Khấu trừ học phí| EN
+    EN --&gt;|Tự động tạo hóa đơn| ACC
+    EN --&gt;|Gán vào lớp học| CL
+    CL --&gt;|Điểm danh học viên| AT
+    
+    %% Dashboard tổng hợp
+    DB -.-&gt;|Thống kê| MC
+    DB -.-&gt;|Thống kê| PT
+    DB -.-&gt;|Thống kê| EN
+    DB -.-&gt;|Thống kê| ACC</pre>
+<p>---</p>
+<h2>2. Chi tiết luồng nghiệp vụ tích hợp (Funnel Workflow)</h2>
+<h3>Giai đoạn 1: Tiếp cận & Tìm kiếm khách hàng (Marketing → CRM)</h3>
+<ul>
+<li><strong>Chiến dịch Marketing (<code>vus.marketing.campaign</code>)</strong>: Bộ phận Marketing thiết lập chiến dịch (ví dụ: "Tuyển sinh Hè 2026") với ngân sách và chỉ tiêu tuyển sinh cụ thể.</li>
+<li><strong>Lead CRM (<code>crm.lead</code>)</strong>: Khi khách hàng đăng ký qua Facebook, Web,... dữ liệu được tự động đổ vào CRM Lead, gắn trực tiếp với chiến dịch Marketing tương ứng và ghi nhận nguồn khách hàng (<code>lead_source</code>).</li>
+<li><strong>Theo dõi & Chăm sóc</strong>: Nhân viên tư vấn thực hiện gọi điện, cập nhật nhật ký chăm sóc vào trường <code>follow_up_notes</code> trên Lead.</li>
+</ul>
+<h3>Giai đoạn 2: Khảo sát năng lực (Placement Test)</h3>
+<ul>
+<li><strong>Lịch thi đầu vào (<code>vus.placement.test</code>)</strong>: Thiết lập các buổi kiểm tra năng lực đầu vào bao gồm phòng thi, ngày thi, và giáo viên gác thi/chấm thi.</li>
+<li><strong>Ghi nhận điểm thi (<code>vus.placement.test.line</code>)</strong>: Nhập điểm thi chi tiết (Nghe, Nói, Đọc, Viết) của thí sinh. Tổng điểm được tự động tính toán. Dựa vào kết quả thi, tư vấn viên chọn <strong>Khóa học đề xuất</strong> phù hợp với trình độ.</li>
+<li><strong>Chuyển đổi trạng thái</strong>: Hệ thống tự động cập nhật trạng thái học viên của khách hàng sang <strong>Chờ xếp lớp (Waiting)</strong>.</li>
+</ul>
+<h3>Giai đoạn 3: Đăng ký & Ưu đãi học phí (Enrollment & Promotion)</h3>
+<ul>
+<li><strong>Tạo phiếu ghi danh</strong>: Từ dòng kết quả thi đầu vào, click nút <strong>Ghi danh</strong> để tự động tạo Phiếu ghi danh (<code>vus.enrollment</code>) ở trạng thái <strong>Nháp</strong>.</li>
+<li><strong>Áp dụng ưu đãi/học bổng (<code>vus.promotion</code>)</strong>: Nhân viên chọn mã ưu đãi hợp lệ (ví dụ: giảm 10% học phí hoặc học bổng cố định 1,000,000đ). Hệ thống tự động kiểm tra thời hạn và số lượt dùng tối đa, tính toán số tiền được giảm (<code>discount_amount</code>) và cập nhật số tiền phải nộp thực tế (<code>amount</code>).</li>
+</ul>
+<h3>Giai đoạn 4: Tài chính & Xếp lớp (Accounting & Class Placement)</h3>
+<ul>
+<li><strong>Xác nhận thanh toán</strong>: Click <strong>Xác nhận & Tạo hóa đơn</strong> trên phiếu ghi danh:</li>
+<li>Trạng thái phiếu ghi danh chuyển sang <strong>Chờ thanh toán (Confirmed)</strong>.</li>
+<li>Tự động sinh hóa đơn khách hàng (<code>out_invoice</code>) bên phân hệ Kế toán với mô tả chi tiết khóa học, số tiền sau khi giảm giá.</li>
+<li>Khi hóa đơn được thanh toán đầy đủ bên kế toán, trạng thái phiếu ghi danh tự động chuyển sang <strong>Đã thanh toán (Paid)</strong>, đồng thời cập nhật trạng thái học viên thành <strong>Đang học (Studying)</strong>.</li>
+<li><strong>Xếp lớp & Kiểm soát sĩ số</strong>: Hệ thống kiểm tra sĩ số tối đa (<code>max_students</code>) của lớp học đã chọn. Nếu lớp đã đầy, hệ thống sẽ chặn và đưa ra cảnh báo để tư vấn viên xếp học viên sang lớp khác.</li>
+</ul>
+<h3>Giai đoạn 5: Quản lý Đào tạo & Báo cáo (Attendance & Dashboard)</h3>
+<ul>
+<li><strong>Điểm danh (<code>vus.attendance</code>)</strong>: Giáo viên hoặc quản lý lớp tiến hành điểm danh hàng ngày cho học viên trong lớp theo các trạng thái: Có mặt, Vắng, Đi trễ, Xin phép. Lịch sử điểm danh được hiển thị trực tiếp trên tab điểm danh của Phiếu ghi danh học viên.</li>
+<li><strong>Báo cáo KPI (<code>vus.recruitment.report</code>)</strong>: Ban quản lý truy cập bảng phân tích đa chiều (Pivot) và đồ thị trực quan (Graph) để theo dõi toàn diện số lượng Lead phát sinh, số lượt thi thử, số lượt ghi danh thành công, doanh thu và hiệu quả chuyển đổi thực tế của từng chiến dịch marketing.</li>
+</ul>
+<p>---</p>
+<h2>3. Hướng dẫn thao tác nghiệp vụ chi tiết</h2>
+<h3>Thao tác 1: Tạo và Chạy Chiến dịch Marketing</h3>
+<ol>
+<li>Truy cập <strong>VUS Đào tạo</strong> → <strong>Marketing</strong> → <strong>Chiến dịch Marketing</strong> → Nhấn <strong>Mới (New)</strong>.</li>
+<li>Điền <strong>Tên chiến dịch</strong> (Ví dụ: <code>Tuyển sinh Hè 2026</code>), <strong>Mã chiến dịch</strong> (<code>VUS-HE-2026</code>), <strong>Ngân sách dự kiến</strong> và <strong>Chỉ tiêu Lead</strong>.</li>
+<li>Nhấn <strong>Bắt đầu</strong> để chuyển trạng thái sang <strong>Đang chạy</strong>.</li>
+</ol>
+<h3>Thao tác 2: Ghi nhận và Chăm sóc Lead CRM</h3>
+<ol>
+<li>Vào <strong>CRM</strong> → Tạo một Lead mới hoặc mở Lead sẵn có.</li>
+<li>Tại trường <strong>Chiến dịch VUS</strong>, chọn chiến dịch vừa tạo. Chọn <strong>Nguồn khách hàng</strong> (ví dụ: <code>Facebook Fanpage</code>).</li>
+<li>Tại tab <strong>VUS Chăm sóc & Tuyển sinh</strong>, nhập ghi chú quá trình tư vấn.</li>
+<li>Khi khách hàng đồng ý kiểm tra trình độ, chuyển đổi Lead sang đối tác khách hàng (Partner) thông qua nút <strong>Create Opportunity</strong> chuẩn của Odoo.</li>
+</ol>
+<h3>Thao tác 3: Tổ chức Thi Đầu Vào & Đề xuất Khóa học</h3>
+<ol>
+<li>Truy cập <strong>VUS Đào tạo</strong> → <strong>Tuyển sinh & Đăng ký</strong> → <strong>Kiểm tra đầu vào</strong> → Nhấn <strong>Mới</strong>.</li>
+<li>Nhập <strong>Tên buổi thi</strong>, <strong>Ngày giờ thi</strong>, chọn <strong>Giảng viên chấm thi</strong> và phòng học. Lưu lại và nhấn <strong>Xác nhận lịch</strong>.</li>
+<li>Trong bảng <strong>Danh sách thí sinh & Kết quả</strong> bên dưới, nhấn <strong>Thêm dòng (Add a line)</strong> và chọn thí sinh (đối tác đã tạo ở CRM).</li>
+<li>Nhập điểm số 4 kỹ năng. Hệ thống tự động tính <strong>Tổng điểm</strong>.</li>
+<li>Chọn <strong>Khóa học đề xuất</strong> (Ví dụ: <code>IELTS Foundation</code>).</li>
+<li>Nhấn nút <strong>Xác nhận điểm</strong> (icon dấu tích) để chốt điểm số cho thí sinh.</li>
+</ol>
+<h3>Thao tác 4: Tạo Ghi Danh & Áp dụng Ưu đãi/Học bổng</h3>
+<ol>
+<li>Tại bảng danh sách kết quả thi, tìm dòng thí sinh vừa chấm điểm, click vào icon <strong>Ghi danh</strong> (hình người kèm dấu cộng).</li>
+<li>Hệ thống sẽ tự động tạo và mở ra giao diện <strong>Phiếu ghi danh</strong> mới ở trạng thái <strong>Nháp</strong>.</li>
+<li>Chọn lớp học mong muốn (Ví dụ: <code>IELTS Foundation Class A</code>) tại trường <strong>Lớp học đăng ký</strong>.</li>
+<li>Tại trường <strong>Chương trình ưu đãi/Học bổng</strong>, chọn mã giảm giá (Ví dụ: <code>HE2026_10</code>). Hệ thống sẽ tự động tính <strong>Số tiền giảm</strong> (450.000đ) và giảm <strong>Số tiền phải nộp</strong> từ 4.500.000đ xuống còn 4.050.000đ.</li>
+<li>Lưu lại.</li>
+</ol>
+<h3>Thao tác 5: Xác nhận Ghi danh & Sinh Hóa đơn tự động</h3>
+<ol>
+<li>Trên giao diện Phiếu ghi danh nháp, nhấn nút <strong>Xác nhận & Tạo hóa đơn</strong> ở thanh trạng thái.</li>
+<li>Hệ thống sẽ tự động tạo một hóa đơn Kế toán liên kết. Click vào link trường <strong>Hóa đơn liên kết</strong> để xem hóa đơn bán ra.</li>
+<li>Khi kế toán tiến hành thanh toán hóa đơn này (Register Payment), trạng thái phiếu ghi danh sẽ tự động chuyển từ <strong>Chờ thanh toán</strong> sang <strong>Đã thanh toán</strong>. Trạng thái học viên của đối tác sẽ tự động chuyển thành <strong>Đang học</strong>.</li>
+</ol>
+<h3>Thao tác 6: Kiểm soát Sĩ số & Xếp lớp</h3>
+<ol>
+<li>Nếu một lớp học đã đạt sĩ số tối đa (ví dụ: Lớp IELTS Intensive Class A giới hạn 10 học viên và đã có 10 học viên đăng ký chính thức).</li>
+<li>Khi người dùng cố tình xác nhận thêm một phiếu ghi danh mới vào lớp này, hệ thống sẽ đưa ra cảnh báo lỗi:</li>
+</ol>
+<p><code>ValidationError: Lớp IELTS Intensive Class A đã đạt giới hạn sĩ số tối đa (10 học viên)!</code> và chặn không cho xác nhận.</p>
+<h3>Thao tác 7: Quản lý Điểm danh hàng ngày</h3>
+<ol>
+<li>Vào <strong>VUS Đào tạo</strong> → <strong>Đào tạo</strong> → <strong>Điểm danh</strong> → Nhấn <strong>Mới</strong>.</li>
+<li>Chọn <strong>Lớp học</strong>, chọn học viên (hệ thống sẽ tự động lọc danh sách học viên đăng ký trong lớp đó) và chọn ngày học.</li>
+<li>Chọn trạng thái điểm danh (Có mặt, Vắng, Đi trễ, Xin phép). Lưu lại và nhấn <strong>Xác nhận</strong>.</li>
+<li>Lịch sử điểm danh này sẽ hiển thị tự động trên tab <strong>Điểm danh</strong> trong giao diện phiếu ghi danh của học viên đó.</li>
+</ol>
+<h3>Thao tác 8: Xem Dashboard KPI Quản trị</h3>
+<ol>
+<li>Vào <strong>VUS Đào tạo</strong> → <strong>Báo cáo KPI</strong>.</li>
+<li>Mặc định hệ thống sẽ mở bảng phân tích Pivot. Người dùng có thể kéo thả để xem tổng số Lead, số lượt thi đầu vào, số lượt ghi danh thành công và doanh thu thực tế phân nhóm theo <strong>Chiến dịch Marketing</strong> hoặc theo <strong>Khóa học</strong>.</li>
+<li>Chuyển sang dạng biểu đồ (Graph) để xem dạng đồ thị cột, đồ thị đường trực quan về doanh thu và tỷ lệ chuyển đổi.</li>
+</ol>
+<p>---</p>
+<h2>4. Kiểm tra & Xác minh Dữ liệu mẫu (Demo Data Verification)</h2>
+<p>Hệ thống đã được tích hợp sẵn tập dữ liệu mẫu chuẩn hóa để người dùng tiến hành chạy thử nghiệm ngay lập tức. Tập dữ liệu bao gồm:</p>
+<ul>
+<li><strong>3 Giảng viên</strong>: Mr. John Smith, Ms. Maria Nguyen, Mr. David Lee.</li>
+<li><strong>4 Khóa học</strong>: IELTS Foundation, IELTS Intensive, Super Minds 1, Super Minds 2.</li>
+<li><strong>3 Lớp học</strong>: IELTS Foundation Class A, IELTS Intensive Class A, Super Minds 1 Class A.</li>
+<li><strong>5 Học viên/Khách hàng tiềm năng</strong>: Nguyen Van A, Tran Thi B, Le Hoang C, Pham Minh D, Vu Thu E.</li>
+<li><strong>2 Chiến dịch Marketing</strong>: Chiến dịch Tuyển sinh Hè 2026, Chiến dịch Thu 2026.</li>
+<li><strong>3 CRM Leads</strong>: Đã gắn với chiến dịch và nguồn tương ứng.</li>
+<li><strong>1 Lịch thi đầu vào</strong>: Đã chấm điểm cho Le Hoang C và Pham Minh D.</li>
+<li><strong>2 Chương trình ưu đãi</strong>: Mã giảm 10% hè và Mã học bổng 1,000,000đ.</li>
+</ul>
+</body>
+</html>
