@@ -37,17 +37,17 @@
     </record>
 
     <!-- Menu Cấu hình & Nhân sự -->
-    <menuitem id="menu_vus_config" name="Cấu hình" parent="menu_vus_root" sequence="100"/>
+    <menuitem id="menu_vus_hr" name="Nhân sự" parent="menu_vus_root" sequence="5"/>
     
     <menuitem id="menu_vus_teacher" 
               name="Giảng viên" 
-              parent="menu_vus_config" 
+              parent="menu_vus_hr" 
               action="action_vus_teacher"
               sequence="10"/>
 
     <menuitem id="menu_vus_student" 
               name="Học viên" 
-              parent="menu_vus_config" 
+              parent="menu_vus_hr" 
               action="action_vus_student"
               sequence="20"/>
 </odoo>
