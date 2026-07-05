@@ -32,7 +32,8 @@ class VusClass(models.Model):
         ('draft', 'Chờ mở'),
         ('opened', 'Đang mở'),
         ('full', 'Đã đầy'),
-        ('closed', 'Đã kết thúc')
+        ('closed', 'Đã kết thúc'),
+        ('cancelled', 'Đã hủy')
     ], string='Trạng thái', default='draft', required=True)
 
 
@@ -42,6 +43,12 @@ class VusClass(models.Model):
     def action_close_class(self):
         self.state = 'closed'
 
+    def action_cancel_class(self):
+        self.state = 'cancelled'
+
+    def action_set_draft(self):
+        self.state = 'draft'
+
     def action_duplicate_class(self):
         for rec in self:
             rec.copy({
@@ -49,6 +56,18 @@ class VusClass(models.Model):
                 'class_code': rec.class_code + '_COPY',
                 'state': 'draft',
             })
+
+    def action_view_students(self):
+        self.ensure_one()
+        return {
+            'name': 'Học viên trong lớp',
+            'type': 'ir.actions.act_window',
+            'res_model': 'vus.enrollment',
+            'view_mode': 'tree,form',
+            'domain': [('class_id', '=', self.id)],
+            'context': {'default_class_id': self.id},
+            'target': 'current',
+        }
 
     @api.constrains('max_students')
     def _check_max_students(self):

@@ -2,9 +2,14 @@
 <odoo>
     <!-- Menu: Điểm danh -->
     <menuitem id="menu_vus_attendance" name="Điểm danh" parent="vus_student.menu_vus_root" sequence="30"/>
+    <menuitem id="menu_vus_attendance_sheet" 
+              name="Điểm danh theo buổi" 
+              parent="menu_vus_attendance" 
+              action="action_vus_attendance_sheet"
+              sequence="10"/>
     <menuitem id="menu_vus_attendance_list" 
-              name="Danh sách điểm danh" 
+              name="Chi tiết điểm danh" 
               parent="menu_vus_attendance" 
               action="action_vus_attendance"
-              sequence="10"/>
+              sequence="20"/>
 </odoo>

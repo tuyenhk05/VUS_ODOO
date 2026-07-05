@@ -71,4 +71,20 @@
             </p>
         </field>
     </record>
+    <!-- Inherit Class Form to add Smart Button -->
+    <record id="view_vus_class_form_inherit_enrollment" model="ir.ui.view">
+        <field name="name">vus.class.form.inherit.enrollment</field>
+        <field name="model">vus.class</field>
+        <field name="inherit_id" ref="vus_class.view_vus_class_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@class='oe_title']" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_view_students" type="object" class="oe_stat_button" icon="fa-users" invisible="state == 'draft'">
+                        <field name="current_student_count" widget="statinfo" string="Học viên"/>
+                    </button>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>

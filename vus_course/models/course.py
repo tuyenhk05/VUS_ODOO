@@ -32,11 +32,32 @@ class VusCourse(models.Model):
     state = fields.Selection([
         ('draft', 'Nháp'),
         ('confirmed', 'Đang áp dụng'),
+        ('closed', 'Ngưng áp dụng')
     ], string='Trạng thái', default='draft', required=True)
 
     def action_confirm(self):
         for rec in self:
             rec.state = 'confirmed'
+
+    def action_close(self):
+        for rec in self:
+            rec.state = 'closed'
+
+    def action_set_draft(self):
+        for rec in self:
+            rec.state = 'draft'
+
+    def action_view_classes(self):
+        self.ensure_one()
+        return {
+            'name': 'Danh sách lớp học',
+            'type': 'ir.actions.act_window',
+            'res_model': 'vus.class',
+            'view_mode': 'tree,form',
+            'domain': [('course_id', '=', self.id)],
+            'context': {'default_course_id': self.id},
+            'target': 'current',
+        }
 
     @api.constrains('code')
     def _check_unique_code(self):

@@ -59,8 +59,10 @@
         <field name="arch" type="xml">
             <form string="Khóa học">
                 <header name="course_header">
-                    <button name="action_confirm" string="Xác nhận tạo khóa học" type="object" class="oe_highlight" invisible="state != 'draft'"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
+                    <button name="action_confirm" string="Xác nhận áp dụng" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_close" string="Ngưng áp dụng" type="object" class="btn-secondary" invisible="state != 'confirmed'"/>
+                    <button name="action_set_draft" string="Đặt về nháp" type="object" invisible="state != 'closed'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,closed"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box"/>

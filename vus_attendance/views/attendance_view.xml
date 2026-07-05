@@ -83,4 +83,98 @@
         </field>
     </record>
 
+    <!-- Sheet Tree View -->
+    <record id="view_vus_attendance_sheet_tree" model="ir.ui.view">
+        <field name="name">vus.attendance.sheet.tree</field>
+        <field name="model">vus.attendance.sheet</field>
+        <field name="arch" type="xml">
+            <tree string="Bảng điểm danh lớp học" decoration-success="state == 'done'" decoration-info="state == 'draft'">
+                <field name="name"/>
+                <field name="class_id"/>
+                <field name="teacher_id"/>
+                <field name="date"/>
+                <field name="session_progress"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state == 'draft'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Sheet Form View -->
+    <record id="view_vus_attendance_sheet_form" model="ir.ui.view">
+        <field name="name">vus.attendance.sheet.form</field>
+        <field name="model">vus.attendance.sheet</field>
+        <field name="arch" type="xml">
+            <form string="Bảng điểm danh">
+                <header>
+                    <button name="action_load_students" string="Tải danh sách học viên" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_confirm" string="Xác nhận điểm danh" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="class_id" readonly="state == 'done'"/>
+                            <field name="teacher_id"/>
+                        </group>
+                        <group>
+                            <field name="date" readonly="state == 'done'"/>
+                            <label for="session_number" string="Tiến độ buổi học"/>
+                            <div class="o_row">
+                                <field name="session_number" readonly="state == 'done'" class="oe_inline"/> / 
+                                <field name="total_sessions" readonly="1" class="oe_inline"/>
+                            </div>
+                            <field name="session_progress" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Danh sách học viên" name="attendance_lines">
+                            <field name="line_ids" readonly="state == 'done'">
+                                <tree editable="bottom" create="false" delete="false">
+                                    <field name="student_id" readonly="1"/>
+                                    <field name="status"/>
+                                    <field name="note"/>
+                                    <field name="state" invisible="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Sheet Action -->
+    <record id="action_vus_attendance_sheet" model="ir.actions.act_window">
+        <field name="name">Điểm danh theo buổi</field>
+        <field name="res_model">vus.attendance.sheet</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tạo bảng điểm danh mới cho lớp học!
+            </p>
+        </field>
+    </record>
+
+    <!-- Inherit Class Form to add Progress Info -->
+    <record id="view_vus_class_form_inherit_attendance" model="ir.ui.view">
+        <field name="name">vus.class.form.inherit.attendance</field>
+        <field name="model">vus.class</field>
+        <field name="inherit_id" ref="vus_class.view_vus_class_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='end_date']" position="after">
+                <label for="completed_sessions" string="Tiến độ học tập"/>
+                <div class="o_row">
+                    <field name="completed_sessions" readonly="1" class="oe_inline"/> / 
+                    <field name="total_sessions" readonly="1" class="oe_inline"/> Buổi đã học
+                </div>
+                <field name="sessions_progress" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
