@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!-- Application Category -->
+        <record model="ir.module.category" id="module_category_vus_education">
+            <field name="name">VUS Education</field>
+            <field name="description">Quản lý trung tâm ngoại ngữ VUS</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <!-- Group: Teacher (Giáo viên) -->
+        <record id="group_vus_teacher" model="res.groups">
+            <field name="name">Giáo viên</field>
+            <field name="category_id" ref="module_category_vus_education"/>
+            <field name="comment">Giới hạn quyền hiển thị: chỉ nhìn thấy lớp học và học viên mình đang phụ trách.</field>
+        </record>
+
+        <!-- Group: Staff (Tuyển sinh / Giáo vụ) -->
+        <record id="group_vus_staff" model="res.groups">
+            <field name="name">Tuyển sinh / Giáo vụ</field>
+            <field name="category_id" ref="module_category_vus_education"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="comment">Quyền vận hành các tác vụ hàng ngày: ghi danh, lớp học, thi xếp lớp.</field>
+        </record>
+
+        <!-- Group: Manager (Quản lý) -->
+        <record id="group_vus_manager" model="res.groups">
+            <field name="name">Quản lý trung tâm</field>
+            <field name="category_id" ref="module_category_vus_education"/>
+            <field name="implied_ids" eval="[(4, ref('vus_student.group_vus_staff'))]"/>
+            <field name="comment">Toàn quyền truy cập mọi tính năng và cấu hình của trung tâm.</field>
+        </record>
+    </data>
+</odoo>

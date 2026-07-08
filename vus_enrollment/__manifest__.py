@@ -19,6 +19,7 @@
         'account',
     ],
     'data': [
+        'security/vus_enrollment_security.xml',
         'security/ir.model.access.csv',
         'views/enrollment_view.xml',
         'views/enrollment_menu.xml',

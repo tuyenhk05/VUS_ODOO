@@ -1,2 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_vus_enrollment,access_vus_enrollment,model_vus_enrollment,,1,1,1,1
+access_vus_enrollment_staff,access_vus_enrollment_staff,model_vus_enrollment,vus_student.group_vus_staff,1,1,1,1
+access_vus_enrollment_manager,access_vus_enrollment_manager,model_vus_enrollment,vus_student.group_vus_manager,1,1,1,1
+access_vus_enrollment_teacher,access_vus_enrollment_teacher,model_vus_enrollment,vus_student.group_vus_teacher,1,0,0,0

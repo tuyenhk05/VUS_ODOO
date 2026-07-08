@@ -12,6 +12,7 @@
     'license': 'LGPL-3',
     'depends': ['base', 'vus_course', 'vus_student'],
     'data': [
+        'security/vus_class_security.xml',
         'security/ir.model.access.csv',
         'views/class_view.xml',
         'views/class_menu.xml',

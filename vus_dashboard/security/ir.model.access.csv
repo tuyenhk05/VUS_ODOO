@@ -1,2 +1,2 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_vus_recruitment_report,access_vus_recruitment_report,model_vus_recruitment_report,base.group_user,1,0,0,0
+access_vus_recruitment_report_manager,access_vus_recruitment_report_manager,model_vus_recruitment_report,vus_student.group_vus_manager,1,0,0,0

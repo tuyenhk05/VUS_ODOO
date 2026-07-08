@@ -205,7 +205,38 @@ graph TD
 
 ---
 
-## 🛠️ 5. Hướng dẫn xử lý sự cố thường gặp (Troubleshooting)
+## 🛡️ 5. Phân quyền và Bảo mật (Role-Based Access Control)
+
+Hệ thống được tích hợp sẵn cơ chế phân quyền (RBAC) chặt chẽ với 3 vai trò (Role) cốt lõi nhằm đảm bảo an toàn dữ liệu và tuân thủ nguyên tắc giới hạn quyền hạn:
+
+### Các vai trò (Roles) trong hệ thống
+1. **Quản lý (Manager)**: 
+   - Có toàn quyền (Full Access) xem, tạo, sửa, xóa (CRUD) trên toàn bộ các phân hệ của hệ thống.
+   - Được phép cấu hình, điều chỉnh các danh mục dùng chung (Khóa học, Lớp học, Khuyến mãi, Thiết lập nâng cao).
+2. **Nhân viên (Staff)**:
+   - Dành cho bộ phận Tư vấn viên, Giáo vụ, Kế toán.
+   - Được quyền truy cập các luồng nghiệp vụ hoạt động hàng ngày (Ghi danh, Chăm sóc Lead, Tổ chức thi đầu vào, Điểm danh).
+   - Bị hạn chế quyền xóa (Delete) ở một số dữ liệu quan trọng như Hóa đơn, Thông tin Khóa học.
+3. **Giảng viên (Teacher)**:
+   - Bị hạn chế quyền truy cập vào các phân hệ kinh doanh và dữ liệu nhạy cảm (như Marketing, Phiếu ghi danh, Học phí & Ưu đãi, KPI Dashboard).
+   - **Bảo mật cấp bản ghi (Record Rules)**: Giảng viên chỉ được phép xem thông tin **Lớp học** và thực hiện **Điểm danh** cho những lớp mà *chính họ được phân công phụ trách*. Giảng viên không thể xem dữ liệu và lớp học của giảng viên khác.
+
+### Hướng dẫn gán quyền cho người dùng
+Để gán quyền hoặc thay đổi quyền cho một người dùng bằng giao diện Odoo:
+1. Đăng nhập vào Odoo bằng tài khoản có quyền Quản trị (Administrator).
+2. (Tùy chọn) Kích hoạt **Chế độ nhà phát triển (Developer Mode)** trong phần Cài đặt nếu cần xem các thiết lập nâng cao.
+3. Truy cập menu **Thiết lập (Settings)** -> **Người dùng & Công ty (Users & Companies)** -> **Người dùng (Users)**.
+4. Mở hồ sơ của một người dùng hiện có hoặc ấn tạo mới.
+5. Tại tab **Quyền truy cập (Access Rights)**, cuộn xuống sẽ thấy phần **VUS Education**.
+6. Chọn cấp độ quyền tương ứng từ menu thả xuống:
+   - *VUS Education / Manager*
+   - *VUS Education / Staff*
+   - *VUS Education / Teacher*
+7. Bấm **Lưu (Save)**. Khi người dùng đó đăng nhập, các menu và dữ liệu sẽ tự động được giới hạn theo đúng cấp độ (cả quyền hiển thị Menu và quyền xem Bản ghi - Record Rules).
+
+---
+
+## 🛠️ 6. Hướng dẫn xử lý sự cố thường gặp (Troubleshooting)
 
 | Vấn đề | Nguyên nhân phổ biến | Cách khắc phục |
 | :--- | :--- | :--- |

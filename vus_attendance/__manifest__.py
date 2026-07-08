@@ -12,6 +12,7 @@
     'license': 'LGPL-3',
     'depends': ['base', 'vus_class', 'vus_student', 'vus_enrollment'],
     'data': [
+        'security/vus_attendance_security.xml',
         'security/ir.model.access.csv',
         'views/attendance_view.xml',
         'views/attendance_menu.xml',

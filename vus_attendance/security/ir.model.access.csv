@@ -1,4 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_vus_attendance,access_vus_attendance,model_vus_attendance,,1,1,1,1
-
-access_vus_attendance_sheet,access_vus_attendance_sheet,model_vus_attendance_sheet,,1,1,1,1
+access_vus_attendance_teacher,access_vus_attendance_teacher,model_vus_attendance,vus_student.group_vus_teacher,1,1,1,1
+access_vus_attendance_staff,access_vus_attendance_staff,model_vus_attendance,vus_student.group_vus_staff,1,1,1,1
+access_vus_attendance_manager,access_vus_attendance_manager,model_vus_attendance,vus_student.group_vus_manager,1,1,1,1
+access_vus_attendance_sheet_teacher,access_vus_attendance_sheet_teacher,model_vus_attendance_sheet,vus_student.group_vus_teacher,1,1,1,0
+access_vus_attendance_sheet_staff,access_vus_attendance_sheet_staff,model_vus_attendance_sheet,vus_student.group_vus_staff,1,1,1,1
+access_vus_attendance_sheet_manager,access_vus_attendance_sheet_manager,model_vus_attendance_sheet,vus_student.group_vus_manager,1,1,1,1

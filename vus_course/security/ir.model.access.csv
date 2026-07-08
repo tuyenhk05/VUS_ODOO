@@ -1,2 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_vus_course,access_vus_course,model_vus_course,,1,1,1,1
+access_vus_course_staff,access_vus_course_staff,model_vus_course,vus_student.group_vus_staff,1,1,1,1
+access_vus_course_manager,access_vus_course_manager,model_vus_course,vus_student.group_vus_manager,1,1,1,1

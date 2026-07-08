@@ -3,11 +3,11 @@ import odoo
 from odoo import api, SUPERUSER_ID
 
 # Cấu hình đường dẫn file config
-config_file = r"C:\Program Files\Odoo 17.0.20260615\server\odoo.conf"
+config_file = r"C:\Program Files\Odoo 17.0.20260622\server\odoo.conf"
 odoo.tools.config.parse_config(['-c', config_file])
 
 # Khởi tạo registry Odoo cho database Vus_odoo
-db_name = 'Vus_odoo'
+db_name = 'admin'
 registry = odoo.registry(db_name)
 
 with registry.cursor() as cr:

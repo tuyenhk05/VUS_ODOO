@@ -16,6 +16,7 @@
         'contacts',
     ],
     'data': [
+        'security/vus_security.xml',
         'views/student_view.xml',
     ],
     'installable': True,
