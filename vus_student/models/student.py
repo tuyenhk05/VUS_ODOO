@@ -14,6 +14,10 @@ class ResPartner(models.Model):
         default=False,
         help="Đánh dấu đối tác này là giảng viên VUS"
     )
+    max_classes = fields.Integer(
+        string='Số lớp dạy tối đa/kỳ',
+        default=3
+    )
     student_code = fields.Char(
         string='Mã học viên',
         help="Nhập mã định danh học viên VUS"

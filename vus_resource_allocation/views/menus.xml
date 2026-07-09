@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menu cha: Phân bổ lịch dạy -->
+    <menuitem id="menu_vus_resource_allocation" 
+              name="Phân bổ &amp; Lịch dạy" 
+              parent="vus_student.menu_vus_root" 
+              sequence="25"/>
+
+    <!-- Menu con: Lịch học chi tiết (Calendar) -->
+    <menuitem id="menu_vus_class_session_list" 
+              name="Lịch học chi tiết" 
+              parent="menu_vus_resource_allocation" 
+              action="action_vus_class_session"
+              sequence="5"/>
+
+    <!-- Menu con: Đăng ký lịch dạy -->
+    <menuitem id="menu_vus_teacher_registration_list" 
+              name="Đăng ký lịch dạy" 
+              parent="menu_vus_resource_allocation" 
+              action="action_vus_teacher_registration"
+              sequence="10"/>
+
+    <!-- Menu con: Báo vắng & Dạy bù -->
+    <menuitem id="menu_vus_teacher_leave_list" 
+              name="Báo vắng &amp; Dạy bù" 
+              parent="menu_vus_resource_allocation" 
+              action="action_vus_teacher_leave"
+              sequence="20"/>
+
+    <!-- Menu con: Cấu hình (Sub-parent) -->
+    <menuitem id="menu_vus_allocation_config" 
+              name="Cấu hình lịch học" 
+              parent="menu_vus_resource_allocation" 
+              sequence="90"
+              groups="vus_student.group_vus_manager"/>
+
+    <!-- Menu cháu: Kỳ học -->
+    <menuitem id="menu_vus_academic_term_list" 
+              name="Kỳ học VUS" 
+              parent="menu_vus_allocation_config" 
+              action="action_vus_academic_term"
+              sequence="10"/>
+
+    <!-- Menu cháu: Khung giờ / Ca học -->
+    <menuitem id="menu_vus_time_slot_list" 
+              name="Khung giờ &amp; Ca học" 
+              parent="menu_vus_allocation_config" 
+              action="action_vus_time_slot"
+              sequence="20"/>
+</odoo>

@@ -35,6 +35,25 @@ class VusMarketingCampaign(models.Model):
         compute='_compute_conversion_rate', 
         store=True
     )
+
+    # Các chỉ số hiệu suất hiệu quả Marketing vừa thêm
+    cost_per_lead = fields.Monetary(
+        string='Chi phí/Lead', 
+        compute='_compute_cost_per_lead', 
+        currency_field='currency_id',
+        store=True
+    )
+    total_revenue = fields.Monetary(
+        string='Doanh thu mang lại', 
+        compute='_compute_total_revenue', 
+        currency_field='currency_id',
+        store=True
+    )
+    roi = fields.Float(
+        string='Chỉ số ROI (%)', 
+        compute='_compute_roi', 
+        store=True
+    )
     
     state = fields.Selection([
         ('draft', 'Nháp'),
@@ -62,6 +81,36 @@ class VusMarketingCampaign(models.Model):
                 rec.conversion_rate = (rec.conversion_count / rec.lead_count) * 100.0
             else:
                 rec.conversion_rate = 0.0
+
+    @api.depends('actual_cost', 'lead_count')
+    def _compute_cost_per_lead(self):
+        for rec in self:
+            if rec.lead_count > 0:
+                rec.cost_per_lead = rec.actual_cost / rec.lead_count
+            else:
+                rec.cost_per_lead = 0.0
+
+    @api.depends('lead_ids.partner_id', 'lead_ids.partner_id.is_student')
+    def _compute_total_revenue(self):
+        for rec in self:
+            partners = rec.lead_ids.mapped('partner_id').filtered(lambda p: p.is_student)
+            if partners:
+                # Tìm các phiếu ghi danh đã thanh toán của học viên
+                enrollments = self.env['vus.enrollment'].search([
+                    ('student_id', 'in', partners.ids),
+                    ('state', '=', 'paid')
+                ])
+                rec.total_revenue = sum(enrollments.mapped('amount'))
+            else:
+                rec.total_revenue = 0.0
+
+    @api.depends('total_revenue', 'actual_cost')
+    def _compute_roi(self):
+        for rec in self:
+            if rec.actual_cost > 0:
+                rec.roi = ((rec.total_revenue - rec.actual_cost) / rec.actual_cost) * 100.0
+            else:
+                rec.roi = 0.0
 
     def action_start(self):
         self.state = 'running'

@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Menu: Đăng ký học -->
-    <menuitem id="menu_vus_enrollment" name="Đăng ký học" parent="vus_student.menu_vus_root" sequence="40"/>
+    <menuitem id="menu_vus_enrollment" 
+              name="Đăng ký học" 
+              parent="vus_student.menu_vus_root" 
+              sequence="40"
+              groups="vus_student.group_vus_staff,vus_student.group_vus_manager"/>
     <menuitem id="menu_vus_enrollment_list" 
               name="Danh sách phiếu đăng ký" 
               parent="menu_vus_enrollment" 

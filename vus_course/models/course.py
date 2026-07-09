@@ -26,6 +26,7 @@ class VusCourse(models.Model):
     duration_weeks = fields.Integer(string='Số tuần đào tạo', default=12)
     sessions_per_week = fields.Integer(string='Buổi/tuần', default=2)
     hours_per_session = fields.Float(string='Giờ/buổi', default=2.0)
+    max_classes = fields.Integer(string='Số lớp tối đa/kỳ', default=5)
     
     description = fields.Html(string='Mô tả chương trình')
 

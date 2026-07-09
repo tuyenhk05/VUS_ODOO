@@ -1,0 +1,135 @@
+# -*- coding: utf-8 -*-
+import pytz
+from datetime import datetime, time
+from odoo import models, fields, api
+
+class VusClassSession(models.Model):
+    _name = 'vus.class.session'
+    _description = 'Buổi học chi tiết của lớp'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'date, session_number'
+
+    class_id = fields.Many2one('vus.class', string='Lớp học', required=True, ondelete='cascade')
+    date = fields.Date(string='Ngày học', required=True)
+    time_slot_id = fields.Many2one('vus.time.slot', related='class_id.time_slot_id', string='Ca học', store=True)
+    teacher_id = fields.Many2one('res.partner', string='Giảng viên', domain=[('is_teacher', '=', True)], required=True)
+    session_number = fields.Integer(string='Buổi số', required=True)
+    name = fields.Char(string='Tên buổi học', compute='_compute_name', store=True)
+    
+    attendance_sheet_id = fields.Many2one('vus.attendance.sheet', string='Bảng điểm danh liên kết')
+    attendance_state = fields.Selection(related='attendance_sheet_id.state', string='Trạng thái điểm danh')
+
+    # Các trường Datetime lưu giờ học chính xác phục vụ hiển thị trên lưới thời gian của Calendar
+    start_datetime = fields.Datetime(string='Thời gian bắt đầu', compute='_compute_datetimes', store=True)
+    end_datetime = fields.Datetime(string='Thời gian kết thúc', compute='_compute_datetimes', store=True)
+
+    @api.depends('class_id', 'session_number', 'date')
+    def _compute_name(self):
+        for rec in self:
+            class_name = rec.class_id.class_name if rec.class_id else 'Mới'
+            date_str = rec.date.strftime('%d/%m/%Y') if rec.date else ''
+            rec.name = f"{class_name} - Buổi {rec.session_number} ({date_str})"
+
+    @api.depends('date', 'time_slot_id.start_time', 'time_slot_id.end_time')
+    def _compute_datetimes(self):
+        # Lấy múi giờ của người dùng để tính toán chính xác giờ UTC lưu vào database
+        tz_name = self.env.user.tz or 'Asia/Ho_Chi_Minh'
+        local_tz = pytz.timezone(tz_name)
+        
+        for rec in self:
+            if rec.date and rec.time_slot_id:
+                slot = rec.time_slot_id
+                
+                # Ca học lưu thời gian dưới dạng float (ví dụ: 18.5 -> 18h30)
+                start_hour = int(slot.start_time)
+                start_minute = int(round((slot.start_time - start_hour) * 60))
+                
+                end_hour = int(slot.end_time)
+                end_minute = int(round((slot.end_time - end_hour) * 60))
+                
+                # Tạo datetime naive theo giờ địa phương
+                local_start = datetime.combine(rec.date, time(start_hour, start_minute))
+                local_end = datetime.combine(rec.date, time(end_hour, end_minute))
+                
+                # Chuyển đổi sang múi giờ UTC và lưu trữ
+                rec.start_datetime = local_tz.localize(local_start).astimezone(pytz.utc).replace(tzinfo=None)
+                rec.end_datetime = local_tz.localize(local_end).astimezone(pytz.utc).replace(tzinfo=None)
+            else:
+                rec.start_datetime = False
+                rec.end_datetime = False
+
+    def action_open_attendance(self):
+        self.ensure_one()
+        if not self.attendance_sheet_id:
+            # Tìm xem đã có bảng điểm danh nào trùng ngày và trùng lớp học chưa
+            existing_sheet = self.env['vus.attendance.sheet'].search([
+                ('class_id', '=', self.class_id.id),
+                ('date', '=', self.date)
+            ], limit=1)
+            
+            if existing_sheet:
+                self.attendance_sheet_id = existing_sheet.id
+            else:
+                # Nếu chưa có, tạo bảng điểm danh nháp mới cho ngày này
+                sheet = self.env['vus.attendance.sheet'].create({
+                    'class_id': self.class_id.id,
+                    'date': self.date,
+                    'session_number': self.session_number,
+                    'teacher_id': self.teacher_id.id,
+                    'session': f"Buổi {self.session_number}",
+                    'state': 'draft'
+                })
+                sheet.action_load_students()
+                self.attendance_sheet_id = sheet.id
+
+        return {
+            'name': 'Điểm danh buổi học',
+            'type': 'ir.actions.act_window',
+            'res_model': 'vus.attendance.sheet',
+            'view_mode': 'form',
+            'res_id': self.attendance_sheet_id.id,
+            'target': 'current',
+        }
+
+    @api.model
+    def _cron_notify_today_classes(self):
+        today = fields.Date.today()
+        # Tìm các buổi học diễn ra trong ngày hôm nay của các lớp đang mở
+        sessions = self.search([
+            ('date', '=', today),
+            ('class_id.state', '=', 'opened')
+        ])
+        
+        # Tìm loại hoạt động Cần làm (To Do)
+        activity_type = self.env.ref('mail.mail_activity_data_todo', raise_if_not_found=False)
+        if not activity_type:
+            activity_type = self.env['mail.activity.type'].search([('category', '=', 'default')], limit=1)
+            
+        for sess in sessions:
+            if not sess.teacher_id:
+                continue
+            # Tìm user liên kết với giáo viên này
+            user = self.env['res.users'].search([('partner_id', '=', sess.teacher_id.id)], limit=1)
+            if not user:
+                continue
+                
+            # Kiểm tra xem đã tạo activity nhắc nhở chưa để tránh tạo trùng lặp
+            existing = self.env['mail.activity'].search([
+                ('res_model', '=', 'vus.class.session'),
+                ('res_id', '=', sess.id),
+                ('user_id', '=', user.id)
+            ], limit=1)
+            
+            if not existing:
+                slot_name = sess.time_slot_id.name if sess.time_slot_id else ''
+                self.env['mail.activity'].create({
+                    'res_model_id': self.env['ir.model']._get('vus.class.session').id,
+                    'res_id': sess.id,
+                    'activity_type_id': activity_type.id if activity_type else False,
+                    'summary': f"Lịch dạy hôm nay: Lớp {sess.class_id.class_name}",
+                    'note': f"<p>Chào Thầy/Cô, hôm nay bạn có lịch dạy lớp <strong>{sess.class_id.class_name}</strong>.</p>"
+                            f"<p>Ca học: {slot_name}.</p>"
+                            f"<p>Vui lòng click vào đây để vào điểm danh khi buổi học diễn ra.</p>",
+                    'date_deadline': today,
+                    'user_id': user.id
+                })

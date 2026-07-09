@@ -25,17 +25,28 @@
                         </h1>
                     </div>
                     <group>
-                        <group>
+                        <group string="Thông tin chung">
                             <field name="code"/>
-                            <field name="target_leads"/>
-                            <field name="conversion_rate" readonly="1" string="Tỷ lệ chuyển đổi (%)"/>
-                        </group>
-                        <group>
                             <field name="start_date"/>
                             <field name="end_date"/>
+                        </group>
+                        <group string="Tài chính &amp; Ngân sách">
                             <field name="currency_id" invisible="1"/>
                             <field name="budget" widget="monetary"/>
                             <field name="actual_cost" widget="monetary"/>
+                            <field name="target_leads"/>
+                        </group>
+                    </group>
+                    <group string="Chỉ số hiệu năng hiệu quả (KPIs)">
+                        <group>
+                            <field name="lead_count" string="Số Lead thực tế"/>
+                            <field name="cost_per_lead" widget="monetary" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="conversion_count" string="Số học viên chuyển đổi"/>
+                            <field name="conversion_rate" string="Tỷ lệ chuyển đổi (%)" widget="progressbar"/>
+                            <field name="total_revenue" widget="monetary" readonly="1"/>
+                            <field name="roi" string="Chỉ số ROI (%)" widget="percentage" decoration-danger="roi &lt; 0" decoration-success="roi &gt;= 0"/>
                         </group>
                     </group>
                     <notebook>
@@ -72,8 +83,11 @@
                 <field name="budget"/>
                 <field name="actual_cost"/>
                 <field name="lead_count"/>
+                <field name="cost_per_lead"/>
                 <field name="conversion_count"/>
                 <field name="conversion_rate"/>
+                <field name="total_revenue"/>
+                <field name="roi"/>
                 <field name="state" widget="badge" decoration-info="state == 'running'" decoration-success="state == 'completed'" decoration-muted="state == 'cancelled'"/>
             </tree>
         </field>
@@ -97,6 +111,10 @@
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_lead_view_form"/>
         <field name="arch" type="xml">
+            <!-- Nút bấm đặt lịch thi xếp lớp nhanh từ thanh công cụ CRM -->
+            <xpath expr="//header" position="inside">
+                <button name="action_book_placement_test" type="object" string="Đăng ký thi xếp lớp" class="oe_highlight" invisible="probability == 100"/>
+            </xpath>
             <xpath expr="//field[@name='tag_ids']" position="after">
                 <field name="vus_campaign_id"/>
                 <field name="lead_source"/>

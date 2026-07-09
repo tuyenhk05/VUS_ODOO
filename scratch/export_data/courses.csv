@@ -1,0 +1,9 @@
+course_name,code,base_price,level,duration_weeks,state
+IELTS Intensive,IELTS-IT,7000000.0,advanced,12,confirmed
+Super Minds 3,SM-03,3800000.0,beginner,10,confirmed
+English for Communication,EC-01,3000000.0,elementary,8,confirmed
+English for Teens 1,ET-01,4000000.0,elementary,12,confirmed
+IELTS Foundation,IELTS-FD,4500000.0,intermediate,8,confirmed
+Super Minds 1,SM-01,3200000.0,starter,10,confirmed
+Super Minds 2,SM-02,3500000.0,starter,10,confirmed
+IELTS Academic,IELTS-AC,5500000.0,upper,12,confirmed

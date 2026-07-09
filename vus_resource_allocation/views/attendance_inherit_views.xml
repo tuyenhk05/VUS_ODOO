@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Kế thừa Action của Điểm danh theo buổi để thêm calendar -->
+    <record id="vus_attendance.action_vus_attendance_sheet" model="ir.actions.act_window">
+        <field name="view_mode">tree,form,calendar</field>
+    </record>
+
+    <!-- Định nghĩa Calendar View cho Bảng điểm danh (Lịch dạy thực tế) -->
+    <record id="view_vus_attendance_sheet_calendar" model="ir.ui.view">
+        <field name="name">vus.attendance.sheet.calendar</field>
+        <field name="model">vus.attendance.sheet</field>
+        <field name="arch" type="xml">
+            <calendar string="Lịch dạy và Điểm danh" 
+                      date_start="date" 
+                      color="class_id"
+                      quick_create="false"
+                      event_limit="5">
+                <field name="class_id"/>
+                <field name="teacher_id"/>
+                <field name="session_progress"/>
+                <field name="state"/>
+            </calendar>
+        </field>
+    </record>
+</odoo>

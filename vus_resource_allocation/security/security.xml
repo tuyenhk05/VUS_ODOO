@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Record Rule: Giáo viên chỉ xem và đăng ký lịch rảnh của chính mình -->
+        <record id="rule_vus_teacher_registration_teacher" model="ir.rule">
+            <field name="name">Giáo viên chỉ thấy đăng ký rảnh của mình</field>
+            <field name="model_id" ref="model_vus_teacher_registration"/>
+            <field name="domain_force">[('teacher_id', '=', user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('vus_student.group_vus_teacher'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!-- Record Rule: Nhân viên & Quản lý xem toàn bộ đăng ký rảnh -->
+        <record id="rule_vus_teacher_registration_all" model="ir.rule">
+            <field name="name">Quản lý và Giáo vụ thấy toàn bộ đăng ký rảnh</field>
+            <field name="model_id" ref="model_vus_teacher_registration"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('vus_student.group_vus_staff')), (4, ref('vus_student.group_vus_manager'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <!-- Record Rule: Giáo viên chỉ xem và báo vắng của chính mình -->
+        <record id="rule_vus_teacher_leave_teacher" model="ir.rule">
+            <field name="name">Giáo viên chỉ thấy báo vắng của mình</field>
+            <field name="model_id" ref="model_vus_teacher_leave"/>
+            <field name="domain_force">[('teacher_id', '=', user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('vus_student.group_vus_teacher'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!-- Record Rule: Nhân viên & Quản lý xem toàn bộ báo vắng -->
+        <record id="rule_vus_teacher_leave_all" model="ir.rule">
+            <field name="name">Quản lý và Giáo vụ thấy toàn bộ báo vắng</field>
+            <field name="model_id" ref="model_vus_teacher_leave"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('vus_student.group_vus_staff')), (4, ref('vus_student.group_vus_manager'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+        <!-- Record Rule: Giáo viên chỉ xem buổi học của mình -->
+        <record id="rule_vus_class_session_teacher" model="ir.rule">
+            <field name="name">Giáo viên chỉ thấy các buổi dạy của mình</field>
+            <field name="model_id" ref="model_vus_class_session"/>
+            <field name="domain_force">[('teacher_id', '=', user.partner_id.id)]</field>
+            <field name="groups" eval="[(4, ref('vus_student.group_vus_teacher'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="0"/>
+            <field name="perm_create" eval="0"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!-- Record Rule: Nhân viên & Quản lý xem toàn bộ buổi học -->
+        <record id="rule_vus_class_session_all" model="ir.rule">
+            <field name="name">Quản lý và Giáo vụ thấy toàn bộ buổi học</field>
+            <field name="model_id" ref="model_vus_class_session"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('vus_student.group_vus_staff')), (4, ref('vus_student.group_vus_manager'))]"/>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+    </data>
+</odoo>

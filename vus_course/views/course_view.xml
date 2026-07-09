@@ -84,6 +84,7 @@
                             <field name="duration_weeks"/>
                             <field name="sessions_per_week"/>
                             <field name="hours_per_session"/>
+                            <field name="max_classes"/>
                         </group>
                     </group>
                     <notebook>

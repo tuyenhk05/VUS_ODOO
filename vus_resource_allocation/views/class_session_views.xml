@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_vus_class_session_tree" model="ir.ui.view">
+        <field name="name">vus.class.session.tree</field>
+        <field name="model">vus.class.session</field>
+        <field name="arch" type="xml">
+            <tree string="Lịch học chi tiết">
+                <field name="session_number"/>
+                <field name="class_id"/>
+                <field name="date"/>
+                <field name="time_slot_id"/>
+                <field name="teacher_id"/>
+                <field name="attendance_state" 
+                       widget="badge" 
+                       decoration-success="attendance_state == 'done'" 
+                       decoration-info="attendance_state == 'draft'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vus_class_session_form" model="ir.ui.view">
+        <field name="name">vus.class.session.form</field>
+        <field name="model">vus.class.session</field>
+        <field name="arch" type="xml">
+            <form string="Chi tiết buổi học">
+                <header>
+                    <button name="action_open_attendance" type="object" string="Điểm danh / Xem điểm danh" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="class_id" readonly="1"/>
+                            <field name="session_number" readonly="1"/>
+                            <field name="teacher_id"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="time_slot_id" readonly="1"/>
+                            <field name="attendance_sheet_id" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_vus_class_session_calendar" model="ir.ui.view">
+        <field name="name">vus.class.session.calendar</field>
+        <field name="model">vus.class.session</field>
+        <field name="arch" type="xml">
+            <calendar string="Lịch học &amp; Giảng dạy VUS" 
+                      date_start="start_datetime" 
+                      date_stop="end_datetime" 
+                      color="class_id"
+                      quick_create="false"
+                      event_limit="5">
+                <field name="class_id"/>
+                <field name="teacher_id"/>
+                <field name="session_number"/>
+                <field name="attendance_state"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="action_vus_class_session" model="ir.actions.act_window">
+        <field name="name">Lịch học chi tiết</field>
+        <field name="res_model">vus.class.session</field>
+        <field name="view_mode">calendar,tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Xem lịch học chi tiết của các lớp học dưới dạng lịch trực quan.
+            </p>
+        </field>
+    </record>
+</odoo>

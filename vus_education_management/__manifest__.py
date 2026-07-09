@@ -22,6 +22,7 @@
         'vus_placement_test',
         'vus_promotion',
         'vus_dashboard',
+        'vus_resource_allocation',
     ],
     'data': [],
     'installable': True,

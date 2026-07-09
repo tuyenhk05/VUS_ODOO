@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_vus_teacher_leave_tree" model="ir.ui.view">
+        <field name="name">vus.teacher.leave.tree</field>
+        <field name="model">vus.teacher.leave</field>
+        <field name="arch" type="xml">
+            <tree string="Báo vắng giảng viên" decoration-warning="state == 'submitted'" decoration-info="state == 'confirmed'" decoration-success="state == 'resolved'" decoration-muted="state == 'draft'">
+                <field name="name"/>
+                <field name="teacher_id"/>
+                <field name="leave_date"/>
+                <field name="class_id"/>
+                <field name="reason"/>
+                <field name="state" 
+                       widget="badge" 
+                       decoration-warning="state == 'submitted'" 
+                       decoration-info="state == 'confirmed'" 
+                       decoration-success="state == 'resolved'" 
+                       decoration-muted="state == 'draft'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_vus_teacher_leave_form" model="ir.ui.view">
+        <field name="name">vus.teacher.leave.form</field>
+        <field name="model">vus.teacher.leave</field>
+        <field name="arch" type="xml">
+            <form string="Báo vắng giảng viên">
+                <header>
+                    <button name="action_submit" type="object" string="Gửi yêu cầu báo vắng" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_confirm" type="object" string="Xác nhận báo vắng" class="oe_highlight" invisible="state != 'submitted'" groups="vus_student.group_vus_manager,vus_student.group_vus_staff"/>
+                    <button name="action_resolve" type="object" string="Hoàn tất xử lý" class="oe_highlight" invisible="state != 'confirmed'" groups="vus_student.group_vus_manager,vus_student.group_vus_staff"/>
+                    <button name="action_set_draft" type="object" string="Đặt về nháp" invisible="state not in ('submitted', 'confirmed')" groups="vus_student.group_vus_manager"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,confirmed,resolved"/>
+                </header>
+                <sheet>
+                    <field name="is_teacher_user" invisible="1"/>
+                    <field name="eligible_class_ids" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="teacher_id" readonly="state != 'draft' or is_teacher_user"/>
+                            <field name="leave_date" readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="class_id" domain="[('id', 'in', eligible_class_ids)]" options="{'no_create': True}" readonly="state != 'draft'"/>
+                            <field name="reason" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Lớp học bị ảnh hưởng &amp; Định tuyến xử lý" name="affected_classes" invisible="state in ('draft', 'submitted')">
+                            <field name="affected_line_ids" readonly="state == 'resolved'">
+                                <tree editable="bottom" create="0" delete="0">
+                                    <field name="class_id" readonly="1"/>
+                                    <field name="date" readonly="1"/>
+                                    <field name="state" 
+                                           widget="badge" 
+                                           decoration-warning="state == 'pending'" 
+                                           decoration-success="state == 'substituted'" 
+                                           decoration-info="state == 'rescheduled'"/>
+                                    
+                                    <!-- Cột xử lý dạy thay -->
+                                    <field name="eligible_substitute_ids" column_invisible="1"/>
+                                    <field name="substitute_teacher_id" 
+                                           domain="[('id', 'in', eligible_substitute_ids)]"
+                                           readonly="state != 'pending'"/>
+                                    <button name="button_confirm_substitute" 
+                                            type="object" 
+                                            string="Xác nhận dạy thay" 
+                                            class="btn-success"
+                                            icon="fa-user-plus"
+                                            invisible="state != 'pending'"/>
+
+                                    <!-- Cột xử lý dạy bù -->
+                                    <field name="makeup_date" readonly="state != 'pending'"/>
+                                    <field name="makeup_time_slot_id" readonly="state != 'pending'"/>
+                                    <button name="button_confirm_makeup" 
+                                            type="object" 
+                                            string="Lên lịch dạy bù" 
+                                            class="btn-primary"
+                                            icon="fa-calendar-plus-o"
+                                            invisible="state != 'pending'"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Định nghĩa Calendar View cho Báo vắng -->
+    <record id="view_vus_teacher_leave_calendar" model="ir.ui.view">
+        <field name="name">vus.teacher.leave.calendar</field>
+        <field name="model">vus.teacher.leave</field>
+        <field name="arch" type="xml">
+            <calendar string="Lịch báo vắng giảng viên" 
+                      date_start="leave_date" 
+                      color="teacher_id" 
+                      quick_create="false"
+                      event_limit="5">
+                <field name="teacher_id"/>
+                <field name="class_id"/>
+                <field name="reason"/>
+                <field name="state"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="action_vus_teacher_leave" model="ir.actions.act_window">
+        <field name="name">Báo vắng &amp; Dạy bù</field>
+        <field name="res_model">vus.teacher.leave</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Báo vắng giảng viên và định tuyến dạy thay / dạy bù tại đây.
+            </p>
+        </field>
+    </record>
+</odoo>

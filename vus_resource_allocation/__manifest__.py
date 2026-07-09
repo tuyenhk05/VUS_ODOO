@@ -1,0 +1,33 @@
+# -*- coding: utf-8 -*-
+{
+    'name': 'VUS Resource Allocation & Scheduling',
+    'version': '17.0.1.0.0',
+    'summary': 'Quản lý lịch dạy rảnh, xếp lớp thông minh và xử lý báo vắng dạy bù của giảng viên',
+    'category': 'Education',
+    'author': 'Senior Odoo Developer',
+    'website': 'https://vus.edu.vn',
+    'license': 'LGPL-3',
+    'depends': [
+        'base',
+        'mail',
+        'vus_student',
+        'vus_class',
+        'vus_attendance',
+    ],
+    'data': [
+        'security/ir.model.access.csv',
+        'security/security.xml',
+        'data/cron_data.xml',
+        'views/academic_term_views.xml',
+        'views/time_slot_views.xml',
+        'views/teacher_registration_views.xml',
+        'views/teacher_leave_views.xml',
+        'views/class_inherit_views.xml',
+        'views/attendance_inherit_views.xml',
+        'views/class_session_views.xml',
+        'views/menus.xml',
+    ],
+    'installable': True,
+    'application': True,
+    'auto_install': False,
+}

@@ -9,6 +9,7 @@
             <xpath expr="//field[@name='category_id']" position="after">
                 <field name="is_student" widget="boolean_toggle"/>
                 <field name="is_teacher" widget="boolean_toggle"/>
+                <field name="max_classes" invisible="not is_teacher"/>
                 <field name="student_code" invisible="not is_student" required="is_student"/>
                 <field name="dob" invisible="not is_student"/>
                 <field name="student_status" invisible="not is_student"/>

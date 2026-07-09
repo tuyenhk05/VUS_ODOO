@@ -62,7 +62,7 @@ class VusAttendance(models.Model):
     
     teacher_id = fields.Many2one(
         'res.partner',
-        related='class_id.teacher_id',
+        related='sheet_id.teacher_id',
         string='Giảng viên',
         store=True
     )
@@ -115,7 +115,7 @@ class VusAttendanceSheet(models.Model):
     class_id = fields.Many2one('vus.class', string='Lớp học', required=True)
     date = fields.Date(string='Ngày học', required=True, default=fields.Date.today)
     session = fields.Char(string='Buổi học', help='VD: Buổi 1, Buổi 2...')
-    teacher_id = fields.Many2one('res.partner', related='class_id.teacher_id', string='Giảng viên', store=True, readonly=True)
+    teacher_id = fields.Many2one('res.partner', string='Giảng viên', required=True, store=True)
     
     # Các trường theo dõi tiến độ buổi học
     total_sessions = fields.Integer(string='Tổng số buổi', compute='_compute_total_sessions', store=True)
@@ -188,7 +188,14 @@ class VusAttendanceSheet(models.Model):
             
         if attendance_vals:
             self.env['vus.attendance'].create(attendance_vals)
-        return True
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if 'class_id' in vals and 'teacher_id' not in vals:
+                cls = self.env['vus.class'].browse(vals['class_id'])
+                if cls:
+                    vals['teacher_id'] = cls.teacher_id.id
+        return super(VusAttendanceSheet, self).create(vals_list)
 
     def action_confirm(self):
         for rec in self:

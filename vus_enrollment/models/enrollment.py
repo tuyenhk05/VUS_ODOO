@@ -120,6 +120,8 @@ class VusEnrollment(models.Model):
                 raise UserError("Vui lòng chọn học viên!")
             if not record.course_id:
                 raise UserError("Vui lòng chọn khóa học!")
+            if not record.class_id:
+                raise UserError("Vui lòng chọn lớp học trước khi xác nhận ghi danh và thanh toán!")
 
             # 1. Tìm Nhật ký bán hàng (Sales Journal)
             journal = self.env['account.journal'].search([('type', '=', 'sale')], limit=1)
@@ -158,6 +160,10 @@ class VusEnrollment(models.Model):
                 'invoice_id': invoice.id,
                 'state': 'confirmed'
             })
+        
+        # Nếu xác nhận đơn lẻ, tự động chuyển hướng trực tiếp đến hóa đơn liên kết để giáo vụ xử lý thanh toán nhanh
+        if len(self) == 1:
+            return self.action_view_invoice()
         return True
 
     def action_view_invoice(self):

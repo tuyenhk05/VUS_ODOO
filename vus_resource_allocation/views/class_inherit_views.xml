@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Kế thừa Form View của Lớp học -->
+    <record id="view_vus_class_form_inherit_allocation" model="ir.ui.view">
+        <field name="name">vus.class.form.inherit.allocation</field>
+        <field name="model">vus.class</field>
+        <field name="inherit_id" ref="vus_class.view_vus_class_form"/>
+        <field name="arch" type="xml">
+            <!-- Thêm trường Kỳ học và Ca học ở phía trên trường Khóa học -->
+            <xpath expr="//field[@name='course_id']" position="before">
+                <field name="term_id"/>
+                <field name="time_slot_id"/>
+                <field name="eligible_teacher_ids" widget="many2many_tags" invisible="1"/>
+                <field name="eligible_course_ids" widget="many2many_tags" invisible="1"/>
+            </xpath>
+
+            <!-- Lọc khóa học chưa vượt quá giới hạn số lớp tối đa -->
+            <xpath expr="//field[@name='course_id']" position="attributes">
+                <attribute name="domain">[('id', 'in', eligible_course_ids)]</attribute>
+            </xpath>
+
+            <!-- Thay đổi domain lọc giáo viên theo ca rảnh đăng ký -->
+            <xpath expr="//field[@name='teacher_id']" position="attributes">
+                <attribute name="domain">[('id', 'in', eligible_teacher_ids)]</attribute>
+                <attribute name="placeholder">Chọn giảng viên rảnh ca này...</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Kế thừa Tree View của Lớp học -->
+    <record id="view_vus_class_tree_inherit_allocation" model="ir.ui.view">
+        <field name="name">vus.class.tree.inherit.allocation</field>
+        <field name="model">vus.class</field>
+        <field name="inherit_id" ref="vus_class.view_vus_class_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='course_id']" position="before">
+                <field name="term_id"/>
+                <field name="time_slot_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Kế thừa Action của Lớp học để thêm calendar vào view_mode -->
+    <record id="vus_class.action_vus_class" model="ir.actions.act_window">
+        <field name="view_mode">kanban,tree,form,calendar</field>
+    </record>
+
+    <!-- Định nghĩa Calendar View cho Lớp học (Theo ngày khai giảng) -->
+    <record id="view_vus_class_calendar" model="ir.ui.view">
+        <field name="name">vus.class.calendar</field>
+        <field name="model">vus.class</field>
+        <field name="arch" type="xml">
+            <calendar string="Lịch khai giảng lớp học" 
+                      date_start="start_date" 
+                      date_stop="end_date" 
+                      color="teacher_id" 
+                      hide_time="true" 
+                      quick_create="false"
+                      event_limit="5">
+                <field name="class_name"/>
+                <field name="course_id"/>
+                <field name="teacher_id"/>
+                <field name="time_slot_id"/>
+            </calendar>
+        </field>
+    </record>
+</odoo>

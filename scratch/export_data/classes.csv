@@ -1,0 +1,6 @@
+class_name,class_code,course_id,term_id,time_slot_id,classroom,max_students,state
+English for Teens Class A,ET1-A,English for Teens 1,Kỳ Thu 2026,Thứ 2 - Thứ 4 - Thứ 6 | Ca 2 (19:15 - 20:45),Phòng 105,20,draft
+Super Minds 1 Class A,SM1-A,Super Minds 1,Kỳ Hè 2026,Thứ 7 - Chủ Nhật | Ca 3 (Thứ 7/CN: 08:00 - 09:30),Phòng 103,15,opened
+Super Minds 2 Class A,SM2-A,Super Minds 2,Kỳ Hè 2026,Thứ 7 - Chủ Nhật | Ca 4 (Thứ 7/CN: 09:45 - 11:15),Phòng 104,15,opened
+IELTS Academic Class A,IELTS-AC-A,IELTS Academic,Kỳ Hè 2026,Thứ 3 - Thứ 5 - Thứ 7 | Ca 1 (17:30 - 19:00),Phòng 102,20,opened
+IELTS Foundation Class A,IELTS-FD-A,IELTS Foundation,Kỳ Hè 2026,Thứ 2 - Thứ 4 - Thứ 6 | Ca 1 (17:30 - 19:00),Phòng 101,20,opened
