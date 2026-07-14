@@ -11,5 +11,27 @@
             <field name="numbercall">-1</field>
             <field name="active" eval="True"/>
         </record>
+
+        <record id="ir_cron_notify_class_payment_deadline" model="ir.cron">
+            <field name="name">VUS: Nhắc nhở hạn nộp học phí lớp học cho Giáo vụ</field>
+            <field name="model_id" ref="model_vus_class"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_notify_payment_deadline()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record id="ir_cron_notify_registration_deadline" model="ir.cron">
+            <field name="name">VUS: Nhắc nhở hạn đăng ký lịch rảnh giảng dạy</field>
+            <field name="model_id" ref="model_vus_academic_term"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_notify_registration_deadline()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+        </record>
     </data>
 </odoo>

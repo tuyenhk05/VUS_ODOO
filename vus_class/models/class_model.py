@@ -28,6 +28,7 @@ class VusClass(models.Model):
     classroom = fields.Char(string='Phòng học')
     
     max_students = fields.Integer(string='Sĩ số tối đa', default=20, required=True)
+    payment_deadline = fields.Date(string='Hạn đóng học phí')
     state = fields.Selection([
         ('draft', 'Chờ mở'),
         ('opened', 'Đang mở'),
@@ -48,6 +49,33 @@ class VusClass(models.Model):
 
     def action_set_draft(self):
         self.state = 'draft'
+
+    def action_remove_unpaid_students(self):
+        self.ensure_one()
+        unpaid_enrollments = self.env['vus.enrollment'].search([
+            ('class_id', '=', self.id),
+            ('state', 'in', ['draft', 'confirmed'])
+        ])
+        if not unpaid_enrollments:
+            raise ValidationError("Không có học viên chưa đóng học phí nào trong lớp này!")
+        
+        # Gỡ bỏ lớp học khỏi các phiếu ghi danh chưa thanh toán
+        unpaid_enrollments.write({'class_id': False})
+        
+        # Nếu lớp ở trạng thái 'full', tự động cập nhật lại trạng thái dựa trên số học viên hiện tại
+        if self.state == 'full':
+            self.state = 'opened'
+            
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Thành công',
+                'message': f"Đã hủy xếp lớp cho {len(unpaid_enrollments)} học viên chưa hoàn thành học phí.",
+                'type': 'success',
+                'sticky': False,
+            }
+        }
 
     def action_duplicate_class(self):
         for rec in self:

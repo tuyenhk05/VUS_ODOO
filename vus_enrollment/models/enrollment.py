@@ -112,6 +112,23 @@ class VusEnrollment(models.Model):
                 if current_count >= record.class_id.max_students:
                     raise ValidationError(f"Lớp {record.class_id.class_name} đã đạt giới hạn sĩ số tối đa ({record.class_id.max_students} học viên)!")
 
+    @api.constrains('class_id')
+    def _check_class_registration_deadline(self):
+        # Bỏ qua nếu chạy bằng quyền superuser (migration, script nạp dữ liệu mẫu)
+        if self.env.su:
+            return
+        for record in self:
+            if record.class_id:
+                completed_sheets = self.env['vus.attendance.sheet'].search_count([
+                    ('class_id', '=', record.class_id.id),
+                    ('state', '=', 'done')
+                ])
+                if completed_sheets > 3:
+                    raise ValidationError(
+                        f"Không thể ghi danh vào lớp '{record.class_id.class_name}' "
+                        f"vì lớp đã học quá 3 buổi (đã học xong {completed_sheets} buổi)!"
+                    )
+
     def action_confirm(self):
         for record in self:
             if record.state != 'draft':

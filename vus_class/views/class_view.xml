@@ -75,6 +75,7 @@
                     <button name="action_close_class" string="Kết thúc lớp học" type="object" class="oe_highlight" invisible="state not in ['opened', 'full']"/>
                     <button name="action_cancel_class" string="Hủy lớp học" type="object" class="btn-secondary" invisible="state not in ['draft', 'opened']"/>
                     <button name="action_set_draft" string="Đặt về nháp" type="object" invisible="state not in ['closed', 'cancelled']"/>
+                    <button name="action_remove_unpaid_students" string="Hủy xếp lớp học viên chưa đóng phí" type="object" class="btn-danger" invisible="state not in ['opened', 'full']" groups="vus_student.group_vus_staff,vus_student.group_vus_manager"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,opened,full,closed"/>
                 </header>
                 <sheet>
@@ -97,6 +98,7 @@
                             <field name="classroom"/>
                             <field name="start_date"/>
                             <field name="end_date"/>
+                            <field name="payment_deadline"/>
                         </group>
                     </group>
                 </sheet>

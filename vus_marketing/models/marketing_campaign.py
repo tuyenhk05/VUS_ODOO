@@ -55,6 +55,37 @@ class VusMarketingCampaign(models.Model):
         store=True
     )
     
+    mailing_ids = fields.One2many(
+        'mailing.mailing', 
+        'vus_campaign_id', 
+        string='Chiến dịch Email Marketing'
+    )
+    email_sent = fields.Integer(
+        string='Tổng email gửi', 
+        compute='_compute_email_stats', 
+        store=True
+    )
+    email_opened = fields.Integer(
+        string='Email đã mở', 
+        compute='_compute_email_stats', 
+        store=True
+    )
+    email_clicked = fields.Integer(
+        string='Email đã nhấp link', 
+        compute='_compute_email_stats', 
+        store=True
+    )
+    email_open_rate = fields.Float(
+        string='Tỷ lệ mở (%)', 
+        compute='_compute_email_stats', 
+        store=True
+    )
+    email_click_rate = fields.Float(
+        string='Tỷ lệ nhấp (%)', 
+        compute='_compute_email_stats', 
+        store=True
+    )
+
     state = fields.Selection([
         ('draft', 'Nháp'),
         ('running', 'Đang chạy'),
@@ -111,6 +142,19 @@ class VusMarketingCampaign(models.Model):
                 rec.roi = ((rec.total_revenue - rec.actual_cost) / rec.actual_cost) * 100.0
             else:
                 rec.roi = 0.0
+
+    @api.depends('mailing_ids.sent', 'mailing_ids.opened', 'mailing_ids.clicked')
+    def _compute_email_stats(self):
+        for rec in self:
+            mailings = rec.mailing_ids
+            sent = sum(mailings.mapped('sent'))
+            opened = sum(mailings.mapped('opened'))
+            clicked = sum(mailings.mapped('clicked'))
+            rec.email_sent = sent
+            rec.email_opened = opened
+            rec.email_clicked = clicked
+            rec.email_open_rate = (opened / sent * 100) if sent > 0 else 0.0
+            rec.email_click_rate = (clicked / sent * 100) if sent > 0 else 0.0
 
     def action_start(self):
         self.state = 'running'

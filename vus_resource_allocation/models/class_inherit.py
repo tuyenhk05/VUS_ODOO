@@ -162,3 +162,56 @@ class VusClassInherit(models.Model):
             
             if generated_sessions:
                 self.env['vus.class.session'].create(generated_sessions)
+
+    @api.model
+    def _cron_notify_payment_deadline(self):
+        today = fields.Date.today()
+        three_days_later = today + datetime.timedelta(days=3)
+        
+        # Tìm các lớp học đang mở có hạn đóng học phí cận hạn (trong vòng 3 ngày tới)
+        classes = self.search([
+            ('payment_deadline', '>=', today),
+            ('payment_deadline', '<=', three_days_later),
+            ('state', 'in', ['opened', 'full'])
+        ])
+        
+        staff_group = self.env.ref('vus_student.group_vus_staff', raise_if_not_found=False)
+        if not staff_group:
+            return
+            
+        staff_users = staff_group.users
+        todo_activity_type = self.env.ref('mail.mail_activity_data_todo', raise_if_not_found=False)
+        if not todo_activity_type:
+            return
+            
+        for rec in classes:
+            # Kiểm tra xem lớp này có học viên chưa đóng phí không
+            unpaid_count = self.env['vus.enrollment'].search_count([
+                ('class_id', '=', rec.id),
+                ('state', 'in', ['draft', 'confirmed'])
+            ])
+            if unpaid_count == 0:
+                continue
+                
+            deadline_str = rec.payment_deadline.strftime('%d/%m/%Y')
+            summary = f"Hạn học phí {rec.class_name}"
+            note = f"Lớp {rec.class_name} có hạn đóng học phí là {deadline_str} ({unpaid_count} học viên chưa hoàn thành học phí). Hãy kiểm tra và đôn đốc!"
+            
+            for user in staff_users:
+                # Kiểm tra trùng lặp
+                existing = self.env['mail.activity'].search([
+                    ('res_model', '=', 'vus.class'),
+                    ('res_id', '=', rec.id),
+                    ('user_id', '=', user.id),
+                    ('summary', '=', summary)
+                ], limit=1)
+                if not existing:
+                    self.env['mail.activity'].create({
+                        'activity_type_id': todo_activity_type.id,
+                        'summary': summary,
+                        'note': note,
+                        'res_id': rec.id,
+                        'res_model_id': self.env['ir.model']._get('vus.class').id,
+                        'user_id': user.id,
+                        'date_deadline': rec.payment_deadline,
+                    })

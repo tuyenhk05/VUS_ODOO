@@ -263,6 +263,7 @@ with registry.cursor() as cr:
         'start_date': '2026-06-01',
         'classroom': 'Phòng 101',
         'max_students': 20,
+        'payment_deadline': '2026-05-30',
         'state': 'opened'
     })
     class_ielts_fd.action_generate_sessions()
@@ -278,6 +279,7 @@ with registry.cursor() as cr:
         'start_date': '2026-06-02',
         'classroom': 'Phòng 102',
         'max_students': 20,
+        'payment_deadline': '2026-05-31',
         'state': 'opened'
     })
     class_ielts_ac.action_generate_sessions()
@@ -293,6 +295,7 @@ with registry.cursor() as cr:
         'start_date': '2026-06-06',
         'classroom': 'Phòng 103',
         'max_students': 15,
+        'payment_deadline': '2026-06-05',
         'state': 'opened'
     })
     class_sm1.action_generate_sessions()
@@ -308,6 +311,7 @@ with registry.cursor() as cr:
         'start_date': '2026-06-06',
         'classroom': 'Phòng 104',
         'max_students': 15,
+        'payment_deadline': '2026-06-05',
         'state': 'opened'
     })
     class_sm2.action_generate_sessions()
@@ -323,6 +327,7 @@ with registry.cursor() as cr:
         'start_date': '2026-09-02',
         'classroom': 'Phòng 105',
         'max_students': 20,
+        'payment_deadline': '2026-08-30',
         'state': 'draft'
     })
 
@@ -511,6 +516,34 @@ with registry.cursor() as cr:
     # 2.12. Tạo Odoo Activity mẫu cho Giảng viên ngày hôm nay
     env['vus.class.session']._cron_notify_today_classes()
     print("✔ Đã tạo Odoo Activity nhắc nhở đứng lớp ngày hôm nay cho giáo viên.")
+
+    # 2.13. Tạo các đợt Email Marketing mẫu liên kết với các Chiến dịch VUS
+    mailing_model = env['mailing.mailing']
+    mailing_model.create({
+        'subject': 'Đón Hè Rực Rỡ cùng Tiếng Anh IELTS VUS - Nhận ưu đãi 20%',
+        'vus_campaign_id': campaigns[0].id,
+        'state': 'done',
+        'sent': 1200,
+        'opened': 480,
+        'clicked': 120,
+        'bounced': 12,
+        'failed': 0,
+        'reply_to_mode': 'update',
+        'mailing_type': 'mail'
+    })
+    mailing_model.create({
+        'subject': 'Tặng Balo xinh xắn & Học bổng 2 Triệu cho bé yêu học tiếng Anh',
+        'vus_campaign_id': campaigns[1].id,
+        'state': 'done',
+        'sent': 1500,
+        'opened': 600,
+        'clicked': 180,
+        'bounced': 15,
+        'failed': 0,
+        'reply_to_mode': 'update',
+        'mailing_type': 'mail'
+    })
+    print("✔ Đã khởi tạo dữ liệu mẫu Email Marketing.")
 
     # Lưu lại toàn bộ dữ liệu mẫu vừa tạo
     cr.commit()

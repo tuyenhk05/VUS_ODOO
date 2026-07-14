@@ -49,6 +49,17 @@
                             <field name="roi" string="Chỉ số ROI (%)" widget="percentage" decoration-danger="roi &lt; 0" decoration-success="roi &gt;= 0"/>
                         </group>
                     </group>
+                    <group string="Thống kê Email Marketing">
+                        <group>
+                            <field name="email_sent" readonly="1"/>
+                            <field name="email_opened" readonly="1"/>
+                            <field name="email_clicked" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="email_open_rate" widget="progressbar" readonly="1"/>
+                            <field name="email_click_rate" widget="progressbar" readonly="1"/>
+                        </group>
+                    </group>
                     <notebook>
                         <page string="Mô tả chi tiết" name="description">
                             <field name="description" placeholder="Nhập mô tả chi tiết chiến dịch tại đây..."/>
@@ -64,9 +75,35 @@
                                 </tree>
                             </field>
                         </page>
+                        <page string="Chiến dịch Email Marketing" name="mass_mailings">
+                            <field name="mailing_ids" readonly="1">
+                                <tree>
+                                    <field name="subject"/>
+                                    <field name="sent"/>
+                                    <field name="opened"/>
+                                    <field name="clicked"/>
+                                    <field name="bounced"/>
+                                    <field name="received_ratio" widget="progressbar" string="Tỷ lệ nhận (%)"/>
+                                    <field name="clicks_ratio" widget="progressbar" string="Tỷ lệ click (%)"/>
+                                    <field name="state" widget="badge"/>
+                                </tree>
+                            </field>
+                        </page>
                     </notebook>
                 </sheet>
             </form>
+        </field>
+    </record>
+
+    <!-- Kế thừa giao diện Email Marketing Form để hiển thị trường Chiến dịch VUS -->
+    <record id="view_mail_mass_mailing_form_inherit_vus" model="ir.ui.view">
+        <field name="name">mailing.mailing.form.inherit.vus</field>
+        <field name="model">mailing.mailing</field>
+        <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='campaign_id']" position="after">
+                <field name="vus_campaign_id" string="Chiến dịch VUS"/>
+            </xpath>
         </field>
     </record>
 

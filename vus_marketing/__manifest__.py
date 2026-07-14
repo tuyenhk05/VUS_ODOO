@@ -5,7 +5,7 @@
     'summary': 'Quản lý chiến dịch Marketing tùy chỉnh của VUS',
     'category': 'Marketing',
     'author': 'Nhóm đồ án VUS',
-    'depends': ['crm', 'vus_student', 'vus_placement_test'],
+    'depends': ['crm', 'vus_student', 'vus_placement_test', 'mass_mailing'],
     'data': [
         'security/ir.model.access.csv',
         'views/marketing_views.xml',
