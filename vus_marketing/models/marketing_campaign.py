@@ -18,6 +18,9 @@ class VusMarketingCampaign(models.Model):
     
     target_leads = fields.Integer(string='Chỉ tiêu Lead', default=100)
     
+    channel_ids = fields.Many2many('vus.marketing.channel', string='Kênh Marketing')
+    audience_ids = fields.Many2many('vus.marketing.audience', string='Đối tượng hướng đến')
+    
     lead_ids = fields.One2many('crm.lead', 'vus_campaign_id', string='Danh sách Lead')
     
     lead_count = fields.Integer(
@@ -164,3 +167,19 @@ class VusMarketingCampaign(models.Model):
 
     def action_cancel(self):
         self.state = 'cancelled'
+
+class VusMarketingChannel(models.Model):
+    _name = 'vus.marketing.channel'
+    _description = 'Kênh Marketing VUS'
+    _rec_name = 'name'
+
+    name = fields.Char(string='Tên kênh', required=True)
+    code = fields.Char(string='Mã kênh')
+
+class VusMarketingAudience(models.Model):
+    _name = 'vus.marketing.audience'
+    _description = 'Đối tượng mục tiêu VUS'
+    _rec_name = 'name'
+
+    name = fields.Char(string='Tên đối tượng', required=True)
+    description = fields.Char(string='Mô tả')

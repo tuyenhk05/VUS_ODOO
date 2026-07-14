@@ -65,7 +65,9 @@ with registry.cursor() as cr:
 
     # 10. Xóa các Chiến dịch Marketing
     env['vus.marketing.campaign'].search([]).unlink()
-    print("✔ Đã xóa Chiến dịch Marketing.")
+    env['vus.marketing.channel'].search([]).unlink()
+    env['vus.marketing.audience'].search([]).unlink()
+    print("✔ Đã xóa Chiến dịch Marketing, Kênh & Đối tượng.")
 
     # 11. Xóa các chương trình ưu đãi
     env['vus.promotion'].search([]).unlink()
@@ -200,6 +202,22 @@ with registry.cursor() as cr:
             })
     print("✔ Đã phê duyệt Đăng ký lịch rảnh dạy cho các Giảng viên.")
 
+    # 2.5.5. Khởi tạo Kênh Marketing & Đối tượng mục tiêu
+    channel_model = env['vus.marketing.channel']
+    aud_model = env['vus.marketing.audience']
+    
+    chan_fb = channel_model.create({'name': 'Facebook Ads', 'code': 'FB'})
+    chan_gg = channel_model.create({'name': 'Google Ads', 'code': 'GG'})
+    chan_tt = channel_model.create({'name': 'TikTok Ads', 'code': 'TT'})
+    chan_email = channel_model.create({'name': 'Email Marketing', 'code': 'EMAIL'})
+    chan_event = channel_model.create({'name': 'Hội thảo / Sự kiện', 'code': 'EVENT'})
+    
+    aud_kids = aud_model.create({'name': 'Học sinh tiểu học (5-11 tuổi)', 'description': 'Khóa Super Minds'})
+    aud_teens = aud_model.create({'name': 'Học sinh cấp 2-3 (11-15 tuổi)', 'description': 'Khóa English for Teens'})
+    aud_ielts = aud_model.create({'name': 'Học sinh/Sinh viên luyện thi IELTS', 'description': 'Khóa IELTS'})
+    aud_adults = aud_model.create({'name': 'Người đi làm', 'description': 'Khóa Tiếng Anh Giao Tiếp'})
+    print("✔ Đã khởi tạo các Kênh Marketing & Đối tượng mục tiêu.")
+
     # 2.6. Khởi tạo các Chiến dịch Marketing
     campaign_model = env['vus.marketing.campaign']
     campaigns = [
@@ -212,6 +230,8 @@ with registry.cursor() as cr:
             'state': 'running',
             'start_date': '2026-05-01',
             'end_date': '2026-08-31',
+            'channel_ids': [(6, 0, [chan_fb.id, chan_gg.id])],
+            'audience_ids': [(6, 0, [aud_kids.id, aud_teens.id, aud_ielts.id])],
             'description': '<p>Quảng cáo Facebook/Google thu hút học viên nhí và luyện thi IELTS dịp hè.</p>'
         }),
         campaign_model.create({
@@ -223,6 +243,8 @@ with registry.cursor() as cr:
             'state': 'running',
             'start_date': '2026-08-01',
             'end_date': '2026-10-31',
+            'channel_ids': [(6, 0, [chan_fb.id, chan_tt.id, chan_email.id])],
+            'audience_ids': [(6, 0, [aud_kids.id, aud_teens.id])],
             'description': '<p>Sự kiện Back to School, tặng balo và học bổng tuyển sinh.</p>'
         }),
         campaign_model.create({
@@ -234,6 +256,8 @@ with registry.cursor() as cr:
             'state': 'completed',
             'start_date': '2026-04-10',
             'end_date': '2026-04-30',
+            'channel_ids': [(6, 0, [chan_event.id, chan_email.id])],
+            'audience_ids': [(6, 0, [aud_ielts.id])],
             'description': '<p>Hội thảo chia sẻ phương pháp học từ cựu học viên VUS.</p>'
         }),
         campaign_model.create({
@@ -244,10 +268,12 @@ with registry.cursor() as cr:
             'target_leads': 30,
             'state': 'draft',
             'start_date': '2026-10-01',
-            'end_date': '2026-12-31'
+            'end_date': '2026-12-31',
+            'channel_ids': [(6, 0, [chan_fb.id, chan_gg.id])],
+            'audience_ids': [(6, 0, [aud_adults.id])]
         })
     ]
-    print(f"✔ Đã tạo {len(campaigns)} Chiến dịch Marketing.")
+    print(f"✔ Đã tạo {len(campaigns)} Chiến dịch Marketing với Kênh & Đối tượng liên kết.")
 
     # 2.7. Khởi tạo Lớp học (classes)
     class_model = env['vus.class']

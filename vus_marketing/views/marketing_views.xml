@@ -29,6 +29,8 @@
                             <field name="code"/>
                             <field name="start_date"/>
                             <field name="end_date"/>
+                            <field name="channel_ids" widget="many2many_tags"/>
+                            <field name="audience_ids" widget="many2many_tags"/>
                         </group>
                         <group string="Tài chính &amp; Ngân sách">
                             <field name="currency_id" invisible="1"/>
