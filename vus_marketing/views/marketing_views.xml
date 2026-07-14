@@ -9,6 +9,7 @@
                 <header>
                     <button name="action_start" string="Bắt đầu" type="object" class="oe_highlight" invisible="state != 'draft'"/>
                     <button name="action_complete" string="Hoàn thành" type="object" class="oe_highlight" invisible="state != 'running'"/>
+                    <button name="action_create_targeted_email" string="Gửi Email Hướng Mục Tiêu" type="object" class="btn-primary" invisible="state not in ['draft', 'running']"/>
                     <button name="action_cancel" string="Hủy" type="object" invisible="state not in ('draft', 'running')"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,running,completed,cancelled"/>
                 </header>
@@ -180,6 +181,18 @@
             <xpath expr="//field[@name='name']" position="after">
                 <field name="vus_campaign_id"/>
                 <field name="lead_source"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Kế thừa Partner Form để hiển thị Phân loại đối tượng VUS -->
+    <record id="view_partner_form_inherit_vus_marketing" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.vus.marketing</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="marketing_audience_ids" widget="many2many_tags" placeholder="Phân loại đối tượng VUS..." invisible="not is_student and not is_teacher"/>
             </xpath>
         </field>
     </record>

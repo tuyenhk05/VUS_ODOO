@@ -381,13 +381,24 @@ with registry.cursor() as cr:
     # Tạo học viên
     students = []
     for idx, name in enumerate(student_names):
+        # Phân loại đối tượng hướng đến cho học viên mẫu
+        if idx < 10:
+            audience_val = [(6, 0, [aud_kids.id])]
+        elif idx < 20:
+            audience_val = [(6, 0, [aud_teens.id])]
+        elif idx < 30:
+            audience_val = [(6, 0, [aud_ielts.id])]
+        else:
+            audience_val = [(6, 0, [aud_adults.id])]
+            
         std = partner_model.create({
             'name': name,
             'email': f"hocvien{idx+1}@gmail.com",
             'phone': f"0987{idx+1:06d}",
             'is_student': False, # Sẽ được ghi danh đánh dấu là True khi đóng tiền
             'student_status': 'potential',
-            'is_company': False
+            'is_company': False,
+            'marketing_audience_ids': audience_val
         })
         students.append(std)
         

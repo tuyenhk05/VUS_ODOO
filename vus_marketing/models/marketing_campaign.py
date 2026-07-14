@@ -168,6 +168,37 @@ class VusMarketingCampaign(models.Model):
     def action_cancel(self):
         self.state = 'cancelled'
 
+    def action_create_targeted_email(self):
+        self.ensure_one()
+        if not self.audience_ids:
+            from odoo.exceptions import UserError
+            raise UserError("Vui lòng cấu hình ít nhất một Đối tượng hướng đến cho chiến dịch này!")
+        
+        partner_model = self.env['ir.model'].search([('model', '=', 'res.partner')], limit=1)
+        if not partner_model:
+            from odoo.exceptions import UserError
+            raise UserError("Hệ thống không tìm thấy mô hình res.partner!")
+            
+        mailing_vals = {
+            'subject': f"[VUS] Thông tin chiến dịch: {self.name}",
+            'vus_campaign_id': self.id,
+            'mailing_model_id': partner_model.id,
+            'mailing_domain': str([('marketing_audience_ids', 'in', self.audience_ids.ids)]),
+            'reply_to_mode': 'update',
+            'mailing_type': 'mail',
+            'state': 'draft'
+        }
+        new_mailing = self.env['mailing.mailing'].create(mailing_vals)
+        
+        return {
+            'name': 'Thiết kế Email Marketing',
+            'type': 'ir.actions.act_window',
+            'res_model': 'mailing.mailing',
+            'view_mode': 'form',
+            'res_id': new_mailing.id,
+            'target': 'current',
+        }
+
 class VusMarketingChannel(models.Model):
     _name = 'vus.marketing.channel'
     _description = 'Kênh Marketing VUS'
