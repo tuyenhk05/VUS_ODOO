@@ -45,7 +45,8 @@ with registry.cursor() as cr:
     # 3. Tạo hoặc Cập nhật tài khoản Giáo vụ / Tuyển sinh (Staff)
     group_sale_salesman = env.ref('sales_team.group_sale_salesman_all_leads')
     group_account_invoice = env.ref('account.group_account_invoice')
-    staff_group_ids = [group_internal.id, group_staff.id, group_sale_salesman.id, group_account_invoice.id]
+    group_account_user = env.ref('account.group_account_user')
+    staff_group_ids = [group_internal.id, group_staff.id, group_sale_salesman.id, group_account_invoice.id, group_account_user.id]
 
     staff_login = 'staff@vus.edu.vn'
     user_staff = env['res.users'].search([('login', '=', staff_login)], limit=1)
