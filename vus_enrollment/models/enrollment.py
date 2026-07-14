@@ -154,6 +154,8 @@ class VusEnrollment(models.Model):
                 ],
             }
             invoice = self.env['account.move'].create(invoice_vals)
+            # Tự động xác nhận/vào sổ hóa đơn để đưa nó về trạng thái 'posted'
+            invoice.action_post()
 
             # 4. Ghi nhận hóa đơn và chuyển trạng thái phiếu ghi danh sang 'confirmed'
             record.write({
