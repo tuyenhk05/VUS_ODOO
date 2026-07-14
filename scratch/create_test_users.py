@@ -24,7 +24,13 @@ with registry.cursor() as cr:
     # 2. Tạo hoặc Cập nhật tài khoản Quản lý (Manager)
     group_sale_manager = env.ref('sales_team.group_sale_manager')
     group_account_manager = env.ref('account.group_account_manager')
-    manager_group_ids = [group_internal.id, group_manager.id, group_sale_manager.id, group_account_manager.id]
+    group_mass_mailing_user = env.ref('mass_mailing.group_mass_mailing_user')
+    group_mass_mailing_campaign = env.ref('mass_mailing.group_mass_mailing_campaign')
+    
+    manager_group_ids = [
+        group_internal.id, group_manager.id, group_sale_manager.id, group_account_manager.id,
+        group_mass_mailing_user.id, group_mass_mailing_campaign.id
+    ]
 
     manager_login = 'manager@vus.edu.vn'
     user_manager = env['res.users'].search([('login', '=', manager_login)], limit=1)
@@ -46,7 +52,11 @@ with registry.cursor() as cr:
     group_sale_salesman = env.ref('sales_team.group_sale_salesman_all_leads')
     group_account_invoice = env.ref('account.group_account_invoice')
     group_account_user = env.ref('account.group_account_user')
-    staff_group_ids = [group_internal.id, group_staff.id, group_sale_salesman.id, group_account_invoice.id, group_account_user.id]
+    
+    staff_group_ids = [
+        group_internal.id, group_staff.id, group_sale_salesman.id, group_account_invoice.id, 
+        group_account_user.id, group_mass_mailing_user.id, group_mass_mailing_campaign.id
+    ]
 
     staff_login = 'staff@vus.edu.vn'
     user_staff = env['res.users'].search([('login', '=', staff_login)], limit=1)
