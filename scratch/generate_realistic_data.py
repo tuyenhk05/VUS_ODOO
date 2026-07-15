@@ -506,16 +506,33 @@ with registry.cursor() as cr:
     enrolls_list = []
     for cls, std_list in distribution:
         for idx, std in enumerate(std_list):
-            state = 'paid' if idx % 4 != 0 else ('confirmed' if idx % 2 == 0 else 'draft')
+            target_state = 'paid' if idx % 4 != 0 else ('confirmed' if idx % 2 == 0 else 'draft')
+            # Tạo phiếu ghi danh ở dạng draft để kích hoạt luồng thanh toán hóa đơn
             enr = enrollment_model.create({
                 'student_id': std.id,
                 'course_id': cls.course_id.id,
                 'class_id': cls.id,
                 'amount': cls.course_id.base_price,
-                'state': state
+                'state': 'draft'
             })
             enrolls_list.append(enr)
-            if state == 'paid':
+            
+            # Xác nhận để tự động sinh hóa đơn (account.move)
+            if target_state in ['confirmed', 'paid']:
+                enr.action_confirm()
+                
+            # Thanh toán hóa đơn nếu trạng thái mong muốn là 'paid'
+            if target_state == 'paid':
+                invoice = enr.invoice_id
+                if invoice:
+                    payment_register = env['account.payment.register'].with_context(
+                        active_model='account.move',
+                        active_ids=invoice.ids
+                    ).create({
+                        'payment_date': fields.Date.today(),
+                        'amount': invoice.amount_residual,
+                    })
+                    payment_register.action_create_payments()
                 std.write({'is_student': True, 'student_status': 'studying'})
             
     print(f"✔ Đã tạo và xếp lớp thành công cho {len(enrolls_list)} Học viên.")
