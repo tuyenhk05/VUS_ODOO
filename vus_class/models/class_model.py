@@ -5,6 +5,7 @@ from odoo.exceptions import ValidationError
 class VusClass(models.Model):
     _name = 'vus.class'
     _description = 'Lớp học tại VUS'
+    _inherit = ['mail.thread']
     _rec_name = 'class_name'
     _order = 'start_date desc'
 

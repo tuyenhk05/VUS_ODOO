@@ -13,6 +13,7 @@
         'vus_student',
         'vus_class',
         'vus_attendance',
+        'vus_enrollment',
     ],
     'data': [
         'security/ir.model.access.csv',

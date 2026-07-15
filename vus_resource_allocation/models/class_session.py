@@ -2,6 +2,7 @@
 import pytz
 from datetime import datetime, time
 from odoo import models, fields, api
+from markupsafe import Markup
 
 class VusClassSession(models.Model):
     _name = 'vus.class.session'
@@ -12,7 +13,7 @@ class VusClassSession(models.Model):
     class_id = fields.Many2one('vus.class', string='Lớp học', required=True, ondelete='cascade')
     date = fields.Date(string='Ngày học', required=True)
     time_slot_id = fields.Many2one('vus.time.slot', related='class_id.time_slot_id', string='Ca học', store=True)
-    teacher_id = fields.Many2one('res.partner', string='Giảng viên', domain=[('is_teacher', '=', True)], required=True)
+    teacher_id = fields.Many2one('res.partner', string='Giảng viên', domain=[('is_teacher', '=', True)])
     session_number = fields.Integer(string='Buổi số', required=True)
     name = fields.Char(string='Tên buổi học', compute='_compute_name', store=True)
     
@@ -60,18 +61,19 @@ class VusClassSession(models.Model):
 
     def action_open_attendance(self):
         self.ensure_one()
+        # Sử dụng sudo() để bỏ qua ràng buộc phân quyền ghi nhận (write) trên vus.class.session
+        # và cho phép nạp học viên (đối với giáo viên dạy thay / dạy bù không phải giáo viên chính)
         if not self.attendance_sheet_id:
-            # Tìm xem đã có bảng điểm danh nào trùng ngày và trùng lớp học chưa
-            existing_sheet = self.env['vus.attendance.sheet'].search([
+            existing_sheet = self.env['vus.attendance.sheet'].sudo().search([
                 ('class_id', '=', self.class_id.id),
                 ('date', '=', self.date)
             ], limit=1)
             
             if existing_sheet:
-                self.attendance_sheet_id = existing_sheet.id
+                self.sudo().write({'attendance_sheet_id': existing_sheet.id})
             else:
                 # Nếu chưa có, tạo bảng điểm danh nháp mới cho ngày này
-                sheet = self.env['vus.attendance.sheet'].create({
+                sheet = self.env['vus.attendance.sheet'].sudo().create({
                     'class_id': self.class_id.id,
                     'date': self.date,
                     'session_number': self.session_number,
@@ -79,8 +81,8 @@ class VusClassSession(models.Model):
                     'session': f"Buổi {self.session_number}",
                     'state': 'draft'
                 })
-                sheet.action_load_students()
-                self.attendance_sheet_id = sheet.id
+                sheet.sudo().action_load_students()
+                self.sudo().write({'attendance_sheet_id': sheet.id})
 
         return {
             'name': 'Điểm danh buổi học',
@@ -100,11 +102,6 @@ class VusClassSession(models.Model):
             ('class_id.state', '=', 'opened')
         ])
         
-        # Tìm loại hoạt động Cần làm (To Do)
-        activity_type = self.env.ref('mail.mail_activity_data_todo', raise_if_not_found=False)
-        if not activity_type:
-            activity_type = self.env['mail.activity.type'].search([('category', '=', 'default')], limit=1)
-            
         for sess in sessions:
             if not sess.teacher_id:
                 continue
@@ -113,23 +110,31 @@ class VusClassSession(models.Model):
             if not user:
                 continue
                 
-            # Kiểm tra xem đã tạo activity nhắc nhở chưa để tránh tạo trùng lặp
-            existing = self.env['mail.activity'].search([
-                ('res_model', '=', 'vus.class.session'),
+            # Kiểm tra xem đã gửi thông báo hôm nay chưa để tránh gửi trùng lặp
+            summary = f"[VUS] Lịch dạy hôm nay - Lớp {sess.class_id.class_name}"
+            existing_msg = self.env['mail.message'].search([
+                ('model', '=', 'vus.class.session'),
                 ('res_id', '=', sess.id),
-                ('user_id', '=', user.id)
+                ('partner_ids', 'in', [user.partner_id.id]),
+                ('subject', '=', summary)
             ], limit=1)
             
-            if not existing:
+            if not existing_msg:
                 slot_name = sess.time_slot_id.name if sess.time_slot_id else ''
-                self.env['mail.activity'].create({
-                    'res_model_id': self.env['ir.model']._get('vus.class.session').id,
-                    'res_id': sess.id,
-                    'activity_type_id': activity_type.id if activity_type else False,
-                    'summary': f"Lịch dạy hôm nay: Lớp {sess.class_id.class_name}",
-                    'note': f"<p>Chào Thầy/Cô, hôm nay bạn có lịch dạy lớp <strong>{sess.class_id.class_name}</strong>.</p>"
-                            f"<p>Ca học: {slot_name}.</p>"
-                            f"<p>Vui lòng click vào đây để vào điểm danh khi buổi học diễn ra.</p>",
-                    'date_deadline': today,
-                    'user_id': user.id
-                })
+                date_str = sess.date.strftime('%d/%m/%Y') if sess.date else ''
+                base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                session_link = f"{base_url}/web#id={sess.id}&model=vus.class.session&view_type=form"
+                note = f"<p>Kính chào Thầy/Cô <strong>{user.name}</strong>,</p>" \
+                       f"<p>Hệ thống xin thông báo lịch giảng dạy của bạn trong ngày hôm nay như sau:</p>" \
+                       f"<ul>" \
+                       f"  <li><strong>Lớp học:</strong> {sess.class_id.class_name}</li>" \
+                       f"  <li><strong>Buổi học:</strong> Buổi số {sess.session_number}</li>" \
+                       f"  <li><strong>Ca học:</strong> {slot_name}</li>" \
+                       f"  <li><strong>Ngày học:</strong> {date_str}</li>" \
+                       f"</ul>" \
+                       f"<p>Vui lòng click vào <a href=\"{session_link}\" target=\"_blank\"><strong>đây</strong></a> để vào chi tiết buổi học và điểm danh khi buổi học diễn ra. Chúc Thầy/Cô một buổi dạy thành công!</p>"
+                sess.message_notify(
+                    body=Markup(note),
+                    subject=summary,
+                    partner_ids=[user.partner_id.id]
+                )

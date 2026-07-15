@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- Menu: Điểm danh -->
-    <menuitem id="menu_vus_attendance" name="Điểm danh" parent="vus_student.menu_vus_root" sequence="30"/>
+    <menuitem id="menu_vus_attendance" name="Điểm danh" parent="vus_student.menu_vus_root" sequence="30" groups="vus_student.group_vus_teacher"/>
     <menuitem id="menu_vus_attendance_sheet" 
               name="Điểm danh theo buổi" 
               parent="menu_vus_attendance" 

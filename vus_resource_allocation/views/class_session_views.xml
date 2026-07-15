@@ -45,6 +45,10 @@
                         </group>
                     </group>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
@@ -67,10 +71,23 @@
         </field>
     </record>
 
+    <!-- Pivot View -->
+    <record id="view_vus_class_session_pivot" model="ir.ui.view">
+        <field name="name">vus.class.session.pivot</field>
+        <field name="model">vus.class.session</field>
+        <field name="arch" type="xml">
+            <pivot string="Phân tích lịch học chi tiết">
+                <field name="date" interval="day" type="row"/>
+                <field name="time_slot_id" type="col"/>
+                <field name="class_id" type="row"/>
+            </pivot>
+        </field>
+    </record>
+
     <record id="action_vus_class_session" model="ir.actions.act_window">
         <field name="name">Lịch học chi tiết</field>
         <field name="res_model">vus.class.session</field>
-        <field name="view_mode">calendar,tree,form</field>
+        <field name="view_mode">calendar,tree,pivot,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Xem lịch học chi tiết của các lớp học dưới dạng lịch trực quan.

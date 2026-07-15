@@ -24,6 +24,83 @@
                 <attribute name="domain">[('id', 'in', eligible_teacher_ids)]</attribute>
                 <attribute name="placeholder">Chọn giảng viên rảnh ca này...</attribute>
             </xpath>
+
+            <!-- Thêm nút xếp giáo viên tự động bên cạnh trường teacher_id -->
+            <xpath expr="//field[@name='teacher_id']" position="after">
+                <button name="action_assign_optimal_teacher" string="Xếp giáo viên tự động" type="object" class="btn-secondary" invisible="not term_id or not time_slot_id or teacher_id or state == 'draft'" groups="vus_student.group_vus_staff,vus_student.group_vus_manager"/>
+            </xpath>
+
+            <!-- Thêm trường closing_date đằng sau payment_deadline -->
+            <xpath expr="//field[@name='payment_deadline']" position="after">
+                <field name="closing_date"/>
+            </xpath>
+
+            <!-- Thêm nút thông tin điểm danh vào button_box -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_attendance_sheets" type="object" class="oe_stat_button" icon="fa-calendar" groups="vus_student.group_vus_staff,vus_student.group_vus_manager">
+                    <span class="o_stat_text">Điểm danh</span>
+                </button>
+            </xpath>
+
+            <!-- Thêm notebook chứa các tab chi tiết vào Form View -->
+            <xpath expr="//sheet" position="inside">
+                <notebook>
+                    <!-- Tab Lịch học chi tiết -->
+                    <page string="Lịch học chi tiết" groups="vus_student.group_vus_staff,vus_student.group_vus_manager">
+                        <field name="session_ids" readonly="1">
+                            <tree string="Lịch học chi tiết">
+                                <field name="session_number"/>
+                                <field name="date"/>
+                                <field name="time_slot_id"/>
+                                <field name="teacher_id"/>
+                                <field name="attendance_state" widget="badge" decoration-success="attendance_state == 'done'" decoration-info="attendance_state == 'draft'"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <!-- Tab Học viên ghi danh -->
+                    <page string="Học viên đã ghi danh" groups="vus_student.group_vus_staff,vus_student.group_vus_manager">
+                        <field name="enrollment_ids" readonly="1">
+                            <tree string="Học viên đã ghi danh" create="false" delete="false">
+                                <field name="student_id"/>
+                                <field name="enrollment_date"/>
+                                <field name="amount"/>
+                                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'confirmed'" decoration-success="state == 'paid'"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <!-- Tab Bảng điểm danh -->
+                    <page string="Bảng điểm danh" groups="vus_student.group_vus_staff,vus_student.group_vus_manager">
+                        <field name="attendance_sheet_ids" readonly="1">
+                            <tree string="Bảng điểm danh lớp học">
+                                <field name="name"/>
+                                <field name="date"/>
+                                <field name="teacher_id"/>
+                                <field name="session_progress"/>
+                                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state == 'draft'"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <!-- Tab Đề xuất giảng viên -->
+                    <page string="Đề xuất giảng viên" groups="vus_student.group_vus_staff,vus_student.group_vus_manager" invisible="state == 'draft'">
+                        <field name="suggested_teacher_ids" readonly="1">
+                            <tree string="Đề xuất giảng viên" create="false" delete="false">
+                                <field name="teacher_id"/>
+                                <field name="active_class_count"/>
+                                <field name="max_classes"/>
+                                <button name="action_select_teacher" string="Chọn làm giáo viên chính" type="object" class="btn-primary" icon="fa-check"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </xpath>
+
+            <!-- Thêm chatter vào Form View -->
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
         </field>
     </record>
 
@@ -41,8 +118,22 @@
     </record>
 
     <!-- Kế thừa Action của Lớp học để thêm calendar vào view_mode -->
+    <!-- Kế thừa Action của Lớp học để thêm calendar và pivot vào view_mode -->
     <record id="vus_class.action_vus_class" model="ir.actions.act_window">
-        <field name="view_mode">kanban,tree,form,calendar</field>
+        <field name="view_mode">kanban,tree,calendar,pivot,form</field>
+    </record>
+
+    <!-- Định nghĩa Pivot View cho Lớp học -->
+    <record id="view_vus_class_pivot" model="ir.ui.view">
+        <field name="name">vus.class.pivot</field>
+        <field name="model">vus.class</field>
+        <field name="arch" type="xml">
+            <pivot string="Phân tích lớp học">
+                <field name="term_id" type="row"/>
+                <field name="time_slot_id" type="col"/>
+                <field name="class_name" type="row"/>
+            </pivot>
+        </field>
     </record>
 
     <!-- Định nghĩa Calendar View cho Lớp học (Theo ngày khai giảng) -->

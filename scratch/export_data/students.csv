@@ -1,23 +1,35 @@
 name,email,phone,is_student,student_status
+Bùi Hoàng Việt Anh,hocvien40@gmail.com,0987000040,True,studying
+Bùi Thị Hạnh,hocvien8@gmail.com,0987000008,True,studying
 Bùi Tiến Dũng,hocvien30@gmail.com,0987000030,True,studying
-Dương Minh Quốc,hocvien9@gmail.com,0987000009,True,studying
 Hoàng Thanh Lâm,hocvien10@gmail.com,0987000010,True,studying
 Lê Hoàng Nam,hocvien2@gmail.com,0987000002,True,studying
+Lê Minh Bình,hocvien49@gmail.com,0987000049,True,studying
+Lê Thị Thu,hocvien34@gmail.com,0987000034,True,studying
+Lê Văn Đô,hocvien42@gmail.com,0987000042,True,studying
 Lương Xuân Trường,hocvien17@gmail.com,0987000017,True,studying
 Nguyễn Công Phượng,hocvien18@gmail.com,0987000018,True,studying
-Nguyễn Minh Anh,hocvien1@gmail.com,0987000001,True,studying
-Nguyễn Phong Hồng Duy,hocvien22@gmail.com,0987000022,True,studying
-Nguyễn Quang Hải,hocvien19@gmail.com,0987000019,True,studying
+Nguyễn Hữu Thắng,hocvien46@gmail.com,0987000046,True,studying
+Nguyễn Thanh Bình,hocvien39@gmail.com,0987000039,True,studying
+Nguyễn Văn Toàn,hocvien35@gmail.com,0987000035,True,studying
+Nguyễn Văn Tùng,hocvien44@gmail.com,0987000044,True,studying
+Nguyễn Đình Trọng,hocvien14@gmail.com,0987000014,True,studying
+Ngô Gia Bảo,hocvien7@gmail.com,0987000007,True,studying
 Phan Văn Huy,hocvien11@gmail.com,0987000011,True,studying
 Phan Văn Đức,hocvien24@gmail.com,0987000024,True,studying
 Phạm Minh Trí,hocvien4@gmail.com,0987000004,True,studying
+Phạm Tuấn Hải,hocvien25@gmail.com,0987000025,True,studying
+Phạm Tuấn Tài,hocvien38@gmail.com,0987000038,True,studying
 Phạm Đức Huy,hocvien16@gmail.com,0987000016,True,studying
 Quế Ngọc Hải,hocvien29@gmail.com,0987000029,True,studying
+Trần Danh Trung,hocvien50@gmail.com,0987000050,True,studying
 Trần Minh Vương,hocvien23@gmail.com,0987000023,True,studying
 Trần Thị Mai,hocvien3@gmail.com,0987000003,True,studying
-Võ Văn Hậu,hocvien13@gmail.com,0987000013,True,studying
-Vũ Hoàng Nam,hocvien5@gmail.com,0987000005,True,studying
+Trần Văn Hùng,hocvien32@gmail.com,0987000032,True,studying
+Trần Văn Kiên,hocvien36@gmail.com,0987000036,True,studying
+Trần Văn Đạt,hocvien45@gmail.com,0987000045,True,studying
 Vũ Văn Thanh,hocvien21@gmail.com,0987000021,True,studying
+Đoàn Văn Hậu,hocvien20@gmail.com,0987000020,True,studying
 Đặng Thu Thảo,hocvien6@gmail.com,0987000006,True,studying
 Đỗ Hùng Dũng,hocvien28@gmail.com,0987000028,True,studying
 Đỗ Thị Diễm,hocvien12@gmail.com,0987000012,True,studying

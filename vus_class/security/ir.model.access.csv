@@ -1,4 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_vus_class_teacher,access_vus_class_teacher,model_vus_class,vus_student.group_vus_teacher,1,1,0,0
+access_vus_class_teacher,access_vus_class_teacher,model_vus_class,vus_student.group_vus_teacher,1,0,0,0
 access_vus_class_staff,access_vus_class_staff,model_vus_class,vus_student.group_vus_staff,1,1,1,0
 access_vus_class_manager,access_vus_class_manager,model_vus_class,vus_student.group_vus_manager,1,1,1,1

@@ -10,7 +10,7 @@
     'author': 'Nhóm đồ án VUS',
     'website': 'https://vus.edu.vn',
     'license': 'LGPL-3',
-    'depends': ['base', 'vus_course', 'vus_student'],
+    'depends': ['base', 'mail', 'vus_course', 'vus_student'],
     'data': [
         'security/vus_class_security.xml',
         'security/ir.model.access.csv',

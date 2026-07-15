@@ -7,7 +7,12 @@ class VusTeacherRegistration(models.Model):
     _description = 'Đăng ký lịch dạy của giáo viên'
     _rec_name = 'teacher_id'
 
-    term_id = fields.Many2one('vus.academic.term', string='Kỳ học', required=True)
+    term_id = fields.Many2one(
+        'vus.academic.term', 
+        string='Kỳ học', 
+        required=True,
+        domain="[('state', '=', 'registration'), ('registration_deadline', '>=', context_today())]"
+    )
     
     teacher_id = fields.Many2one(
         'res.partner', 
@@ -80,6 +85,12 @@ class VusTeacherRegistration(models.Model):
 
     def action_submit(self):
         for rec in self:
+            # Giáo viên bắt buộc phải đăng ký đủ số ca mới được bấm 'Gửi duyệt'
+            if self.env.user.has_group('vus_student.group_vus_teacher') and rec.selected_sessions < rec.min_sessions:
+                raise ValidationError(
+                    f"Bạn mới đăng ký {rec.selected_sessions} ca/tháng, "
+                    f"chưa đạt số ca tối thiểu được yêu cầu là {rec.min_sessions} ca/tháng để gửi duyệt!"
+                )
             rec.state = 'submitted'
 
     def action_approve(self):

@@ -60,11 +60,34 @@
         </field>
     </record>
 
+    <!-- Enrollment Search View -->
+    <record id="view_vus_enrollment_search" model="ir.ui.view">
+        <field name="name">vus.enrollment.search</field>
+        <field name="model">vus.enrollment</field>
+        <field name="arch" type="xml">
+            <search string="Tìm kiếm ghi danh">
+                <field name="student_id"/>
+                <field name="course_id"/>
+                <field name="class_id"/>
+                <filter name="state_draft" string="Nháp" domain="[('state', '=', 'draft')]"/>
+                <filter name="state_confirmed" string="Chờ đóng phí" domain="[('state', '=', 'confirmed')]"/>
+                <filter name="state_paid" string="Đã đóng phí" domain="[('state', '=', 'paid')]"/>
+                <group expand="0" string="Gom nhóm theo">
+                    <filter name="group_by_class" string="Lớp học" context="{'group_by': 'class_id'}"/>
+                    <filter name="group_by_course" string="Khóa học" context="{'group_by': 'course_id'}"/>
+                    <filter name="group_by_state" string="Trạng thái" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <!-- Enrollment Action -->
     <record id="action_vus_enrollment" model="ir.actions.act_window">
         <field name="name">Phiếu ghi danh</field>
         <field name="res_model">vus.enrollment</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_vus_enrollment_search"/>
+        <field name="context">{'search_default_group_by_class': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Tạo phiếu ghi danh học viên mới!

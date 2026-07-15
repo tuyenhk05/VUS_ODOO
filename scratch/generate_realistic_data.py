@@ -278,115 +278,162 @@ with registry.cursor() as cr:
     # 2.7. Khởi tạo Lớp học (classes)
     class_model = env['vus.class']
     
-    # Lớp IELTS Foundation
-    class_ielts_fd = class_model.create({
-        'class_name': 'IELTS Foundation Class A',
-        'class_code': 'IELTS-FD-A',
-        'course_id': courses['IELTS-FD'].id,
-        'term_id': term_summer.id,
-        'time_slot_id': slots['mwf_ca1'].id,
-        'teacher_id': teacher_john.id,
-        'start_date': '2026-06-01',
-        'classroom': 'Phòng 101',
-        'max_students': 20,
-        'payment_deadline': '2026-05-30',
-        'state': 'opened'
-    })
-    class_ielts_fd.action_generate_sessions()
+    classes_data = [
+        # Kỳ Hè 2026
+        {
+            'class_name': 'IELTS Foundation Class A',
+            'class_code': 'IELTS-FD-A',
+            'course_id': courses['IELTS-FD'].id,
+            'term_id': term_summer.id,
+            'time_slot_id': slots['mwf_ca1'].id,
+            'start_date': '2026-06-01',
+            'classroom': 'Phòng 101',
+            'max_students': 20,
+            'payment_deadline': '2026-05-30',
+            'state': 'draft'
+        },
+        {
+            'class_name': 'IELTS Foundation Class B',
+            'class_code': 'IELTS-FD-B',
+            'course_id': courses['IELTS-FD'].id,
+            'term_id': term_summer.id,
+            'time_slot_id': slots['tts_ca1'].id,
+            'start_date': '2026-06-02',
+            'classroom': 'Phòng 102',
+            'max_students': 20,
+            'payment_deadline': '2026-05-31',
+            'state': 'draft'
+        },
+        {
+            'class_name': 'IELTS Academic Class A',
+            'class_code': 'IELTS-AC-A',
+            'course_id': courses['IELTS-AC'].id,
+            'term_id': term_summer.id,
+            'time_slot_id': slots['mwf_ca2'].id,
+            'start_date': '2026-06-01',
+            'classroom': 'Phòng 103',
+            'max_students': 20,
+            'payment_deadline': '2026-05-30',
+            'state': 'draft'
+        },
+        {
+            'class_name': 'IELTS Academic Class B',
+            'class_code': 'IELTS-AC-B',
+            'course_id': courses['IELTS-AC'].id,
+            'term_id': term_summer.id,
+            'time_slot_id': slots['tts_ca2'].id,
+            'start_date': '2026-06-02',
+            'classroom': 'Phòng 104',
+            'max_students': 20,
+            'payment_deadline': '2026-05-31',
+            'state': 'draft'
+        },
+        {
+            'class_name': 'Super Minds 1 Class A',
+            'class_code': 'SM1-A',
+            'course_id': courses['SM-01'].id,
+            'term_id': term_summer.id,
+            'time_slot_id': slots['ss_ca1'].id,
+            'start_date': '2026-06-06',
+            'classroom': 'Phòng 105',
+            'max_students': 15,
+            'payment_deadline': '2026-06-05',
+            'state': 'draft'
+        },
+        {
+            'class_name': 'Super Minds 1 Class B',
+            'class_code': 'SM1-B',
+            'course_id': courses['SM-01'].id,
+            'term_id': term_summer.id,
+            'time_slot_id': slots['ss_ca2'].id,
+            'start_date': '2026-06-06',
+            'classroom': 'Phòng 106',
+            'max_students': 15,
+            'payment_deadline': '2026-06-05',
+            'state': 'draft'
+        },
+        {
+            'class_name': 'Super Minds 2 Class A',
+            'class_code': 'SM2-A',
+            'course_id': courses['SM-02'].id,
+            'term_id': term_summer.id,
+            'time_slot_id': slots['ss_ca3'].id,
+            'start_date': '2026-06-06',
+            'classroom': 'Phòng 107',
+            'max_students': 15,
+            'payment_deadline': '2026-06-05',
+            'state': 'draft'
+        },
+        # Kỳ Thu 2026
+        {
+            'class_name': 'English for Teens Class A',
+            'class_code': 'ET1-A',
+            'course_id': courses['ET-01'].id,
+            'term_id': term_autumn.id,
+            'time_slot_id': slots['mwf_ca1'].id,
+            'start_date': '2026-09-02',
+            'classroom': 'Phòng 108',
+            'max_students': 20,
+            'payment_deadline': '2026-08-30',
+            'state': 'draft'
+        },
+        {
+            'class_name': 'English for Teens Class B',
+            'class_code': 'ET1-B',
+            'course_id': courses['ET-01'].id,
+            'term_id': term_autumn.id,
+            'time_slot_id': slots['tts_ca1'].id,
+            'start_date': '2026-09-03',
+            'classroom': 'Phòng 109',
+            'max_students': 20,
+            'payment_deadline': '2026-08-31',
+            'state': 'draft'
+        },
+        {
+            'class_name': 'English for Communication Class A',
+            'class_code': 'EC1-A',
+            'course_id': courses['EC-01'].id,
+            'term_id': term_autumn.id,
+            'time_slot_id': slots['mwf_ca2'].id,
+            'start_date': '2026-09-02',
+            'classroom': 'Phòng 110',
+            'max_students': 20,
+            'payment_deadline': '2026-08-30',
+            'state': 'draft'
+        }
+    ]
 
-    # Lớp IELTS Academic
-    class_ielts_ac = class_model.create({
-        'class_name': 'IELTS Academic Class A',
-        'class_code': 'IELTS-AC-A',
-        'course_id': courses['IELTS-AC'].id,
-        'term_id': term_summer.id,
-        'time_slot_id': slots['tts_ca1'].id,
-        'teacher_id': teacher_lan.id,
-        'start_date': '2026-06-02',
-        'classroom': 'Phòng 102',
-        'max_students': 20,
-        'payment_deadline': '2026-05-31',
-        'state': 'opened'
-    })
-    class_ielts_ac.action_generate_sessions()
+    classes_dict = {}
+    print("-> Tạo các Lớp học nháp, sau đó mở lớp (tự động sinh closing_date) và tự động xếp giáo viên tối ưu...")
+    for c_vals in classes_data:
+        c_rec = class_model.create(c_vals)
+        c_rec.action_open_class() # Mở lớp và tạo chi tiết buổi học
+        c_rec.action_assign_optimal_teacher() # Tự động phân bổ giáo viên đồng đều
+        classes_dict[c_rec.class_code] = c_rec
+        print(f"   ✔ Lớp '{c_rec.class_name}' -> Xếp Giảng viên: {c_rec.teacher_id.name} (Hạn đóng lớp: {c_rec.closing_date})")
 
-    # Lớp Super Minds 1
-    class_sm1 = class_model.create({
-        'class_name': 'Super Minds 1 Class A',
-        'class_code': 'SM1-A',
-        'course_id': courses['SM-01'].id,
-        'term_id': term_summer.id,
-        'time_slot_id': slots['ss_ca3'].id,
-        'teacher_id': teacher_david.id,
-        'start_date': '2026-06-06',
-        'classroom': 'Phòng 103',
-        'max_students': 15,
-        'payment_deadline': '2026-06-05',
-        'state': 'opened'
-    })
-    class_sm1.action_generate_sessions()
-
-    # Lớp Super Minds 2
-    class_sm2 = class_model.create({
-        'class_name': 'Super Minds 2 Class A',
-        'class_code': 'SM2-A',
-        'course_id': courses['SM-02'].id,
-        'term_id': term_summer.id,
-        'time_slot_id': slots['ss_ca4'].id,
-        'teacher_id': teacher_nhan.id,
-        'start_date': '2026-06-06',
-        'classroom': 'Phòng 104',
-        'max_students': 15,
-        'payment_deadline': '2026-06-05',
-        'state': 'opened'
-    })
-    class_sm2.action_generate_sessions()
-
-    # Lớp English for Teens 1 (Chờ khai giảng)
-    class_et1 = class_model.create({
-        'class_name': 'English for Teens Class A',
-        'class_code': 'ET1-A',
-        'course_id': courses['ET-01'].id,
-        'term_id': term_autumn.id,
-        'time_slot_id': slots['mwf_ca2'].id,
-        'teacher_id': teacher_hong.id,
-        'start_date': '2026-09-02',
-        'classroom': 'Phòng 105',
-        'max_students': 20,
-        'payment_deadline': '2026-08-30',
-        'state': 'draft'
-    })
-
-    classes_dict = {
-        'IELTS-FD-A': class_ielts_fd,
-        'IELTS-AC-A': class_ielts_ac,
-        'SM1-A': class_sm1,
-        'SM2-A': class_sm2,
-        'ET1-A': class_et1
-    }
-    print(f"✔ Đã tạo {len(classes_dict)} Lớp học (và tự động sinh Lịch học chi tiết).")
-
-    # 2.8. Khởi tạo danh sách Học viên với Tên thật và CRM Leads (Độ bao phủ lớn: 35 Học viên)
+    # 2.8. Khởi tạo danh sách Học viên với Tên thật và CRM Leads (Độ bao phủ lớn: 50 Học viên)
     student_names = [
-        # Tên học viên
         "Nguyễn Minh Anh", "Lê Hoàng Nam", "Trần Thị Mai", "Phạm Minh Trí", "Vũ Hoàng Nam",
         "Đặng Thu Thảo", "Ngô Gia Bảo", "Bùi Thị Hạnh", "Dương Minh Quốc", "Hoàng Thanh Lâm",
         "Phan Văn Huy", "Đỗ Thị Diễm", "Võ Văn Hậu", "Nguyễn Đình Trọng", "Trần Duy Mạnh",
         "Phạm Đức Huy", "Lương Xuân Trường", "Nguyễn Công Phượng", "Nguyễn Quang Hải", "Đoàn Văn Hậu",
         "Vũ Văn Thanh", "Nguyễn Phong Hồng Duy", "Trần Minh Vương", "Phan Văn Đức", "Phạm Tuấn Hải",
         "Nguyễn Tiến Linh", "Nguyễn Hoàng Đức", "Đỗ Hùng Dũng", "Quế Ngọc Hải", "Bùi Tiến Dũng",
-        "Đặng Văn Lâm", "Trần Văn Hùng", "Phạm Thu Hà", "Lê Thị Thu", "Nguyễn Hoàng Nam"
+        "Đặng Văn Lâm", "Trần Văn Hùng", "Phạm Thu Hà", "Lê Thị Thu", "Nguyễn Văn Toàn",
+        "Trần Văn Kiên", "Lê Văn Xuân", "Phạm Tuấn Tài", "Nguyễn Thanh Bình", "Bùi Hoàng Việt Anh",
+        "Nguyễn Hoàng Nam", "Lê Văn Đô", "Huỳnh Công Đến", "Nguyễn Văn Tùng", "Trần Văn Đạt",
+        "Nguyễn Hữu Thắng", "Nhâm Mạnh Dũng", "Hồ Thanh Minh", "Lê Minh Bình", "Trần Danh Trung"
     ]
     
     # Tạo học viên
     students = []
     for idx, name in enumerate(student_names):
-        # Phân loại đối tượng hướng đến cho học viên mẫu
-        if idx < 10:
+        if idx < 15:
             audience_val = [(6, 0, [aud_kids.id])]
-        elif idx < 20:
-            audience_val = [(6, 0, [aud_teens.id])]
         elif idx < 30:
+            audience_val = [(6, 0, [aud_teens.id])]
+        elif idx < 45:
             audience_val = [(6, 0, [aud_ielts.id])]
         else:
             audience_val = [(6, 0, [aud_adults.id])]
@@ -395,7 +442,7 @@ with registry.cursor() as cr:
             'name': name,
             'email': f"hocvien{idx+1}@gmail.com",
             'phone': f"0987{idx+1:06d}",
-            'is_student': False, # Sẽ được ghi danh đánh dấu là True khi đóng tiền
+            'is_student': False,
             'student_status': 'potential',
             'is_company': False,
             'marketing_audience_ids': audience_val
@@ -408,8 +455,8 @@ with registry.cursor() as cr:
     lead_model = env['crm.lead']
     leads = []
     
-    # 15 Leads cho chiến dịch Hè (campaigns[0])
-    for i in range(15):
+    # 20 Leads cho chiến dịch Hè (campaigns[0])
+    for i in range(20):
         leads.append(lead_model.create({
             'name': f"Tư vấn khóa học Hè - {students[i].name}",
             'partner_id': students[i].id,
@@ -418,8 +465,8 @@ with registry.cursor() as cr:
             'follow_up_notes': 'Quan tâm học phí khóa học dịp hè.'
         }))
         
-    # 12 Leads cho chiến dịch Thu (campaigns[1])
-    for i in range(15, 27):
+    # 20 Leads cho chiến dịch Thu (campaigns[1])
+    for i in range(20, 40):
         leads.append(lead_model.create({
             'name': f"Tư vấn khóa khai giảng - {students[i].name}",
             'partner_id': students[i].id,
@@ -428,8 +475,8 @@ with registry.cursor() as cr:
             'follow_up_notes': 'Học viên muốn nhận ưu đãi tặng Balo Back to school.'
         }))
         
-    # 8 Leads cho sự kiện IELTS Workshop (campaigns[2])
-    for i in range(27, 35):
+    # 10 Leads cho sự kiện IELTS Workshop (campaigns[2])
+    for i in range(40, 50):
         leads.append(lead_model.create({
             'name': f"Tư vấn sau sự kiện IELTS - {students[i].name}",
             'partner_id': students[i].id,
@@ -443,63 +490,33 @@ with registry.cursor() as cr:
     # 2.9. Tạo Phiếu ghi danh (Enrollment) và tự động ghi nhận doanh thu
     enrollment_model = env['vus.enrollment']
     
-    # Định nghĩa danh sách các đăng ký để sinh doanh thu phân bổ
-    # Cấu trúc: (Học viên, Khóa học, Lớp học, Trạng thái)
-    enroll_data = [
-        # Lớp IELTS Foundation (mwf_ca1, 4.5M) -> Chiến dịch Hè
-        (students[0], courses['IELTS-FD'], class_ielts_fd, 'paid'),
-        (students[1], courses['IELTS-FD'], class_ielts_fd, 'paid'),
-        (students[2], courses['IELTS-FD'], class_ielts_fd, 'paid'),
-        (students[3], courses['IELTS-FD'], class_ielts_fd, 'paid'),
-        (students[4], courses['IELTS-FD'], class_ielts_fd, 'paid'),
-        (students[5], courses['IELTS-FD'], class_ielts_fd, 'paid'),
-        (students[6], courses['IELTS-FD'], class_ielts_fd, 'confirmed'),
-        (students[7], courses['IELTS-FD'], class_ielts_fd, 'draft'),
-        
-        # Lớp IELTS Academic (tts_ca1, 5.5M) -> Chiến dịch Hè
-        (students[8], courses['IELTS-AC'], class_ielts_ac, 'paid'),
-        (students[9], courses['IELTS-AC'], class_ielts_ac, 'paid'),
-        (students[10], courses['IELTS-AC'], class_ielts_ac, 'paid'),
-        (students[11], courses['IELTS-AC'], class_ielts_ac, 'paid'),
-        (students[12], courses['IELTS-AC'], class_ielts_ac, 'paid'),
-        (students[13], courses['IELTS-AC'], class_ielts_ac, 'confirmed'),
-        
-        # Lớp Super Minds 1 (ss_ca3, 3.2M) -> Chiến dịch Thu
-        (students[15], courses['SM-01'], class_sm1, 'paid'),
-        (students[16], courses['SM-01'], class_sm1, 'paid'),
-        (students[17], courses['SM-01'], class_sm1, 'paid'),
-        (students[18], courses['SM-01'], class_sm1, 'paid'),
-        (students[19], courses['SM-01'], class_sm1, 'confirmed'),
-        
-        # Lớp Super Minds 2 (ss_ca4, 3.5M) -> Chiến dịch Thu
-        (students[20], courses['SM-02'], class_sm2, 'paid'),
-        (students[21], courses['SM-02'], class_sm2, 'paid'),
-        (students[22], courses['SM-02'], class_sm2, 'paid'),
-        (students[23], courses['SM-02'], class_sm2, 'paid'),
-        (students[24], courses['SM-02'], class_sm2, 'confirmed'),
-        
-        # Lớp IELTS Workshop (IELTS Academic, 5.5M) -> Sự kiện IELTS Workshop
-        (students[27], courses['IELTS-AC'], class_ielts_ac, 'paid'),
-        (students[28], courses['IELTS-AC'], class_ielts_ac, 'paid'),
-        (students[29], courses['IELTS-AC'], class_ielts_ac, 'paid'),
-        (students[30], courses['IELTS-AC'], class_ielts_ac, 'confirmed'),
+    distribution = [
+        (classes_dict['IELTS-FD-A'], students[0:8]),
+        (classes_dict['IELTS-FD-B'], students[8:14]),
+        (classes_dict['IELTS-AC-A'], students[14:21]),
+        (classes_dict['IELTS-AC-B'], students[21:26]),
+        (classes_dict['SM1-A'], students[26:32]),
+        (classes_dict['SM1-B'], students[32:36]),
+        (classes_dict['SM2-A'], students[36:42]),
+        (classes_dict['ET1-A'], students[42:47]),
+        (classes_dict['ET1-B'], students[47:50]),
     ]
     
     # Tạo các phiếu ghi danh
     enrolls_list = []
-    for std, crs, cls, state in enroll_data:
-        enr = enrollment_model.create({
-            'student_id': std.id,
-            'course_id': crs.id,
-            'class_id': cls.id,
-            'amount': crs.base_price,
-            'state': state
-        })
-        enrolls_list.append(enr)
-        
-        # Đồng bộ trạng thái học viên chính thức nếu đã đóng tiền
-        if state == 'paid':
-            std.write({'is_student': True, 'student_status': 'studying'})
+    for cls, std_list in distribution:
+        for idx, std in enumerate(std_list):
+            state = 'paid' if idx % 4 != 0 else ('confirmed' if idx % 2 == 0 else 'draft')
+            enr = enrollment_model.create({
+                'student_id': std.id,
+                'course_id': cls.course_id.id,
+                'class_id': cls.id,
+                'amount': cls.course_id.base_price,
+                'state': state
+            })
+            enrolls_list.append(enr)
+            if state == 'paid':
+                std.write({'is_student': True, 'student_status': 'studying'})
             
     print(f"✔ Đã tạo và xếp lớp thành công cho {len(enrolls_list)} Học viên.")
 
@@ -507,7 +524,6 @@ with registry.cursor() as cr:
     test_model = env['vus.placement.test']
     test_line_model = env['vus.placement.test.line']
     
-    # Buổi kiểm tra 1
     pt1 = test_model.create({
         'name': 'Buổi kiểm tra xếp lớp IELTS Tháng 5',
         'date': datetime.datetime.now() - datetime.timedelta(days=20),
@@ -517,38 +533,36 @@ with registry.cursor() as cr:
         'state': 'completed'
     })
     
-    # Nhập điểm thi xếp lớp
-    test_line_model.create({'test_id': pt1.id, 'partner_id': students[8].id, 'listening_score': 65, 'reading_score': 70, 'writing_score': 60, 'speaking_score': 65, 'recommended_course_id': courses['IELTS-AC'].id, 'state': 'graded'})
-    test_line_model.create({'test_id': pt1.id, 'partner_id': students[9].id, 'listening_score': 70, 'reading_score': 75, 'writing_score': 65, 'speaking_score': 70, 'recommended_course_id': courses['IELTS-AC'].id, 'state': 'graded'})
-    test_line_model.create({'test_id': pt1.id, 'partner_id': students[10].id, 'listening_score': 80, 'reading_score': 80, 'writing_score': 75, 'speaking_score': 80, 'recommended_course_id': courses['IELTS-AC'].id, 'state': 'graded'})
-    test_line_model.create({'test_id': pt1.id, 'partner_id': students[11].id, 'listening_score': 55, 'reading_score': 60, 'writing_score': 50, 'speaking_score': 55, 'recommended_course_id': courses['IELTS-FD'].id, 'state': 'graded'})
+    test_line_model.create({'test_id': pt1.id, 'partner_id': students[14].id, 'listening_score': 65, 'reading_score': 70, 'writing_score': 60, 'speaking_score': 65, 'recommended_course_id': courses['IELTS-AC'].id, 'state': 'graded'})
+    test_line_model.create({'test_id': pt1.id, 'partner_id': students[15].id, 'listening_score': 70, 'reading_score': 75, 'writing_score': 65, 'speaking_score': 70, 'recommended_course_id': courses['IELTS-AC'].id, 'state': 'graded'})
+    test_line_model.create({'test_id': pt1.id, 'partner_id': students[16].id, 'listening_score': 80, 'reading_score': 80, 'writing_score': 75, 'speaking_score': 80, 'recommended_course_id': courses['IELTS-AC'].id, 'state': 'graded'})
+    test_line_model.create({'test_id': pt1.id, 'partner_id': students[17].id, 'listening_score': 55, 'reading_score': 60, 'writing_score': 50, 'speaking_score': 55, 'recommended_course_id': courses['IELTS-FD'].id, 'state': 'graded'})
     
     print("✔ Đã tạo Lịch kiểm tra đầu vào và Bảng điểm thi xếp lớp mẫu.")
 
     # 2.11. Tạo Phiếu báo vắng & Dạy thay
     leave_model = env['vus.teacher.leave']
     
-    # Lấy một buổi học chi tiết vào ngày 2026-06-15 của Mr. John Smith dạy lớp IELTS Foundation Class A
-    leave_date = datetime.date(2026, 6, 15)
-    leave_rec = leave_model.create({
-        'teacher_id': teacher_john.id,
-        'leave_date': leave_date,
-        'class_id': class_ielts_fd.id,
-        'reason': 'Nghỉ ốm đột xuất',
-        'state': 'draft'
-    })
-    
-    # Submit -> Confirm (để sinh buổi bị ảnh hưởng)
-    leave_rec.action_submit()
-    leave_rec.action_confirm()
-    
-    # Phân dạy thay
-    affected_line = leave_rec.affected_line_ids[0]
-    affected_line.write({'substitute_teacher_id': teacher_hong.id})
-    affected_line.button_confirm_substitute()
-    leave_rec.action_resolve()
-    
-    print("✔ Đã tạo và xử lý thành công 1 yêu cầu Báo vắng & Phân giảng viên dạy thay.")
+    sess = env['vus.class.session'].search([('class_id', '=', classes_dict['IELTS-FD-A'].id)], limit=1)
+    if sess:
+        leave_rec = leave_model.create({
+            'teacher_id': sess.teacher_id.id,
+            'leave_date': sess.date,
+            'class_id': sess.class_id.id,
+            'reason': 'Nghỉ ốm đột xuất',
+            'state': 'draft'
+        })
+        leave_rec.action_submit()
+        leave_rec.action_confirm()
+        
+        if leave_rec.affected_line_ids:
+            affected_line = leave_rec.affected_line_ids[0]
+            sub_teacher = env['res.partner'].search([('is_teacher', '=', True), ('id', '!=', sess.teacher_id.id)], limit=1)
+            if sub_teacher:
+                affected_line.write({'substitute_teacher_id': sub_teacher.id})
+                affected_line.button_confirm_substitute()
+                leave_rec.action_resolve()
+        print("✔ Đã tạo và xử lý thành công 1 yêu cầu Báo vắng & Phân giảng viên dạy thay.")
 
     # 2.12. Tạo Odoo Activity mẫu cho Giảng viên ngày hôm nay
     env['vus.class.session']._cron_notify_today_classes()
@@ -646,7 +660,7 @@ with registry.cursor() as cr:
 
     export_to_csv('vus.marketing.campaign', ['name', 'code', 'budget', 'actual_cost', 'lead_count', 'cost_per_lead', 'conversion_count', 'conversion_rate', 'total_revenue', 'roi', 'state'], 'campaigns.csv')
     export_to_csv('crm.lead', ['name', 'partner_id', 'vus_campaign_id', 'lead_source'], 'leads.csv')
-    export_to_csv('vus.class', ['class_name', 'class_code', 'course_id', 'term_id', 'time_slot_id', 'classroom', 'max_students', 'state'], 'classes.csv')
+    export_to_csv('vus.class', ['class_name', 'class_code', 'course_id', 'term_id', 'time_slot_id', 'teacher_id', 'classroom', 'max_students', 'payment_deadline', 'closing_date', 'state'], 'classes.csv')
     export_to_csv('vus.enrollment', ['name', 'student_id', 'course_id', 'class_id', 'amount', 'state'], 'enrollments.csv')
 
     print("\n>>> KẾT XUẤT TẤT CẢ FILE CSV DỮ LIỆU MẪU THÀNH CÔNG! <<<")

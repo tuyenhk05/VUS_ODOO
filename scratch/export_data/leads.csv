@@ -1,12 +1,27 @@
 name,partner_id,vus_campaign_id,lead_source
+Tư vấn sau sự kiện IELTS - Trần Danh Trung,Trần Danh Trung,Hội thảo Luyện thi IELTS 8.0,event
+Tư vấn sau sự kiện IELTS - Lê Minh Bình,Lê Minh Bình,Hội thảo Luyện thi IELTS 8.0,event
+Tư vấn sau sự kiện IELTS - Hồ Thanh Minh,Hồ Thanh Minh,Hội thảo Luyện thi IELTS 8.0,event
+Tư vấn sau sự kiện IELTS - Nhâm Mạnh Dũng,Nhâm Mạnh Dũng,Hội thảo Luyện thi IELTS 8.0,event
+Tư vấn sau sự kiện IELTS - Nguyễn Hữu Thắng,Nguyễn Hữu Thắng,Hội thảo Luyện thi IELTS 8.0,event
+Tư vấn sau sự kiện IELTS - Trần Văn Đạt,Trần Văn Đạt,Hội thảo Luyện thi IELTS 8.0,event
+Tư vấn sau sự kiện IELTS - Nguyễn Văn Tùng,Nguyễn Văn Tùng,Hội thảo Luyện thi IELTS 8.0,event
+Tư vấn sau sự kiện IELTS - Huỳnh Công Đến,Huỳnh Công Đến,Hội thảo Luyện thi IELTS 8.0,event
+Tư vấn sau sự kiện IELTS - Lê Văn Đô,Lê Văn Đô,Hội thảo Luyện thi IELTS 8.0,event
 Tư vấn sau sự kiện IELTS - Nguyễn Hoàng Nam,Nguyễn Hoàng Nam,Hội thảo Luyện thi IELTS 8.0,event
-Tư vấn sau sự kiện IELTS - Lê Thị Thu,Lê Thị Thu,Hội thảo Luyện thi IELTS 8.0,event
-Tư vấn sau sự kiện IELTS - Phạm Thu Hà,Phạm Thu Hà,Hội thảo Luyện thi IELTS 8.0,event
-Tư vấn sau sự kiện IELTS - Trần Văn Hùng,Trần Văn Hùng,Hội thảo Luyện thi IELTS 8.0,event
-Tư vấn sau sự kiện IELTS - Đặng Văn Lâm,Đặng Văn Lâm,Hội thảo Luyện thi IELTS 8.0,event
-Tư vấn sau sự kiện IELTS - Bùi Tiến Dũng,Bùi Tiến Dũng,Hội thảo Luyện thi IELTS 8.0,event
-Tư vấn sau sự kiện IELTS - Quế Ngọc Hải,Quế Ngọc Hải,Hội thảo Luyện thi IELTS 8.0,event
-Tư vấn sau sự kiện IELTS - Đỗ Hùng Dũng,Đỗ Hùng Dũng,Hội thảo Luyện thi IELTS 8.0,event
+Tư vấn khóa khai giảng - Bùi Hoàng Việt Anh,Bùi Hoàng Việt Anh,Chiến dịch Thu Khai Trường 2026,referral
+Tư vấn khóa khai giảng - Nguyễn Thanh Bình,Nguyễn Thanh Bình,Chiến dịch Thu Khai Trường 2026,direct
+Tư vấn khóa khai giảng - Phạm Tuấn Tài,Phạm Tuấn Tài,Chiến dịch Thu Khai Trường 2026,referral
+Tư vấn khóa khai giảng - Lê Văn Xuân,Lê Văn Xuân,Chiến dịch Thu Khai Trường 2026,direct
+Tư vấn khóa khai giảng - Trần Văn Kiên,Trần Văn Kiên,Chiến dịch Thu Khai Trường 2026,referral
+Tư vấn khóa khai giảng - Nguyễn Văn Toàn,Nguyễn Văn Toàn,Chiến dịch Thu Khai Trường 2026,direct
+Tư vấn khóa khai giảng - Lê Thị Thu,Lê Thị Thu,Chiến dịch Thu Khai Trường 2026,referral
+Tư vấn khóa khai giảng - Phạm Thu Hà,Phạm Thu Hà,Chiến dịch Thu Khai Trường 2026,direct
+Tư vấn khóa khai giảng - Trần Văn Hùng,Trần Văn Hùng,Chiến dịch Thu Khai Trường 2026,referral
+Tư vấn khóa khai giảng - Đặng Văn Lâm,Đặng Văn Lâm,Chiến dịch Thu Khai Trường 2026,direct
+Tư vấn khóa khai giảng - Bùi Tiến Dũng,Bùi Tiến Dũng,Chiến dịch Thu Khai Trường 2026,referral
+Tư vấn khóa khai giảng - Quế Ngọc Hải,Quế Ngọc Hải,Chiến dịch Thu Khai Trường 2026,direct
+Tư vấn khóa khai giảng - Đỗ Hùng Dũng,Đỗ Hùng Dũng,Chiến dịch Thu Khai Trường 2026,referral
 Tư vấn khóa khai giảng - Nguyễn Hoàng Đức,Nguyễn Hoàng Đức,Chiến dịch Thu Khai Trường 2026,direct
 Tư vấn khóa khai giảng - Nguyễn Tiến Linh,Nguyễn Tiến Linh,Chiến dịch Thu Khai Trường 2026,referral
 Tư vấn khóa khai giảng - Phạm Tuấn Hải,Phạm Tuấn Hải,Chiến dịch Thu Khai Trường 2026,direct
@@ -14,11 +29,11 @@ Tư vấn khóa khai giảng - Phan Văn Đức,Phan Văn Đức,Chiến dịch 
 Tư vấn khóa khai giảng - Trần Minh Vương,Trần Minh Vương,Chiến dịch Thu Khai Trường 2026,direct
 Tư vấn khóa khai giảng - Nguyễn Phong Hồng Duy,Nguyễn Phong Hồng Duy,Chiến dịch Thu Khai Trường 2026,referral
 Tư vấn khóa khai giảng - Vũ Văn Thanh,Vũ Văn Thanh,Chiến dịch Thu Khai Trường 2026,direct
-Tư vấn khóa khai giảng - Đoàn Văn Hậu,Đoàn Văn Hậu,Chiến dịch Thu Khai Trường 2026,referral
-Tư vấn khóa khai giảng - Nguyễn Quang Hải,Nguyễn Quang Hải,Chiến dịch Thu Khai Trường 2026,direct
-Tư vấn khóa khai giảng - Nguyễn Công Phượng,Nguyễn Công Phượng,Chiến dịch Thu Khai Trường 2026,referral
-Tư vấn khóa khai giảng - Lương Xuân Trường,Lương Xuân Trường,Chiến dịch Thu Khai Trường 2026,direct
-Tư vấn khóa khai giảng - Phạm Đức Huy,Phạm Đức Huy,Chiến dịch Thu Khai Trường 2026,referral
+Tư vấn khóa học Hè - Đoàn Văn Hậu,Đoàn Văn Hậu,Chiến dịch Tuyển sinh Hè 2026,web
+Tư vấn khóa học Hè - Nguyễn Quang Hải,Nguyễn Quang Hải,Chiến dịch Tuyển sinh Hè 2026,facebook
+Tư vấn khóa học Hè - Nguyễn Công Phượng,Nguyễn Công Phượng,Chiến dịch Tuyển sinh Hè 2026,web
+Tư vấn khóa học Hè - Lương Xuân Trường,Lương Xuân Trường,Chiến dịch Tuyển sinh Hè 2026,facebook
+Tư vấn khóa học Hè - Phạm Đức Huy,Phạm Đức Huy,Chiến dịch Tuyển sinh Hè 2026,web
 Tư vấn khóa học Hè - Trần Duy Mạnh,Trần Duy Mạnh,Chiến dịch Tuyển sinh Hè 2026,facebook
 Tư vấn khóa học Hè - Nguyễn Đình Trọng,Nguyễn Đình Trọng,Chiến dịch Tuyển sinh Hè 2026,web
 Tư vấn khóa học Hè - Võ Văn Hậu,Võ Văn Hậu,Chiến dịch Tuyển sinh Hè 2026,facebook

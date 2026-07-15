@@ -119,6 +119,13 @@ class VusEnrollment(models.Model):
             return
         for record in self:
             if record.class_id:
+                # 1. Kiểm tra hạn đóng/khóa lớp học (closing_date)
+                if record.class_id.closing_date and fields.Date.today() > record.class_id.closing_date:
+                    raise ValidationError(
+                        f"Không thể ghi danh vào lớp '{record.class_id.class_name}' "
+                        f"vì lớp đã đóng/khóa ghi danh (Hạn đóng lớp là ngày {record.class_id.closing_date.strftime('%d/%m/%Y')})!"
+                    )
+                # 2. Kiểm tra số buổi đã học
                 completed_sheets = self.env['vus.attendance.sheet'].search_count([
                     ('class_id', '=', record.class_id.id),
                     ('state', '=', 'done')
