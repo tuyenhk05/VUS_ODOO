@@ -84,7 +84,7 @@
                 <sheet>
                     <group>
                         <group string="Thông tin chung">
-                            <field name="test_id" readonly="1"/>
+                            <field name="test_id" readonly="state != 'registered'" domain="[('date', '&gt;=', current_date)]"/>
                             <field name="partner_id"/>
                             <field name="recommended_course_id"/>
                             <field name="enrollment_id" widget="many2one_clickable"/>

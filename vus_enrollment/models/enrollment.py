@@ -36,7 +36,7 @@ class VusEnrollment(models.Model):
     class_id = fields.Many2one(
         'vus.class',
         string='Lớp học đăng ký',
-        domain="[('course_id', '=', course_id)]"
+        domain="[('course_id', '=', course_id), ('state', '=', 'opened')]"
     )
     enrollment_date = fields.Date(
         string='Ngày ghi danh',

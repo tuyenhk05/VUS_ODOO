@@ -21,6 +21,7 @@ class CrmLead(models.Model):
     
     follow_up_notes = fields.Text(string='Ghi chú chăm sóc')
 
+
     def action_book_placement_test(self):
         self.ensure_one()
         # 1. Đảm bảo Lead được liên kết với partner học viên tiềm năng

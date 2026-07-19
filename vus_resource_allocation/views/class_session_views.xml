@@ -25,8 +25,10 @@
             <form string="Chi tiết buổi học">
                 <header>
                     <button name="action_open_attendance" type="object" string="Điểm danh / Xem điểm danh" class="oe_highlight"/>
+                    <button name="action_report_leave" type="object" string="Báo vắng (Xin nghỉ)" class="btn-danger" invisible="attendance_state == 'done'"/>
                 </header>
                 <sheet>
+                    <field name="attendance_state" invisible="1"/>
                     <div class="oe_title">
                         <h1>
                             <field name="name" readonly="1"/>
@@ -60,13 +62,14 @@
             <calendar string="Lịch học &amp; Giảng dạy VUS" 
                       date_start="start_datetime" 
                       date_stop="end_datetime" 
-                      color="class_id"
+                      color="session_status"
                       quick_create="false"
                       event_limit="5">
                 <field name="class_id"/>
                 <field name="teacher_id"/>
                 <field name="session_number"/>
                 <field name="attendance_state"/>
+                <field name="session_status" filters="1"/>
             </calendar>
         </field>
     </record>
@@ -81,6 +84,38 @@
                 <field name="time_slot_id" type="col"/>
                 <field name="class_id" type="row"/>
             </pivot>
+        </field>
+    </record>
+
+    <record id="view_vus_class_session_search" model="ir.ui.view">
+        <field name="name">vus.class.session.search</field>
+        <field name="model">vus.class.session</field>
+        <field name="arch" type="xml">
+            <search string="Tìm kiếm buổi học">
+                <field name="class_id"/>
+                <field name="teacher_id"/>
+                <filter string="Buổi học đã điểm danh" name="attended" domain="[('attendance_state', '=', 'done')]"/>
+                <filter string="Buổi học chưa điểm danh" name="not_attended" domain="[('attendance_state', '=', 'draft')]"/>
+                <group expand="0" string="Gom nhóm theo">
+                    <filter string="Giảng viên" name="groupby_teacher" context="{'group_by': 'teacher_id'}"/>
+                    <filter string="Lớp học" name="groupby_class" context="{'group_by': 'class_id'}"/>
+                    <filter string="Trạng thái điểm danh" name="groupby_attendance" context="{'group_by': 'attendance_state'}"/>
+                    <filter string="Tháng học" name="groupby_month" context="{'group_by': 'date:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_vus_teacher_session_stats" model="ir.actions.act_window">
+        <field name="name">Thống kê ca dạy Giáo viên</field>
+        <field name="res_model">vus.class.session</field>
+        <field name="view_mode">pivot,tree,graph</field>
+        <field name="search_view_id" ref="view_vus_class_session_search"/>
+        <field name="context">{'search_default_groupby_teacher': 1, 'pivot_row_groupby': ['teacher_id'], 'pivot_column_groupby': ['attendance_state'], 'pivot_measures': ['session_count']}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Báo cáo phân tích thống kê số ca dạy của Giảng viên.
+            </p>
         </field>
     </record>
 

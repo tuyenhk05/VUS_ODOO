@@ -94,7 +94,7 @@
                             <field name="max_students"/>
                         </group>
                         <group>
-                            <field name="schedule"/>
+
                             <field name="classroom"/>
                             <field name="start_date"/>
                             <field name="end_date"/>

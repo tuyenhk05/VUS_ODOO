@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields
+from odoo import models, fields, api
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
@@ -33,3 +33,19 @@ class ResPartner(models.Model):
         ('reserved', 'Bảo lưu'),
         ('completed', 'Đã hoàn thành')
     ], string='Trạng thái học viên', default='potential', help="Trạng thái hiện tại của học viên VUS")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('is_student') and not vals.get('student_code'):
+                vals['student_code'] = self.env['ir.sequence'].next_by_code('res.partner.student.code') or 'New'
+        return super(ResPartner, self).create(vals_list)
+
+    def write(self, vals):
+        res = super(ResPartner, self).write(vals)
+        for partner in self:
+            if partner.is_student and not partner.student_code:
+                super(ResPartner, partner).write({
+                    'student_code': self.env['ir.sequence'].next_by_code('res.partner.student.code') or 'New'
+                })
+        return res

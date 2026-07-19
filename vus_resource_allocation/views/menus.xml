@@ -13,6 +13,13 @@
               action="action_vus_class_session"
               sequence="5"/>
 
+    <!-- Menu con: Thống kê ca dạy -->
+    <menuitem id="menu_vus_teacher_session_stats" 
+              name="Thống kê ca dạy" 
+              parent="menu_vus_resource_allocation" 
+              action="action_vus_teacher_session_stats"
+              sequence="8"/>
+
     <!-- Menu con: Đăng ký lịch dạy -->
     <menuitem id="menu_vus_teacher_registration_list" 
               name="Đăng ký lịch dạy" 

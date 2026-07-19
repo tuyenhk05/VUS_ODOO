@@ -19,10 +19,11 @@
                 <attribute name="domain">[('id', 'in', eligible_course_ids)]</attribute>
             </xpath>
 
-            <!-- Thay đổi domain lọc giáo viên theo ca rảnh đăng ký -->
+            <!-- Thay đổi domain lọc giáo viên theo ca rảnh đăng ký và ẩn ở nháp -->
             <xpath expr="//field[@name='teacher_id']" position="attributes">
                 <attribute name="domain">[('id', 'in', eligible_teacher_ids)]</attribute>
                 <attribute name="placeholder">Chọn giảng viên rảnh ca này...</attribute>
+                <attribute name="invisible">state == 'draft'</attribute>
             </xpath>
 
             <!-- Thêm nút xếp giáo viên tự động bên cạnh trường teacher_id -->
@@ -117,7 +118,19 @@
         </field>
     </record>
 
-    <!-- Kế thừa Action của Lớp học để thêm calendar vào view_mode -->
+    <!-- Định nghĩa Graph View cho Lớp học (Tải dạy Giảng viên) -->
+    <record id="view_vus_class_graph" model="ir.ui.view">
+        <field name="name">vus.class.graph</field>
+        <field name="model">vus.class</field>
+        <field name="arch" type="xml">
+            <graph string="Tải dạy của Giảng viên" type="bar" sample="1">
+                <field name="teacher_id" type="row"/>
+                <field name="term_id" type="col"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Kế thừa Action của Lớp học để thêm calendar và pivot vào view_mode -->
     <!-- Kế thừa Action của Lớp học để thêm calendar và pivot vào view_mode -->
     <record id="vus_class.action_vus_class" model="ir.actions.act_window">
         <field name="view_mode">kanban,tree,calendar,pivot,form</field>

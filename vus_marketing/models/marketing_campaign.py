@@ -186,6 +186,7 @@ class VusMarketingCampaign(models.Model):
             'mailing_domain': str([('marketing_audience_ids', 'in', self.audience_ids.ids)]),
             'reply_to_mode': 'update',
             'mailing_type': 'mail',
+            'email_from': self.env.user.email_formatted or self.env.company.email or 'info@vus.edu.vn',
             'state': 'draft'
         }
         new_mailing = self.env['mailing.mailing'].create(mailing_vals)

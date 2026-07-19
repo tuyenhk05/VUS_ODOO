@@ -27,6 +27,18 @@
         </field>
     </record>
 
+    <!-- Giao diện Graph Pie Chart Phân bổ Lead -->
+    <record id="view_vus_recruitment_report_graph_pie" model="ir.ui.view">
+        <field name="name">vus.recruitment.report.graph.pie</field>
+        <field name="model">vus.recruitment.report</field>
+        <field name="arch" type="xml">
+            <graph string="Tỷ lệ phân bổ Lead theo Chiến dịch" type="pie">
+                <field name="campaign_id"/>
+                <field name="lead_count" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
     <!-- Hành động xem Báo cáo -->
     <record id="action_vus_recruitment_report" model="ir.actions.act_window">
         <field name="name">Báo cáo KPI</field>

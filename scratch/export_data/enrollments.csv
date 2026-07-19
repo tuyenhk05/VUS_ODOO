@@ -1,51 +1,51 @@
 name,student_id,course_id,class_id,amount,state
-VUS/ENR/2026/00387,Trần Danh Trung,English for Teens 1,English for Teens Class B,4000000.0,paid
-VUS/ENR/2026/00386,Lê Minh Bình,English for Teens 1,English for Teens Class B,4000000.0,paid
-VUS/ENR/2026/00385,Hồ Thanh Minh,English for Teens 1,English for Teens Class B,4000000.0,confirmed
-VUS/ENR/2026/00384,Nhâm Mạnh Dũng,English for Teens 1,English for Teens Class A,4000000.0,confirmed
-VUS/ENR/2026/00383,Nguyễn Hữu Thắng,English for Teens 1,English for Teens Class A,4000000.0,paid
-VUS/ENR/2026/00382,Trần Văn Đạt,English for Teens 1,English for Teens Class A,4000000.0,paid
-VUS/ENR/2026/00381,Nguyễn Văn Tùng,English for Teens 1,English for Teens Class A,4000000.0,paid
-VUS/ENR/2026/00380,Huỳnh Công Đến,English for Teens 1,English for Teens Class A,4000000.0,confirmed
-VUS/ENR/2026/00379,Lê Văn Đô,Super Minds 2,Super Minds 2 Class A,3500000.0,paid
-VUS/ENR/2026/00378,Nguyễn Hoàng Nam,Super Minds 2,Super Minds 2 Class A,3500000.0,confirmed
-VUS/ENR/2026/00377,Bùi Hoàng Việt Anh,Super Minds 2,Super Minds 2 Class A,3500000.0,paid
-VUS/ENR/2026/00376,Nguyễn Thanh Bình,Super Minds 2,Super Minds 2 Class A,3500000.0,paid
-VUS/ENR/2026/00375,Phạm Tuấn Tài,Super Minds 2,Super Minds 2 Class A,3500000.0,paid
-VUS/ENR/2026/00374,Lê Văn Xuân,Super Minds 2,Super Minds 2 Class A,3500000.0,confirmed
-VUS/ENR/2026/00373,Trần Văn Kiên,Super Minds 1,Super Minds 1 Class B,3200000.0,paid
-VUS/ENR/2026/00372,Nguyễn Văn Toàn,Super Minds 1,Super Minds 1 Class B,3200000.0,paid
-VUS/ENR/2026/00371,Lê Thị Thu,Super Minds 1,Super Minds 1 Class B,3200000.0,paid
-VUS/ENR/2026/00370,Phạm Thu Hà,Super Minds 1,Super Minds 1 Class B,3200000.0,confirmed
-VUS/ENR/2026/00369,Trần Văn Hùng,Super Minds 1,Super Minds 1 Class A,3200000.0,paid
-VUS/ENR/2026/00368,Đặng Văn Lâm,Super Minds 1,Super Minds 1 Class A,3200000.0,confirmed
-VUS/ENR/2026/00367,Bùi Tiến Dũng,Super Minds 1,Super Minds 1 Class A,3200000.0,paid
-VUS/ENR/2026/00366,Quế Ngọc Hải,Super Minds 1,Super Minds 1 Class A,3200000.0,paid
-VUS/ENR/2026/00365,Đỗ Hùng Dũng,Super Minds 1,Super Minds 1 Class A,3200000.0,paid
-VUS/ENR/2026/00364,Nguyễn Hoàng Đức,Super Minds 1,Super Minds 1 Class A,3200000.0,confirmed
-VUS/ENR/2026/00363,Nguyễn Tiến Linh,IELTS Academic,IELTS Academic Class B,5500000.0,confirmed
-VUS/ENR/2026/00362,Phạm Tuấn Hải,IELTS Academic,IELTS Academic Class B,5500000.0,paid
-VUS/ENR/2026/00361,Phan Văn Đức,IELTS Academic,IELTS Academic Class B,5500000.0,paid
-VUS/ENR/2026/00360,Trần Minh Vương,IELTS Academic,IELTS Academic Class B,5500000.0,paid
-VUS/ENR/2026/00359,Nguyễn Phong Hồng Duy,IELTS Academic,IELTS Academic Class B,5500000.0,confirmed
-VUS/ENR/2026/00358,Vũ Văn Thanh,IELTS Academic,IELTS Academic Class A,5500000.0,paid
-VUS/ENR/2026/00357,Đoàn Văn Hậu,IELTS Academic,IELTS Academic Class A,5500000.0,paid
-VUS/ENR/2026/00356,Nguyễn Quang Hải,IELTS Academic,IELTS Academic Class A,5500000.0,confirmed
-VUS/ENR/2026/00355,Nguyễn Công Phượng,IELTS Academic,IELTS Academic Class A,5500000.0,paid
-VUS/ENR/2026/00354,Lương Xuân Trường,IELTS Academic,IELTS Academic Class A,5500000.0,paid
-VUS/ENR/2026/00353,Phạm Đức Huy,IELTS Academic,IELTS Academic Class A,5500000.0,paid
-VUS/ENR/2026/00352,Trần Duy Mạnh,IELTS Academic,IELTS Academic Class A,5500000.0,confirmed
-VUS/ENR/2026/00351,Nguyễn Đình Trọng,IELTS Foundation,IELTS Foundation Class B,4500000.0,paid
-VUS/ENR/2026/00350,Võ Văn Hậu,IELTS Foundation,IELTS Foundation Class B,4500000.0,confirmed
-VUS/ENR/2026/00349,Đỗ Thị Diễm,IELTS Foundation,IELTS Foundation Class B,4500000.0,paid
-VUS/ENR/2026/00348,Phan Văn Huy,IELTS Foundation,IELTS Foundation Class B,4500000.0,paid
-VUS/ENR/2026/00347,Hoàng Thanh Lâm,IELTS Foundation,IELTS Foundation Class B,4500000.0,paid
-VUS/ENR/2026/00346,Dương Minh Quốc,IELTS Foundation,IELTS Foundation Class B,4500000.0,confirmed
-VUS/ENR/2026/00345,Bùi Thị Hạnh,IELTS Foundation,IELTS Foundation Class A,4500000.0,paid
-VUS/ENR/2026/00344,Ngô Gia Bảo,IELTS Foundation,IELTS Foundation Class A,4500000.0,paid
-VUS/ENR/2026/00343,Đặng Thu Thảo,IELTS Foundation,IELTS Foundation Class A,4500000.0,paid
-VUS/ENR/2026/00342,Vũ Hoàng Nam,IELTS Foundation,IELTS Foundation Class A,4500000.0,confirmed
-VUS/ENR/2026/00341,Phạm Minh Trí,IELTS Foundation,IELTS Foundation Class A,4500000.0,paid
-VUS/ENR/2026/00340,Trần Thị Mai,IELTS Foundation,IELTS Foundation Class A,4500000.0,paid
-VUS/ENR/2026/00339,Lê Hoàng Nam,IELTS Foundation,IELTS Foundation Class A,4500000.0,paid
+VUS/ENR/2026/00537,Trần Danh Trung,English for Teens 1,English for Teens Class B,4000000.0,paid
+VUS/ENR/2026/00536,Lê Minh Bình,English for Teens 1,English for Teens Class B,4000000.0,paid
+VUS/ENR/2026/00535,Hồ Thanh Minh,English for Teens 1,English for Teens Class B,4000000.0,confirmed
+VUS/ENR/2026/00534,Nhâm Mạnh Dũng,English for Teens 1,English for Teens Class A,4000000.0,confirmed
+VUS/ENR/2026/00533,Nguyễn Hữu Thắng,English for Teens 1,English for Teens Class A,4000000.0,paid
+VUS/ENR/2026/00532,Trần Văn Đạt,English for Teens 1,English for Teens Class A,4000000.0,paid
+VUS/ENR/2026/00531,Nguyễn Văn Tùng,English for Teens 1,English for Teens Class A,4000000.0,paid
+VUS/ENR/2026/00530,Huỳnh Công Đến,English for Teens 1,English for Teens Class A,4000000.0,confirmed
+VUS/ENR/2026/00529,Lê Văn Đô,Super Minds 2,Super Minds 2 Class A,3500000.0,paid
+VUS/ENR/2026/00528,Nguyễn Hoàng Nam,Super Minds 2,Super Minds 2 Class A,3500000.0,confirmed
+VUS/ENR/2026/00527,Bùi Hoàng Việt Anh,Super Minds 2,Super Minds 2 Class A,3500000.0,paid
+VUS/ENR/2026/00526,Nguyễn Thanh Bình,Super Minds 2,Super Minds 2 Class A,3500000.0,paid
+VUS/ENR/2026/00525,Phạm Tuấn Tài,Super Minds 2,Super Minds 2 Class A,3500000.0,paid
+VUS/ENR/2026/00524,Lê Văn Xuân,Super Minds 2,Super Minds 2 Class A,3500000.0,confirmed
+VUS/ENR/2026/00523,Trần Văn Kiên,Super Minds 1,Super Minds 1 Class B,3200000.0,paid
+VUS/ENR/2026/00522,Nguyễn Văn Toàn,Super Minds 1,Super Minds 1 Class B,3200000.0,paid
+VUS/ENR/2026/00521,Lê Thị Thu,Super Minds 1,Super Minds 1 Class B,3200000.0,paid
+VUS/ENR/2026/00520,Phạm Thu Hà,Super Minds 1,Super Minds 1 Class B,3200000.0,confirmed
+VUS/ENR/2026/00519,Trần Văn Hùng,Super Minds 1,Super Minds 1 Class A,3200000.0,paid
+VUS/ENR/2026/00518,Đặng Văn Lâm,Super Minds 1,Super Minds 1 Class A,3200000.0,confirmed
+VUS/ENR/2026/00517,Bùi Tiến Dũng,Super Minds 1,Super Minds 1 Class A,3200000.0,paid
+VUS/ENR/2026/00516,Quế Ngọc Hải,Super Minds 1,Super Minds 1 Class A,3200000.0,paid
+VUS/ENR/2026/00515,Đỗ Hùng Dũng,Super Minds 1,Super Minds 1 Class A,3200000.0,paid
+VUS/ENR/2026/00514,Nguyễn Hoàng Đức,Super Minds 1,Super Minds 1 Class A,3200000.0,confirmed
+VUS/ENR/2026/00513,Nguyễn Tiến Linh,IELTS Academic,IELTS Academic Class B,5500000.0,confirmed
+VUS/ENR/2026/00512,Phạm Tuấn Hải,IELTS Academic,IELTS Academic Class B,5500000.0,paid
+VUS/ENR/2026/00511,Phan Văn Đức,IELTS Academic,IELTS Academic Class B,5500000.0,paid
+VUS/ENR/2026/00510,Trần Minh Vương,IELTS Academic,IELTS Academic Class B,5500000.0,paid
+VUS/ENR/2026/00509,Nguyễn Phong Hồng Duy,IELTS Academic,IELTS Academic Class B,5500000.0,confirmed
+VUS/ENR/2026/00508,Vũ Văn Thanh,IELTS Academic,IELTS Academic Class A,5500000.0,paid
+VUS/ENR/2026/00507,Đoàn Văn Hậu,IELTS Academic,IELTS Academic Class A,5500000.0,paid
+VUS/ENR/2026/00506,Nguyễn Quang Hải,IELTS Academic,IELTS Academic Class A,5500000.0,confirmed
+VUS/ENR/2026/00505,Nguyễn Công Phượng,IELTS Academic,IELTS Academic Class A,5500000.0,paid
+VUS/ENR/2026/00504,Lương Xuân Trường,IELTS Academic,IELTS Academic Class A,5500000.0,paid
+VUS/ENR/2026/00503,Phạm Đức Huy,IELTS Academic,IELTS Academic Class A,5500000.0,paid
+VUS/ENR/2026/00502,Trần Duy Mạnh,IELTS Academic,IELTS Academic Class A,5500000.0,confirmed
+VUS/ENR/2026/00501,Nguyễn Đình Trọng,IELTS Foundation,IELTS Foundation Class B,4500000.0,paid
+VUS/ENR/2026/00500,Võ Văn Hậu,IELTS Foundation,IELTS Foundation Class B,4500000.0,confirmed
+VUS/ENR/2026/00499,Đỗ Thị Diễm,IELTS Foundation,IELTS Foundation Class B,4500000.0,paid
+VUS/ENR/2026/00498,Phan Văn Huy,IELTS Foundation,IELTS Foundation Class B,4500000.0,paid
+VUS/ENR/2026/00497,Hoàng Thanh Lâm,IELTS Foundation,IELTS Foundation Class B,4500000.0,paid
+VUS/ENR/2026/00496,Dương Minh Quốc,IELTS Foundation,IELTS Foundation Class B,4500000.0,confirmed
+VUS/ENR/2026/00495,Bùi Thị Hạnh,IELTS Foundation,IELTS Foundation Class A,4500000.0,paid
+VUS/ENR/2026/00494,Ngô Gia Bảo,IELTS Foundation,IELTS Foundation Class A,4500000.0,paid
+VUS/ENR/2026/00493,Đặng Thu Thảo,IELTS Foundation,IELTS Foundation Class A,4500000.0,paid
+VUS/ENR/2026/00492,Vũ Hoàng Nam,IELTS Foundation,IELTS Foundation Class A,4500000.0,confirmed
+VUS/ENR/2026/00491,Phạm Minh Trí,IELTS Foundation,IELTS Foundation Class A,4500000.0,paid
+VUS/ENR/2026/00490,Trần Thị Mai,IELTS Foundation,IELTS Foundation Class A,4500000.0,paid
+VUS/ENR/2026/00489,Lê Hoàng Nam,IELTS Foundation,IELTS Foundation Class A,4500000.0,paid
 VUS/ENR/2026/00001,Nguyễn Minh Anh,IELTS Foundation,IELTS Foundation Class A,4500000.0,confirmed

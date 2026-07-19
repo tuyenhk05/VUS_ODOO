@@ -18,11 +18,59 @@ class VusClassSession(models.Model):
     name = fields.Char(string='Tên buổi học', compute='_compute_name', store=True)
     
     attendance_sheet_id = fields.Many2one('vus.attendance.sheet', string='Bảng điểm danh liên kết')
-    attendance_state = fields.Selection(related='attendance_sheet_id.state', string='Trạng thái điểm danh')
+    attendance_state = fields.Selection(related='attendance_sheet_id.state', string='Trạng thái điểm danh', store=True)
+    session_count = fields.Integer(string='Số ca dạy', compute='_compute_session_count', store=True)
+
+    @api.depends('class_id')
+    def _compute_session_count(self):
+        for rec in self:
+            rec.session_count = 1
 
     # Các trường Datetime lưu giờ học chính xác phục vụ hiển thị trên lưới thời gian của Calendar
     start_datetime = fields.Datetime(string='Thời gian bắt đầu', compute='_compute_datetimes', store=True)
     end_datetime = fields.Datetime(string='Thời gian kết thúc', compute='_compute_datetimes', store=True)
+
+    session_status = fields.Selection([
+        ('regular', 'Lớp chính thức'),
+        ('substituted', 'Dạy thay'),
+        ('makeup', 'Dạy bù / Học bù'),
+        ('leave', 'Giáo viên báo nghỉ')
+    ], string='Trạng thái buổi học', compute='_compute_session_status', store=True, default='regular')
+
+    @api.depends('teacher_id', 'class_id.teacher_id', 'date')
+    def _compute_session_status(self):
+        for rec in self:
+            leave_line = self.env['vus.teacher.leave.line'].search([
+                ('session_id', '=', rec.id)
+            ], limit=1)
+            
+            if leave_line:
+                if leave_line.state == 'pending':
+                    rec.session_status = 'leave'
+                elif leave_line.state == 'substituted':
+                    rec.session_status = 'substituted'
+                elif leave_line.state == 'rescheduled':
+                    rec.session_status = 'makeup'
+            else:
+                if rec.teacher_id and rec.class_id.teacher_id and rec.teacher_id != rec.class_id.teacher_id:
+                    rec.session_status = 'substituted'
+                else:
+                    rec.session_status = 'regular'
+
+    def action_report_leave(self):
+        self.ensure_one()
+        return {
+            'name': 'Báo vắng giảng viên',
+            'type': 'ir.actions.act_window',
+            'res_model': 'vus.teacher.leave',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_teacher_id': self.teacher_id.id,
+                'default_leave_date': self.date,
+                'default_class_id': self.class_id.id,
+            }
+        }
 
     @api.depends('class_id', 'session_number', 'date')
     def _compute_name(self):

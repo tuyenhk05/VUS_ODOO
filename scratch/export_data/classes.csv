@@ -2,10 +2,10 @@ class_name,class_code,course_id,term_id,time_slot_id,teacher_id,classroom,max_st
 English for Teens Class B,ET1-B,English for Teens 1,Kỳ Thu 2026,Thứ 3 - Thứ 5 - Thứ 7 | Ca 1 (17:30 - 19:00),Cô Lê Thị Hồng,Phòng 109,20,2026-08-31,2026-08-31,opened
 English for Teens Class A,ET1-A,English for Teens 1,Kỳ Thu 2026,Thứ 2 - Thứ 4 - Thứ 6 | Ca 1 (17:30 - 19:00),Thầy John Smith,Phòng 108,20,2026-08-30,2026-08-30,opened
 English for Communication Class A,EC1-A,English for Communication,Kỳ Thu 2026,Thứ 2 - Thứ 4 - Thứ 6 | Ca 2 (19:15 - 20:45),Thầy Nguyễn Hữu Nhân,Phòng 110,20,2026-08-30,2026-08-30,opened
-Super Minds 2 Class A,SM2-A,Super Minds 2,Kỳ Hè 2026,Thứ 7 - Chủ Nhật | Ca 3 (Thứ 7/CN: 08:00 - 09:30),Cô Lê Thị Hồng,Phòng 107,15,2026-06-05,2026-06-05,opened
-Super Minds 1 Class A,SM1-A,Super Minds 1,Kỳ Hè 2026,Thứ 7 - Chủ Nhật | Ca 1 (17:30 - 19:00),Thầy David Lee,Phòng 105,15,2026-06-05,2026-06-05,opened
 Super Minds 1 Class B,SM1-B,Super Minds 1,Kỳ Hè 2026,Thứ 7 - Chủ Nhật | Ca 2 (19:15 - 20:45),Thầy John Smith,Phòng 106,15,2026-06-05,2026-06-05,opened
+Super Minds 1 Class A,SM1-A,Super Minds 1,Kỳ Hè 2026,Thứ 7 - Chủ Nhật | Ca 1 (17:30 - 19:00),Thầy David Lee,Phòng 105,15,2026-06-05,2026-06-05,opened
+Super Minds 2 Class A,SM2-A,Super Minds 2,Kỳ Hè 2026,Thứ 7 - Chủ Nhật | Ca 3 (Thứ 7/CN: 08:00 - 09:30),Cô Lê Thị Hồng,Phòng 107,15,2026-06-05,2026-06-05,opened
 IELTS Foundation Class B,IELTS-FD-B,IELTS Foundation,Kỳ Hè 2026,Thứ 3 - Thứ 5 - Thứ 7 | Ca 1 (17:30 - 19:00),Cô Lê Thị Hồng,Phòng 102,20,2026-05-31,2026-05-31,opened
 IELTS Academic Class B,IELTS-AC-B,IELTS Academic,Kỳ Hè 2026,Thứ 3 - Thứ 5 - Thứ 7 | Ca 2 (19:15 - 20:45),Cô Trần Thị Lan,Phòng 104,20,2026-05-31,2026-05-31,opened
-IELTS Foundation Class A,IELTS-FD-A,IELTS Foundation,Kỳ Hè 2026,Thứ 2 - Thứ 4 - Thứ 6 | Ca 1 (17:30 - 19:00),Thầy John Smith,Phòng 101,20,2026-05-30,2026-05-30,opened
 IELTS Academic Class A,IELTS-AC-A,IELTS Academic,Kỳ Hè 2026,Thứ 2 - Thứ 4 - Thứ 6 | Ca 2 (19:15 - 20:45),Thầy Nguyễn Hữu Nhân,Phòng 103,20,2026-05-30,2026-05-30,opened
+IELTS Foundation Class A,IELTS-FD-A,IELTS Foundation,Kỳ Hè 2026,Thứ 2 - Thứ 4 - Thứ 6 | Ca 1 (17:30 - 19:00),Thầy John Smith,Phòng 101,20,2026-05-30,2026-05-30,opened

@@ -442,7 +442,7 @@ with registry.cursor() as cr:
             'name': name,
             'email': f"hocvien{idx+1}@gmail.com",
             'phone': f"0987{idx+1:06d}",
-            'is_student': False,
+            'is_student': True,
             'student_status': 'potential',
             'is_company': False,
             'marketing_audience_ids': audience_val
@@ -623,7 +623,7 @@ with registry.cursor() as cr:
 
     # Hàm export model ra file CSV
     def export_to_csv(model_name, fields_list, file_name):
-        export_dir = r"C:\Program Files\Odoo 17.0.20260615\server\custom_addons\scratch\export_data"
+        export_dir = r"C:\Users\HUYNH KIM TUYEN\.gemini\antigravity-ide\brain\9d124192-e176-472b-92f2-9dee61557ff3\scratch\export_data"
         if not os.path.exists(export_dir):
             os.makedirs(export_dir)
             
@@ -657,7 +657,7 @@ with registry.cursor() as cr:
     
     # Chỉ xuất các giảng viên ra teachers.csv
     teachers_records = env['res.partner'].search([('is_teacher', '=', True)])
-    teachers_file = r"C:\Program Files\Odoo 17.0.20260615\server\custom_addons\scratch\export_data\teachers.csv"
+    teachers_file = r"C:\Users\HUYNH KIM TUYEN\.gemini\antigravity-ide\brain\9d124192-e176-472b-92f2-9dee61557ff3\scratch\export_data\teachers.csv"
     with open(teachers_file, mode='w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
         writer.writerow(['name', 'email', 'phone', 'is_teacher'])
@@ -667,12 +667,12 @@ with registry.cursor() as cr:
 
     # Chỉ xuất các học viên ra students.csv
     students_records = env['res.partner'].search([('is_student', '=', True)])
-    students_file = r"C:\Program Files\Odoo 17.0.20260615\server\custom_addons\scratch\export_data\students.csv"
+    students_file = r"C:\Users\HUYNH KIM TUYEN\.gemini\antigravity-ide\brain\9d124192-e176-472b-92f2-9dee61557ff3\scratch\export_data\students.csv"
     with open(students_file, mode='w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
-        writer.writerow(['name', 'email', 'phone', 'is_student', 'student_status'])
+        writer.writerow(['name', 'student_code', 'email', 'phone', 'is_student', 'student_status'])
         for s in students_records:
-            writer.writerow([s.name, s.email or '', s.phone or '', s.is_student, s.student_status])
+            writer.writerow([s.name, s.student_code or '', s.email or '', s.phone or '', s.is_student, s.student_status])
     print(f"✔ Đã kết xuất res.partner (students) ra tệp: {students_file}")
 
     export_to_csv('vus.marketing.campaign', ['name', 'code', 'budget', 'actual_cost', 'lead_count', 'cost_per_lead', 'conversion_count', 'conversion_rate', 'total_revenue', 'roi', 'state'], 'campaigns.csv')

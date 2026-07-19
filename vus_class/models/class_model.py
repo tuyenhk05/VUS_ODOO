@@ -10,7 +10,7 @@ class VusClass(models.Model):
     _order = 'start_date desc'
 
     class_name = fields.Char(string='Tên lớp', required=True)
-    class_code = fields.Char(string='Mã lớp', required=True, copy=False)
+    class_code = fields.Char(string='Mã lớp', required=True, readonly=True, copy=False, default='New')
     
     course_id = fields.Many2one('vus.course', string='Khóa học', required=True)
     course_level = fields.Selection(related='course_id.level', string='Trình độ', store=True)
@@ -38,6 +38,29 @@ class VusClass(models.Model):
         ('cancelled', 'Đã hủy')
     ], string='Trạng thái', default='draft', required=True)
 
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('class_code', 'New') == 'New':
+                course_id = vals.get('course_id')
+                if course_id:
+                    course = self.env['vus.course'].browse(course_id)
+                    course_code = course.code or 'CLASS'
+                else:
+                    course_code = 'CLASS'
+                year = fields.Date.today().strftime('%y')
+                last_class = self.search([('class_code', 'like', f"{course_code}-{year}-%")], order='id desc', limit=1)
+                if last_class and last_class.class_code:
+                    try:
+                        last_seq = int(last_class.class_code.split('-')[-1])
+                        next_seq = last_seq + 1
+                    except:
+                        next_seq = 1
+                else:
+                    next_seq = 1
+                vals['class_code'] = f"{course_code}-{year}-{next_seq:03d}"
+        return super(VusClass, self).create(vals_list)
 
     def action_open_class(self):
         self.state = 'opened'
