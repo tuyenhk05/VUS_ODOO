@@ -17,6 +17,7 @@
         'vus_course',
         'vus_class',
         'account',
+        'mail',
     ],
     'data': [
         'security/vus_enrollment_security.xml',

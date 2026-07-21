@@ -200,19 +200,24 @@ class VusClassInherit(models.Model):
                 continue
                 
             deadline_str = rec.payment_deadline.strftime('%d/%m/%Y')
-            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url', 'http://localhost:8069')
             class_link = f"{base_url}/web#id={rec.id}&model=vus.class&view_type=form"
             summary = f"[VUS] Hạn đóng học phí cận kề - Lớp {rec.class_name}"
-            note = f"<p>Kính gửi Bộ phận Giáo vụ/Staff,</p>" \
-                   f"<p>Hệ thống xin thông báo lớp học <strong>{rec.class_name}</strong> đang có hạn đóng học phí cận kề:</p>" \
+            note = f"<p>⏰ <b>CẢNH BÁO HẠN ĐÓNG HỌC PHÍ</b></p>" \
+                   f"<p>Kính gửi Bộ phận Giáo vụ / Staff,</p>" \
+                   f"<p>Hệ thống xin thông báo lớp học <b>{rec.class_name}</b> đang có hạn đóng học phí cận kề:</p>" \
                    f"<ul>" \
-                   f"  <li><strong>Hạn đóng phí:</strong> {deadline_str}</li>" \
-                   f"  <li><strong>Số học viên chưa đóng phí:</strong> {unpaid_count} học viên</li>" \
+                   f"  <li><b>Hạn đóng phí:</b> {deadline_str}</li>" \
+                   f"  <li><b>Số học viên chưa đóng phí:</b> {unpaid_count} học viên</li>" \
                    f"</ul>" \
-                   f"<p>Vui lòng click vào <a href=\"{class_link}\" target=\"_blank\"><strong>đây</strong></a> để xem chi tiết danh sách học viên lớp học và đôn đốc hoàn thành học phí.</p>"
+                   f"<p style=\"margin-top: 10px;\">" \
+                   f"  <a href=\"{class_link}\" target=\"_blank\" style=\"background-color: #0C2B5C; color: #FFFFFF; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; display: inline-block;\">" \
+                   f"    👉 Click vào đây để xem chi tiết Lớp học {rec.class_name}" \
+                   f"  </a>" \
+                   f"</p>"
             
             for user in staff_users:
-                # Kiểm tra trùng lặp
+                # Check duplicate
                 existing_msg = self.env['mail.message'].search([
                     ('model', '=', 'vus.class'),
                     ('res_id', '=', rec.id),
@@ -220,11 +225,20 @@ class VusClassInherit(models.Model):
                     ('subject', '=', summary)
                 ], limit=1)
                 if not existing_msg:
-                    rec.message_notify(
-                        body=Markup(note),
-                        subject=summary,
-                        partner_ids=[user.partner_id.id]
-                    )
+                    msg = self.env['mail.message'].sudo().create({
+                        'model': 'vus.class',
+                        'res_id': rec.id,
+                        'message_type': 'notification',
+                        'subject': summary,
+                        'body': Markup(note),
+                        'partner_ids': [(6, 0, [user.partner_id.id])],
+                    })
+                    self.env['mail.notification'].sudo().create({
+                        'mail_message_id': msg.id,
+                        'res_partner_id': user.partner_id.id,
+                        'notification_type': 'inbox',
+                        'is_read': False,
+                    })
 
     @api.depends('term_id', 'time_slot_id', 'eligible_teacher_ids')
     def _compute_suggested_teachers(self):

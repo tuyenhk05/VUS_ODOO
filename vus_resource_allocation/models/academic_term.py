@@ -56,11 +56,10 @@ class VusAcademicTerm(models.Model):
 
         # 2. Gửi Odoo Inbox Message cho toàn bộ Giảng viên
         teacher_group = self.env.ref('vus_student.group_vus_teacher', raise_if_not_found=False)
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url', 'http://localhost:8069')
         if teacher_group:
             teacher_users = teacher_group.users
             for user in teacher_users:
-                # Tìm xem giáo viên đã có phiếu đăng ký rảnh nào chưa
                 reg = self.env['vus.teacher.registration'].search([
                     ('term_id', '=', self.id),
                     ('teacher_id', '=', user.partner_id.id)
@@ -70,16 +69,32 @@ class VusAcademicTerm(models.Model):
                 else:
                     reg_link = f"{base_url}/web#model=vus.teacher.registration&view_type=list"
                 
-                self.message_notify(
-                    body=Markup(f"<p>Kính chào Thầy/Cô <strong>{user.name}</strong>,</p>"
-                         f"<p>Hệ thống VUS Đào tạo đã chính thức mở cổng tiếp nhận đăng ký lịch dạy rảnh cho <strong>Kỳ học: {self.name}</strong>.</p>"
-                         f"<ul>"
-                         f"  <li><strong>Hạn chót đăng ký:</strong> {deadline_str}</li>"
-                         f"</ul>"
-                         f"<p>Vui lòng click vào <a href=\"{reg_link}\" target=\"_blank\"><strong>đây</strong></a> để điền và hoàn thành phiếu <strong>Đăng ký lịch dạy</strong> trước thời hạn trên.</p>"),
-                    subject=f"[VUS] Mở cổng đăng ký lịch dạy rảnh - Kỳ {self.name}",
-                    partner_ids=[user.partner_id.id]
-                )
+                t_subj = f"[VUS] Mở cổng đăng ký lịch dạy rảnh - Kỳ {self.name}"
+                t_body = f"<p>📅 <b>THÔNG BÁO MỞ CỔNG ĐĂNG KÝ LỊCH DẠY RẢNH</b></p>" \
+                         f"<p>Kính chào Thầy / Cô <b>{user.name}</b>,</p>" \
+                         f"<p>Hệ thống VUS Đào tạo đã chính thức mở cổng tiếp nhận đăng ký lịch dạy rảnh cho <b>Kỳ học: {self.name}</b>.</p>" \
+                         f"<ul>" \
+                         f"  <li><b>Hạn chót đăng ký:</b> {deadline_str}</li>" \
+                         f"</ul>" \
+                         f"<p style=\"margin-top: 10px;\">" \
+                         f"  <a href=\"{reg_link}\" target=\"_blank\" style=\"background-color: #0C2B5C; color: #FFFFFF; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; display: inline-block;\">" \
+                         f"    👉 Click vào đây để điền Phiếu đăng ký lịch dạy" \
+                         f"  </a>" \
+                         f"</p>"
+                msg = self.env['mail.message'].sudo().create({
+                    'model': 'vus.academic.term',
+                    'res_id': self.id,
+                    'message_type': 'notification',
+                    'subject': t_subj,
+                    'body': Markup(t_body),
+                    'partner_ids': [(6, 0, [user.partner_id.id])],
+                })
+                self.env['mail.notification'].sudo().create({
+                    'mail_message_id': msg.id,
+                    'res_partner_id': user.partner_id.id,
+                    'notification_type': 'inbox',
+                    'is_read': False,
+                })
         
         # 3. Gửi Odoo Inbox Message cho toàn bộ Quản lý (Manager)
         manager_group = self.env.ref('vus_student.group_vus_manager', raise_if_not_found=False)
@@ -87,16 +102,32 @@ class VusAcademicTerm(models.Model):
             manager_users = manager_group.users
             for user in manager_users:
                 term_link = f"{base_url}/web#id={self.id}&model=vus.academic.term&view_type=form"
-                self.message_notify(
-                    body=Markup(f"<p>Kính gửi Quản lý Đào tạo,</p>"
-                         f"<p>Cổng đăng ký lịch dạy rảnh cho <strong>Kỳ học: {self.name}</strong> đã chính thức được mở.</p>"
-                         f"<ul>"
-                         f"  <li><strong>Hạn chót đăng ký của giáo viên:</strong> {deadline_str}</li>"
-                         f"</ul>"
-                         f"<p>Vui lòng click vào <a href=\"{term_link}\" target=\"_blank\"><strong>đây</strong></a> để theo dõi tiến độ đăng ký của các giảng viên phục vụ công tác xếp lớp.</p>"),
-                    subject=f"[VUS] Theo dõi cổng đăng ký lịch dạy rảnh - Kỳ {self.name}",
-                    partner_ids=[user.partner_id.id]
-                )
+                m_subj = f"[VUS] Theo dõi cổng đăng ký lịch dạy rảnh - Kỳ {self.name}"
+                m_body = f"<p>📊 <b>QUẢN LÝ CỔNG ĐĂNG KÝ LỊCH DẠY RẢNH</b></p>" \
+                         f"<p>Kính gửi Quản lý Đào tạo,</p>" \
+                         f"<p>Cổng đăng ký lịch dạy rảnh cho <b>Kỳ học: {self.name}</b> đã chính thức được mở.</p>" \
+                         f"<ul>" \
+                         f"  <li><b>Hạn chót đăng ký của giáo viên:</b> {deadline_str}</li>" \
+                         f"</ul>" \
+                         f"<p style=\"margin-top: 10px;\">" \
+                         f"  <a href=\"{term_link}\" target=\"_blank\" style=\"background-color: #0C2B5C; color: #FFFFFF; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; display: inline-block;\">" \
+                         f"    👉 Click vào đây để mở theo dõi Kỳ học {self.name}" \
+                         f"  </a>" \
+                         f"</p>"
+                msg = self.env['mail.message'].sudo().create({
+                    'model': 'vus.academic.term',
+                    'res_id': self.id,
+                    'message_type': 'notification',
+                    'subject': m_subj,
+                    'body': Markup(m_body),
+                    'partner_ids': [(6, 0, [user.partner_id.id])],
+                })
+                self.env['mail.notification'].sudo().create({
+                    'mail_message_id': msg.id,
+                    'res_partner_id': user.partner_id.id,
+                    'notification_type': 'inbox',
+                    'is_read': False,
+                })
 
     @api.model
     def _cron_notify_registration_deadline(self):
@@ -122,9 +153,8 @@ class VusAcademicTerm(models.Model):
             
             # Cảnh báo cho Giảng viên chưa đăng ký ca rảnh trong kỳ này
             if teacher_group:
-                base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url', 'http://localhost:8069')
                 for user in teacher_group.users:
-                    # Kiểm tra xem giáo viên này đã có phiếu đăng ký rảnh nào trong kỳ này chưa
                     reg = self.env['vus.teacher.registration'].search([
                         ('term_id', '=', term.id),
                         ('teacher_id', '=', user.partner_id.id)
@@ -145,20 +175,35 @@ class VusAcademicTerm(models.Model):
                         ('subject', '=', summary)
                     ], limit=1)
                     if not existing_msg:
-                        term.message_notify(
-                            body=Markup(f"<p>Kính chào Thầy/Cô <strong>{user.name}</strong>,</p>"
-                                 f"<p>Hệ thống xin nhắc nhở lịch đăng ký ca dạy rảnh cho <strong>Kỳ học: {term.name}</strong> sắp hết hạn:</p>"
-                                 f"<ul>"
-                                 f"  <li><strong>Hạn chót:</strong> {deadline_str}</li>"
-                                 f"</ul>"
-                                 f"<p>Hiện tại hệ thống chưa ghi nhận phiếu đăng ký của bạn. Vui lòng click vào <a href=\"{reg_link}\" target=\"_blank\"><strong>đây</strong></a> để hoàn thành ngay để không ảnh hưởng đến việc xếp lịch dạy.</p>"),
-                            subject=summary,
-                            partner_ids=[user.partner_id.id]
-                        )
+                        t_body = f"<p>⏰ <b>CẢNH BÁO HẠN ĐĂNG KÝ LỊCH DẠY RẢNH SẮP HẾT</b></p>" \
+                                 f"<p>Kính chào Thầy / Cô <b>{user.name}</b>,</p>" \
+                                 f"<p>Hệ thống xin nhắc nhở lịch đăng ký ca dạy rảnh cho <b>Kỳ học: {term.name}</b> sắp hết hạn:</p>" \
+                                 f"<ul>" \
+                                 f"  <li><b>Hạn chót:</b> {deadline_str}</li>" \
+                                 f"</ul>" \
+                                 f"<p style=\"margin-top: 10px;\">" \
+                                 f"  <a href=\"{reg_link}\" target=\"_blank\" style=\"background-color: #0C2B5C; color: #FFFFFF; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; display: inline-block;\">" \
+                                 f"    👉 Click vào đây để hoàn thành Phiếu đăng ký" \
+                                 f"  </a>" \
+                                 f"</p>"
+                        msg = self.env['mail.message'].sudo().create({
+                            'model': 'vus.academic.term',
+                            'res_id': term.id,
+                            'message_type': 'notification',
+                            'subject': summary,
+                            'body': Markup(t_body),
+                            'partner_ids': [(6, 0, [user.partner_id.id])],
+                        })
+                        self.env['mail.notification'].sudo().create({
+                            'mail_message_id': msg.id,
+                            'res_partner_id': user.partner_id.id,
+                            'notification_type': 'inbox',
+                            'is_read': False,
+                        })
                         
             # Nhắc nhở cho Managers để đôn đốc
             if manager_group:
-                base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url', 'http://localhost:8069')
                 for user in manager_group.users:
                     summary = f"[VUS] Đôn đốc hạn đăng ký lịch dạy rảnh - Kỳ {term.name}"
                     existing_msg = self.env['mail.message'].search([
@@ -169,13 +214,28 @@ class VusAcademicTerm(models.Model):
                     ], limit=1)
                     if not existing_msg:
                         term_link = f"{base_url}/web#id={term.id}&model=vus.academic.term&view_type=form"
-                        term.message_notify(
-                            body=Markup(f"<p>Kính gửi Quản lý Đào tạo,</p>"
-                                 f"<p>Thời hạn đăng ký lịch dạy rảnh cho <strong>Kỳ học: {term.name}</strong> sẽ đóng vào ngày <strong>{deadline_str}</strong>.</p>"
-                                 f"<p>Vui lòng click vào <a href=\"{term_link}\" target=\"_blank\"><strong>đây</strong></a> để kiểm tra và đôn đốc các giảng viên chưa hoàn thành đăng ký.</p>"),
-                            subject=summary,
-                            partner_ids=[user.partner_id.id]
-                        )
+                        m_body = f"<p>📌 <b>ĐÔN ĐỐC HẠN ĐĂNG KÝ LỊCH DẠY RẢNH</b></p>" \
+                                 f"<p>Kính gửi Quản lý Đào tạo,</p>" \
+                                 f"<p>Thời hạn đăng ký lịch dạy rảnh cho <b>Kỳ học: {term.name}</b> sẽ đóng vào ngày <b>{deadline_str}</b>.</p>" \
+                                 f"<p style=\"margin-top: 10px;\">" \
+                                 f"  <a href=\"{term_link}\" target=\"_blank\" style=\"background-color: #0C2B5C; color: #FFFFFF; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; display: inline-block;\">" \
+                                 f"    👉 Click vào đây để đôn đốc giảng viên chưa đăng ký" \
+                                 f"  </a>" \
+                                 f"</p>"
+                        msg = self.env['mail.message'].sudo().create({
+                            'model': 'vus.academic.term',
+                            'res_id': term.id,
+                            'message_type': 'notification',
+                            'subject': summary,
+                            'body': Markup(m_body),
+                            'partner_ids': [(6, 0, [user.partner_id.id])],
+                        })
+                        self.env['mail.notification'].sudo().create({
+                            'mail_message_id': msg.id,
+                            'res_partner_id': user.partner_id.id,
+                            'notification_type': 'inbox',
+                            'is_read': False,
+                        })
 
     def action_activate(self):
         self.write({'state': 'active'})

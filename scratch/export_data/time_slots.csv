@@ -1,9 +1,0 @@
-days_group,shift,start_time,end_time,name
-mwf,ca1,17.5,19.0,Thứ 2 - Thứ 4 - Thứ 6 | Ca 1 (17:30 - 19:00)
-mwf,ca2,19.25,20.75,Thứ 2 - Thứ 4 - Thứ 6 | Ca 2 (19:15 - 20:45)
-ss,ca1,8.0,9.5,Thứ 7 - Chủ Nhật | Ca 1 (17:30 - 19:00)
-ss,ca2,9.75,11.25,Thứ 7 - Chủ Nhật | Ca 2 (19:15 - 20:45)
-ss,ca3,14.0,15.5,Thứ 7 - Chủ Nhật | Ca 3 (Thứ 7/CN: 08:00 - 09:30)
-ss,ca4,15.75,17.25,Thứ 7 - Chủ Nhật | Ca 4 (Thứ 7/CN: 09:45 - 11:15)
-tts,ca1,17.5,19.0,Thứ 3 - Thứ 5 - Thứ 7 | Ca 1 (17:30 - 19:00)
-tts,ca2,19.25,20.75,Thứ 3 - Thứ 5 - Thứ 7 | Ca 2 (19:15 - 20:45)

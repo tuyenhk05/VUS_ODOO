@@ -170,19 +170,33 @@ class VusClassSession(models.Model):
             if not existing_msg:
                 slot_name = sess.time_slot_id.name if sess.time_slot_id else ''
                 date_str = sess.date.strftime('%d/%m/%Y') if sess.date else ''
-                base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+                base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url', 'http://localhost:8069')
                 session_link = f"{base_url}/web#id={sess.id}&model=vus.class.session&view_type=form"
-                note = f"<p>Kính chào Thầy/Cô <strong>{user.name}</strong>,</p>" \
+                note = f"<p>📚 <b>THÔNG BÁO LỊCH DẠY HÔM NAY</b></p>" \
+                       f"<p>Kính chào Thầy / Cô <b>{user.name}</b>,</p>" \
                        f"<p>Hệ thống xin thông báo lịch giảng dạy của bạn trong ngày hôm nay như sau:</p>" \
                        f"<ul>" \
-                       f"  <li><strong>Lớp học:</strong> {sess.class_id.class_name}</li>" \
-                       f"  <li><strong>Buổi học:</strong> Buổi số {sess.session_number}</li>" \
-                       f"  <li><strong>Ca học:</strong> {slot_name}</li>" \
-                       f"  <li><strong>Ngày học:</strong> {date_str}</li>" \
+                       f"  <li><b>Lớp học:</b> {sess.class_id.class_name}</li>" \
+                       f"  <li><b>Buổi học:</b> Buổi số {sess.session_number}</li>" \
+                       f"  <li><b>Ca học:</b> {slot_name}</li>" \
+                       f"  <li><b>Ngày học:</b> {date_str}</li>" \
                        f"</ul>" \
-                       f"<p>Vui lòng click vào <a href=\"{session_link}\" target=\"_blank\"><strong>đây</strong></a> để vào chi tiết buổi học và điểm danh khi buổi học diễn ra. Chúc Thầy/Cô một buổi dạy thành công!</p>"
-                sess.message_notify(
-                    body=Markup(note),
-                    subject=summary,
-                    partner_ids=[user.partner_id.id]
-                )
+                       f"<p style=\"margin-top: 10px;\">" \
+                       f"  <a href=\"{session_link}\" target=\"_blank\" style=\"background-color: #0C2B5C; color: #FFFFFF; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; display: inline-block;\">" \
+                       f"    👉 Click vào đây để mở Buổi học &amp; Điểm danh" \
+                       f"  </a>" \
+                       f"</p>"
+                msg = self.env['mail.message'].sudo().create({
+                    'model': 'vus.class.session',
+                    'res_id': sess.id,
+                    'message_type': 'notification',
+                    'subject': summary,
+                    'body': Markup(note),
+                    'partner_ids': [(6, 0, [user.partner_id.id])],
+                })
+                self.env['mail.notification'].sudo().create({
+                    'mail_message_id': msg.id,
+                    'res_partner_id': user.partner_id.id,
+                    'notification_type': 'inbox',
+                    'is_read': False,
+                })

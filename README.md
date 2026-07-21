@@ -1,245 +1,275 @@
-# Hệ thống Quản lý Đào tạo VUS (VUS ERP Custom Addons)
-
-Bộ phân hệ mở rộng (Custom Addons) được phát triển trên nền tảng **Odoo 17.0** nhằm tối ưu hóa và số hóa toàn diện quy trình vận hành đào tạo, tuyển sinh, marketing, kế toán học phí và chăm sóc học viên cho hệ thống Anh Văn Hội Việt Mỹ (VUS).
+# BÁO CÁO NGHIỆP VỤ & HƯỚNG DẪN CÀI ĐẶT HỆ THỐNG VUS ERP & STUDENT PORTAL
 
 ---
 
-## 📂 1. Cấu trúc và Chức năng các phân hệ
+## 📋 1. BÁO CÁO TỔNG QUAN DỰ ÁN
 
-Dự án được module hóa thành các phân hệ độc lập, liên kết chặt chẽ qua các mối quan hệ nghiệp vụ:
+Bộ giải pháp mở rộng (Custom Addons) được thiết kế và phát triển trên nền tảng **Odoo 17.0 ERP** nhằm mục đích số hóa toàn diện quy trình vận hành đào tạo, quản lý tuyển sinh, tiếp thị marketing, kế toán học phí và cổng thông tin học viên tự phục vụ cho **Hệ thống Anh Văn Hội Việt Mỹ (VUS)**.
 
-1. **`vus_student`**: Quản lý thông tin học viên & giảng viên.
-   - Kế thừa danh mục đối tác chuẩn `res.partner`.
-   - Quản lý chi tiết vòng đời học viên thông qua các trạng thái: `Potential` (Tiềm năng), `Waiting` (Chờ xếp lớp), `Studying` (Đang học), `Reserved` (Bảo lưu), `Completed` (Hoàn thành).
-   - Tối ưu hóa giao diện: Tạo menu **Nhân sự** riêng biệt gom nhóm Học viên và Giảng viên để dễ dàng truy xuất.
-   - **Tính năng mới**: Hỗ trợ thiết lập **Số lớp dạy tối đa/kỳ** (`max_classes`) cho từng Giảng viên.
-2. **`vus_course`**: Quản lý danh mục khóa học (`vus.course`).
-   - Lưu trữ thông tin học phí gốc, cấp độ (Starter, Beginner, Intermediate, Advanced,...), số buổi học, thời lượng học.
-   - **Nút thông minh (Smart Button)**: Xem nhanh số lượng lớp học đang mở thuộc khóa học và điều hướng nhanh sang danh sách lớp đó.
-   - **Tính năng mới**: Hỗ trợ cấu hình **Số lớp tối đa/kỳ** (`max_classes`) cho từng khóa học.
-3. **`vus_class`**: Quản lý thông tin lớp học (`vus.class`).
-   - Ghi nhận ngày khai giảng, phòng học (`classroom`), lịch học, giảng viên phụ trách, sĩ số tối đa.
-   - **Nút thông minh (Smart Button)**: Xem sĩ số học viên thực tế và điều hướng nhanh sang danh sách học viên đang theo học.
-4. **`vus_enrollment`**: Ghi danh khóa học và liên kết kế toán tự động (`vus.enrollment`).
-   - Tự động lấy thông tin học phí từ khóa học được cấu hình và kiểm tra ràng buộc không cho phép xác nhận ghi danh khi chưa chọn lớp học.
-   - **Định hướng Kế toán**: Khi bấm xác nhận một phiếu ghi danh đơn lẻ, hệ thống tự động tạo hóa đơn khách hàng (`out_invoice`), đồng thời tự động điều hướng (Redirect) ngay sang giao diện Form hóa đơn đó để giáo vụ tiến hành thu phí nhanh chóng.
-   - Trạng thái phiếu tự động chuyển thành **Đã thanh toán** khi hóa đơn được thanh toán đầy đủ.
-5. **`vus_attendance`**: Quản lý điểm danh học viên hàng loạt theo buổi học (`vus.attendance`).
-   - Cung cấp giao diện điểm danh theo buổi (`vus.attendance.sheet`), cho phép tải nhanh danh sách học viên từ lớp học và điểm danh hàng loạt bằng 1-Click.
-   - Lưu trữ lịch sử chuyên cần chi tiết của từng học viên trực tiếp trên phiếu ghi danh.
-   - **Bảo mật phân quyền**: Tối ưu hóa trường Giảng viên (`teacher_id`) trên bảng điểm danh thành dạng Many2one cho phép ghi nhận và thay đổi đối với cả giáo viên dạy thay hoặc dạy bù đứng lớp.
-6. **`vus_marketing`**: Quản lý chiến dịch Marketing và theo dõi Leads (`vus.marketing.campaign`).
-   - Theo dõi ngân sách chiến dịch, chi phí thực tế, chỉ tiêu Lead.
-   - Kế thừa `crm.lead` để liên kết chiến dịch và nguồn (Facebook, Website, Sự kiện,...).
-   - Tự động thống kê số lead thực tế, số lượng chuyển đổi thành công, doanh thu đóng học phí liên kết và tính toán tỷ lệ chuyển đổi cũng như tỷ suất sinh lợi **ROI (%)** chuẩn xác.
-7. **`vus_placement_test`**: Quản lý lịch kiểm tra đầu vào và chấm điểm (`vus.placement.test`).
-   - Ghi nhận điểm số 4 kỹ năng (Nghe, Nói, Đọc, Viết) và đề xuất khóa học phù hợp dựa trên tổng điểm.
-   - Hỗ trợ nút hành động nhanh **Ghi danh (Enroll)** để tự động tạo phiếu ghi danh dựa trên đề xuất thi đầu vào.
-8. **`vus_promotion`**: Quản lý Học bổng & Ưu đãi học phí (`vus.promotion`).
-   - Định nghĩa mã giảm giá/học bổng (giảm theo % hoặc số tiền cố định VND).
-   - Áp dụng kiểm tra điều kiện thời hạn sử dụng và số lượt dùng tối đa, tự động khấu trừ tiền học phí trên phiếu ghi danh.
-9. **`vus_dashboard`**: Báo cáo phân tích KPI tuyển sinh.
-   - Sử dụng mô hình SQL View `vus.recruitment.report` kết hợp dữ liệu từ CRM Lead, Thi đầu vào, Phiếu ghi danh và Hóa đơn kế toán.
-   - Giao diện báo cáo Pivot và biểu đồ trực quan về doanh thu tuyển sinh, tỷ lệ chuyển đổi lead và hiệu quả marketing.
-10. **`vus_resource_allocation`**: Quản lý phân bổ tài nguyên nâng cao (Lịch dạy, Báo vắng, Dạy thay).
-    - Quản lý đăng ký ca học rảnh của giảng viên và tự động lọc động giảng viên khả dụng trên form lớp học.
-    - Quản lý lịch học chi tiết từng buổi học (`vus.class.session`). Tích hợp Cron job tự động quét lịch học hôm nay và tạo thông báo Odoo Activity nhắc nhở đứng lớp hôm nay cho giảng viên.
-    - Quản lý yêu cầu báo vắng và phân công giảng viên dạy thay/dạy bù.
-11. **`vus_education_management`**: Module đóng gói (Bundle).
-    - Phụ thuộc và tự động kích hoạt cài đặt đồng bộ toàn bộ 10 module con ở trên.
+### Mục tiêu trọng tâm:
+1. **Số hóa quy trình tuyển sinh & tiếp thị**: Tự động hóa từ khâu thu thập Lead từ chiến dịch Marketing, quản lý lịch thi xếp lớp đầu vào (Placement Test) đến phân bổ phiếu ghi danh.
+2. **Quản lý đào tạo & phân bổ tài nguyên**: Quản lý khóa học, lớp học, phòng học, xếp ca rảnh giảng viên, tự động điểm danh hàng loạt, xử lý báo vắng, dạy thay và dạy bù.
+3. **Kế toán học phí & Tự động hóa hóa đơn**: Áp dụng ưu đãi/học bổng tự động, kết nối trực tiếp với phân hệ Kế toán Odoo (`account.move`), tự động sinh hóa đơn bán hàng (`out_invoice`), hỗ trợ thanh toán VietQR & VNPay.
+4. **Cổng thông tin Học viên Trực tuyến (VUS Student Portal)**: Xây dựng trải nghiệm ứng dụng đơn trang (Single Page Application - SPA) hiện đại, bảo mật, giúp học viên đăng ký lớp online, tra cứu lịch học tương tác, theo dõi độ chuyên cần và thanh toán trực tuyến.
+5. **Hệ thống thông báo thời gian thực & Điều hướng 1-Click**: Tích hợp thông báo hai chiều vào **Hộp thư đến (Discuss Inbox)** và **Thanh tác vụ (Systray)** kèm nút bấm chuyển trang trực tiếp mở Form dữ liệu chỉ với 1 cú nhấp chuột.
 
 ---
 
-## 🛠️ 2. Yêu cầu hệ thống trước khi cài đặt
+## 🏛️ 2. KIẾN TRÚC MÔ-ĐÙN VÀ CÁC PHÂN HỆ NÒNG CỐT
 
-Để chạy thành công dự án này, máy tính của bạn cần đáp ứng các điều kiện sau:
+Hệ thống được thiết kế theo kiến trúc Module hóa (Modular Architecture), bao gồm **11 mô-đun tùy chỉnh** liên kết chặt chẽ:
 
-* **Odoo**: Phiên bản **Odoo 17.0** (Community hoặc Enterprise).
-* **Python**: Phiên bản **3.10** trở lên.
-* **Hệ quản trị CSDL**: **PostgreSQL** 12 trở lên.
-* **Các module tiêu chuẩn của Odoo** (Cần được cài đặt sẵn trên Database của bạn):
-  * `contacts` (Danh bạ)
-  * `crm` (Quản lý khách hàng tiềm năng)
-  * `account` (Kế toán chuẩn Odoo)
-  * `mail` (Hệ thống thảo luận)
-
----
-
-## 🚀 3. Hướng dẫn Cài đặt & Khởi chạy chi tiết
-
-Khi tải (clone) dự án này về máy, bạn thực hiện theo các bước sau để cấu hình và chạy dự án:
-
-### Bước 1: Cấu hình `addons_path` cho máy chủ Odoo
-
-Bạn cần khai báo thư mục `custom_addons` vừa tải về vào tệp cấu hình của Odoo (`odoo.conf`) để Odoo có thể tìm thấy các module tùy chỉnh này.
-
-1. Tìm tệp `odoo.conf` trên máy chủ của bạn (Thường nằm trong thư mục gốc cài đặt Odoo hoặc thư mục cấu hình `/etc/odoo/`).
-2. Mở file và tìm dòng `addons_path`. Thêm đường dẫn tuyệt đối đến thư mục `custom_addons` vào cuối dòng, phân tách bằng dấu phẩy `,`.
-
-*Ví dụ trên Windows:*
-```ini
-addons_path = C:\Program Files\Odoo 17.0.20260615\server\odoo\addons,C:\du-an-cua-ban\custom_addons
+```mermaid
+graph TD
+    A[vus_education_management - Bundle Master] --> B[vus_student]
+    A --> C[vus_course]
+    A --> D[vus_class]
+    A --> E[vus_enrollment]
+    A --> F[vus_attendance]
+    A --> G[vus_marketing]
+    A --> H[vus_placement_test]
+    A --> I[vus_promotion]
+    A --> J[vus_dashboard]
+    A --> K[vus_resource_allocation]
+    A --> L[vus_student_portal]
 ```
 
-*Ví dụ trên Linux / Docker:*
+### Chi tiết chức năng từng mô-đun:
+
+#### 1. `vus_student` - Quản lý Học viên & Giảng viên
+- Kế thừa danh mục đối tác chuẩn `res.partner` của Odoo.
+- Theo dõi chi tiết vòng đời học viên: `Potential` (Tiềm năng), `Waiting` (Chờ xếp lớp), `Studying` (Đang học), `Reserved` (Bảo lưu), `Completed` (Hoàn thành).
+- Phân định rõ vai trò Học viên (`is_student`) và Giảng viên (`is_teacher`).
+- Cấu hình giới hạn **Số lớp dạy tối đa trong kỳ** (`max_classes`) cho từng giảng viên.
+
+#### 2. `vus_course` - Quản lý Chương trình & Khóa học (`vus.course`)
+- Quản lý các chương trình học (SuperKids, Young Leaders, IELTS Foundation, English Hub...).
+- Lưu trữ thông tin học phí chuẩn, cấp độ, tổng số buổi học, thời lượng.
+- Tích hợp Smart Button xem nhanh số lớp học đang tuyển sinh.
+- Cấu hình chỉ tiêu **Số lớp tối đa trong kỳ** (`max_classes`).
+
+#### 3. `vus_class` - Quản lý Lớp học (`vus.class`)
+- Ghi nhận lịch học, ca học (`time_slot_id`), phòng học (`classroom`), giảng viên phụ trách, sĩ số tối đa.
+- Quản lý trạng thái tuyển sinh: `draft` (Nháp), `opened` (Đang mở đăng ký), `in_progress` (Đang học), `completed` (Đã kết thúc), `cancelled` (Đã hủy).
+- Tích hợp Smart Button thống kê học viên thực tế và danh sách đăng ký mới.
+
+#### 4. `vus_enrollment` - Phiếu ghi danh & Tự động hóa Kế toán (`vus.enrollment`)
+- Khởi tạo phiếu ghi danh cho học viên khi đăng ký lớp.
+- **Tự động hóa Kế toán**: Khi duyệt phiếu ghi danh, hệ thống tự động sinh Hóa đơn khách hàng (`out_invoice`), hạch toán học phí và tự động điều hướng sang giao diện Form hóa đơn.
+- Tự động chuyển trạng thái phiếu sang `paid` (Đã thanh toán) khi hóa đơn được thanh toán đầy đủ.
+- Kế thừa `mail.thread` và `mail.activity.mixin` cho phép trao đổi qua Chatter.
+
+#### 5. `vus_attendance` - Điểm danh Chuyên cần Hàng loạt (`vus.attendance`)
+- Quản lý bảng điểm danh theo buổi (`vus.attendance.sheet`).
+- Hỗ trợ nút **Tải danh sách học viên** nạp nhanh toàn bộ học viên của lớp và điểm danh 1-Click (Có mặt / Đi trễ / Vắng mặt).
+- Lưu vết lịch sử chuyên cần trực tiếp lên từng phiếu ghi danh của học viên.
+
+#### 6. `vus_marketing` - Chiến dịch Marketing & CRM Leads (`vus.marketing.campaign`)
+- Quản lý ngân sách chiến dịch tiếp thị, chi phí thực tế và nguồn thu hút học viên (Facebook, Google, Website, Event).
+- Liên kết trực tiếp với `crm.lead` để theo dõi tỷ lệ chuyển đổi Lead thành Học viên chính thức.
+- Tự động tính toán chỉ số hiệu quả đầu tư **ROI (%)** và doanh thu thực thu.
+
+#### 7. `vus_placement_test` - Thi Đầu vào & Đánh giá Trình độ (`vus.placement.test`)
+- Quản lý lịch kiểm tra đầu vào và hội đồng chấm thi.
+- Chấm điểm 4 kỹ năng (Nghe, Nói, Đọc, Viết), tự động cộng tổng điểm và đề xuất khóa học tương ứng.
+- Tích hợp nút **Ghi danh nhanh (Quick Enroll)** tự động sinh phiếu ghi danh từ kết quả thi.
+
+#### 8. `vus_promotion` - Học bổng & Ưu đãi Học phí (`vus.promotion`)
+- Quản lý mã giảm giá, học bổng (Giảm theo % hoặc Giảm số tiền cố định VND).
+- Kiểm tra điều kiện thời hạn sử dụng và số lượt dùng tối đa, tự động trừ tiền trên phiếu ghi danh.
+
+#### 9. `vus_dashboard` - Báo cáo Phân tích Tuyển sinh (`vus.recruitment.report`)
+- Xây dựng mô hình SQL View tổng hợp dữ liệu CRM Lead, Thi đầu vào, Phiếu ghi danh và Hóa đơn.
+- Cung cấp giao diện báo cáo Pivot và biểu đồ trực quan phục vụ ban quản lý.
+
+#### 10. `vus_resource_allocation` - Phân bổ Tài nguyên & Phân công Giảng dạy
+- Quản lý phiếu đăng ký ca rảnh của giảng viên theo kỳ học (`vus.academic.term`).
+- Tự động gợi ý danh sách giảng viên khả dụng không bị trùng lịch dạy.
+- Quản lý lịch học chi tiết từng buổi (`vus.class.session`), quản lý yêu cầu báo vắng và phân công giảng viên dạy thay/dạy bù.
+- Tích hợp tiến trình Cron tự động gửi thông báo lịch dạy hàng ngày cho giảng viên.
+
+#### 11. `vus_student_portal` - Cổng thông tin Học viên Trực tuyến (Student Portal)
+- Xây dựng cổng thông tin tự phục vụ dành cho học viên trên giao diện Single Page Application (SPA).
+- Đăng nhập bảo mật bằng **Mã học viên + Ngày sinh**.
+- Đăng ký lớp học trực tuyến, tự động kiểm tra trùng lịch học.
+- Quản lý phiếu ghi danh, hủy phiếu nháp, xem mã chuyển khoản VietQR và thanh toán VNPay.
+- Xem lịch học tương tác dạng ô Lịch tháng (Calendar Grid 7x5) kèm màu sắc thể hiện trạng thái chuyên cần.
+- Đăng ký nhận tư vấn khóa học mới.
+
+---
+
+## ⚡ 3. CƠ CHẾ THÔNG BÁO THỜI GIAN THỰC & ĐIỀU HƯỚNG TRỰC TIẾP
+
+Dự án đã triển khai cơ chế thông báo toàn diện kết hợp giữa **Odoo Backend** và **Student Portal**:
+
+```mermaid
+sequenceDiagram
+    participant Student as Học viên (Student Portal)
+    participant Server as Odoo Server Controller
+    participant DB as Database (mail.notification)
+    participant Manager as Quản lý / Giáo vụ (Odoo ERP)
+
+    Student->>Server: Gửi Đăng ký lớp / Tư vấn
+    Server->>DB: Tạo phiếu nháp vus.enrollment / crm.lead
+    Server->>DB: Khởi tạo mail.message + mail.notification (type='inbox')
+    Server->>DB: Khởi tạo mail.activity (Systray Menu)
+    Server-->>Student: Trả về JSON 200 OK + Toast Thông báo thành công
+    DB-->>Manager: Bắn Thông báo về Hộp thư đến (Discuss Inbox) & Nút Chuông Systray
+    Note over Manager: Quản lý bấm nút "👉 Click vào đây để mở và duyệt"
+    Manager->>Server: Mở trực tiếp Form Record cần xử lý
+```
+
+### 1. Luồng bắn thông báo Hộp thư đến (Discuss Inbox) & Systray:
+- Mỗi khi có sự kiện quan trọng (Đăng ký lớp mới, Đăng ký tư vấn, Cảnh báo hạn đóng học phí, Lịch dạy trong ngày, Đôn đốc đăng ký ca rảnh), hệ thống tự động:
+  1. Khởi tạo `mail.activity` nhắc việc trên thanh Menu đồng hồ Systray.
+  2. Khởi tạo `mail.message` đính kèm bản ghi dữ liệu.
+  3. Khởi tạo `mail.notification` với `notification_type = 'inbox'` đẩy thẳng tin nhắn vào **Hộp thư đến (Discuss Inbox)** của Quản lý / Giảng viên với biểu tượng chấm đỏ chưa đọc.
+
+### 2. Nút bấm điều hướng 1-Click (Direct Link Button):
+- Mọi nội dung thông báo đều chứa một nút bấm điều hướng được thiết kế nổi bật với tông màu VUS (`#0C2B5C`):  
+  `👉 Click vào đây để mở và duyệt Phiếu VUS/ENR/2026/...`
+- Đường dẫn có định dạng chuẩn: `http://localhost:8069/web#id={res_id}&model={res_model}&view_type=form`.
+- Khi người dùng nhấp vào thông báo trong Hộp thư đến, hệ thống sẽ mở trực tiếp màn hình Form xử lý dữ liệu mà không cần phải truy cập danh sách tìm kiếm thủ công.
+
+### 3. Hệ thống Thẻ Alert & Hộp thoại Modal Box giao diện mới:
+- **Thẻ Alert `.vus-alert-box`**: Thay thế các thẻ alert mặc định bằng bộ CSS Design System hiện đại với dải viền màu chủ đạo, hiệu ứng mờ nhạt pastel, bo góc `12px` và icon đại diện riêng cho từng trạng thái (`info`, `success`, `warning`, `danger`).
+- **Hộp thoại Modal Box `showConfirmModal()`**: Thay thế toàn bộ các popup `alert()` và `confirm()` thô sơ của trình duyệt bằng Hộp thoại Modal Box VUS làm mờ phông nền (`backdrop-filter: blur(6px)`), nút bấm xác nhận thiết kế chuẩn UI/UX.
+
+---
+
+## 🧮 4. THUẬT TOÁN KIỂM TRA TRÙNG LỊCH HỌC (`check_classes_overlap`)
+
+Để ngăn chặn học viên đăng ký hai lớp học trùng thời gian, hệ thống sử dụng thuật toán kiểm tra trùng lịch đa tầng `check_classes_overlap(cls1, cls2)`:
+
+```python
+def check_classes_overlap(cls1, cls2):
+    # Bước 1: Kiểm tra giao thoa khoảng ngày khai giảng/kết thúc
+    start1 = cls1.start_date or fields.Date.today()
+    end1 = cls1.end_date or (start1 + timedelta(days=90))
+    start2 = cls2.start_date or fields.Date.today()
+    end2 = cls2.end_date or (start2 + timedelta(days=90))
+
+    if max(start1, start2) > min(end1, end2):
+        return False, ''  # Không trùng ngày
+
+    # Bước 2: Phân tách và trích xuất nhóm các thứ trong tuần (DOW: 0=T2, ..., 6=CN)
+    days1 = parse_schedule_days(cls1.schedule or (cls1.time_slot_id.name if cls1.time_slot_id else ''))
+    days2 = parse_schedule_days(cls2.schedule or (cls2.time_slot_id.name if cls2.time_slot_id else ''))
+
+    if not days1 or not days2 or not (days1 & days2):
+        return False, ''  # Không trùng thứ trong tuần
+
+    # Bước 3: Phân tách và kiểm tra giao thoa khoảng giờ học (Giờ bắt đầu & Giờ kết thúc)
+    range1 = parse_schedule_time_range(cls1.schedule or (cls1.time_slot_id.name if cls1.time_slot_id else ''))
+    range2 = parse_schedule_time_range(cls2.schedule or (cls2.time_slot_id.name if cls2.time_slot_id else ''))
+
+    if range1 and range2:
+        t1_start, t1_end = range1
+        t2_start, t2_end = range2
+        if max(t1_start, t2_start) >= min(t1_end, t2_end):
+            return False, ''  # Không trùng khoảng giờ (Ví dụ: Ca sáng vs Ca tối cùng ngày)
+
+    return True, f"Bị trùng lịch học với lớp '{cls2.class_name}'"
+```
+
+### Ưu điểm vượt trội:
+- **Tự động làm sạch dữ liệu**: Sử dụng Regex loại bỏ các định dạng giờ (như `18:00`, `19.30`) và chữ ca (như `Ca 1`, `Ca 2`) trước khi phân tích thứ trong tuần, tránh việc con số `8` trong `18:00` bị nhận diện nhầm thành Chủ nhật.
+- **Tránh báo động giả**: Nếu hai lớp học trùng ngày (ví dụ cùng học Thứ 7 - Chủ Nhật) nhưng học ở hai ca giờ khác nhau (Ca 1: 17:30 - 19:00 vs Ca 2: 19:15 - 20:45), thuật toán vẫn xác nhận **KHÔNG TRÙNG** và cho phép học viên đăng ký bình thường.
+
+---
+
+## 🛠️ 5. YÊU CẦU HỆ THỐNG VÀ HƯỚNG DẪN CÀI ĐẶT
+
+### 1. Yêu cầu môi trường:
+* **Hệ điều hành**: Windows 10/11, Linux (Ubuntu/Debian) hoặc Docker.
+* **Odoo**: Phiên bản **Odoo 17.0** (Community hoặc Enterprise).
+* **Python**: Phiên bản **3.10** trở lên.
+* **Database**: **PostgreSQL** 12 trở lên.
+* **Các phụ thuộc tiêu chuẩn**: `contacts`, `crm`, `account`, `mail`.
+
+---
+
+### 2. Các bước cài đặt chi tiết:
+
+#### Bước 1: Khai báo `addons_path`
+Mở file cấu hình `odoo.conf` của bạn và thêm đường dẫn đến thư mục `custom_addons`:
+
 ```ini
+# Ví dụ trên Windows:
+addons_path = C:\Program Files\Odoo 17.0.20260615\server\odoo\addons,C:\du-an-cua-ban\custom_addons
+
+# Ví dụ trên Linux / Docker:
 addons_path = /usr/lib/python3/dist-packages/odoo/addons,/mnt/extra-addons/custom_addons
 ```
 
----
-
-### Bước 2: Khởi động lại dịch vụ Odoo
-
-Mỗi khi thay đổi file cấu hình `odoo.conf` hoặc thêm module mới, bạn cần khởi động lại dịch vụ Odoo để cập nhật:
-
-* **Trên Windows (Sử dụng PowerShell dưới quyền Administrator):**
+#### Bước 2: Khởi động lại Dịch vụ Odoo
+- **Windows (PowerShell Admin)**:
   ```powershell
   Restart-Service -Name "odoo-server-17.0"
   ```
-  *(Hoặc mở ứng dụng `Services` của Windows, tìm dịch vụ `odoo-server-17.0` và bấm **Restart**)*
-
-* **Trên Linux:**
+- **Linux**:
   ```bash
   sudo systemctl restart odoo
   ```
 
-* **Trên Docker:**
-  ```bash
-  docker restart <ten_container_odoo>
-  ```
+#### Bước 3: Cài đặt Mô-đun lên Odoo Database
+1. Đăng nhập giao diện Odoo với tài khoản **Administrator**.
+2. Bật **Chế độ nhà phát triển (Developer Mode)** tại *Cài đặt (Settings)*.
+3. Truy cập menu **Ứng dụng (Apps)** -> Nhấn **Cập nhật danh sách ứng dụng (Update Apps List)**.
+4. Tìm kiếm từ khóa `vus_education_management` và nhấn **Kích hoạt (Activate)**.  
+   *(Hệ thống sẽ tự động kích hoạt đồng bộ 11 mô-đun con thuộc hệ sinh thái VUS)*.
 
 ---
 
-### Bước 3: Cài đặt Module lên Database
+## 🔄 6. HƯỚNG DẪN VẬN HÀNH KIỂM THỬ ĐẦU-CUỐI (END-TO-END WORKFLOW)
 
-#### Cách 1: Cài đặt trực tiếp từ giao diện Web (Khuyên dùng)
-1. Đăng nhập vào giao diện Odoo bằng tài khoản Administrator.
-2. Truy cập **Cài đặt** (Settings) -> Kích hoạt **Chế độ nhà phát triển** (Developer Mode).
-3. Đi tới menu **Ứng dụng** (Apps).
-4. Click vào nút **Cập nhật danh sách ứng dụng** (Update Apps List) trên thanh menu phụ và xác nhận cập nhật.
-5. Tìm kiếm từ khóa `vus_education_management` trong ô tìm kiếm (Lưu ý: Tắt bộ lọc mặc định `Apps` nếu không tìm thấy).
-6. Nhấn nút **Kích hoạt** (Activate/Install). Hệ thống sẽ tự động cài đặt module bundle này kèm theo toàn bộ các module con phụ thuộc.
-
-#### Cách 2: Cài đặt nhanh qua Command Line Interface (CLI)
-Bạn có thể cài đặt trực tiếp thông qua lệnh python khởi chạy odoo-bin:
-```powershell
-& "C:\Program Files\Odoo 17.0.20260615\python\python.exe" "C:\Program Files\Odoo 17.0.20260615\server\odoo-bin" -c "C:\Program Files\Odoo 17.0.20260615\server\odoo.conf" -d Vus_odoo -i vus_education_management --stop-after-init
-```
-
----
-
-### Bước 4: Khởi tạo dữ liệu mẫu Việt hóa quy mô lớn và Xuất file CSV
-
-Để phục vụ kiểm thử nhanh toàn bộ luồng nghiệp vụ với các kịch bản thực tế (độ bao phủ ~80%) mà không cần tạo thủ công, dự án tích hợp sẵn script dọn dẹp và nạp dữ liệu tại đường dẫn `custom_addons/scratch/generate_realistic_data.py`.
-
-#### ⚠️ QUAN TRỌNG: Cấu hình script trước khi chạy
-Trước khi chạy script, hãy mở file `custom_addons/scratch/generate_realistic_data.py` bằng trình soạn thảo mã nguồn và điều chỉnh 2 biến cấu hình ở đầu file (Dòng 8 và Dòng 11) sao cho trùng khớp với môi trường local của bạn:
-
-```python
-# Mở file scratch/generate_realistic_data.py và chỉnh sửa:
-config_file = r"C:\Đường_dẫn_thực_tế_đến_file\odoo.conf"
-db_name = 'Tên_Database_Thực_tế_Của_Bạn'
-```
-
-#### Chạy script nạp và kết xuất dữ liệu:
-Mở Terminal/PowerShell và thực thi lệnh sau:
-
-* **Trên Windows:**
-  ```powershell
-  $env:PYTHONPATH="C:\Program Files\Odoo 17.0.20260615\server"; $env:PYTHONIOENCODING="utf-8"; & "C:\Program Files\Odoo 17.0.20260615\python\python.exe" "C:\Program Files\Odoo 17.0.20260615\server\custom_addons\scratch\generate_realistic_data.py"
-  ```
-
-Script sẽ thực hiện:
-1. Xóa sạch dữ liệu mẫu cũ.
-2. Tạo 3 Kỳ học (Hè, Thu, Đông), 8 Khóa học tiêu chuẩn, 8 Ca học, và 5 Giảng viên.
-3. Tạo 35 học viên với tên tiếng Việt thật liên kết với 35 CRM Leads.
-4. Phân bổ 4 Chiến dịch Marketing với ngân sách và chi phí thực tế giúp phân tách biểu đồ doanh thu và ROI cực đẹp.
-5. Tạo 28 Phiếu ghi danh, tự động sinh Hóa đơn kế toán và ghi nhận thanh toán.
-6. Kết xuất dữ liệu mẫu đã tạo ra **9 tệp CSV chuẩn** đặt tại thư mục `custom_addons/scratch/export_data/` để bạn có thể tải về hoặc import thủ công nếu cần.
-
----
-
-## 📖 4. Hướng dẫn Luồng kiểm thử nghiệp vụ chính (End-to-End Flow)
-
-Hãy thực hiện kiểm thử hệ thống theo trình tự nghiệp vụ chuẩn của một trung tâm Anh ngữ như sau:
+Hãy thực hiện kiểm thử hệ thống theo đúng quy trình vận hành thực tế:
 
 ```mermaid
-graph TD
-    A[CRM & Marketing Campaign] --> B[Placement Test - Thi Đầu Vào]
-    B --> C[Recommended Course - Đề xuất khóa học]
-    C --> D[Quick Enroll - Ghi danh nhanh]
-    D --> E[Apply Promotion - Áp dụng ưu đãi]
-    E --> F[Confirm & Auto Redirect Billing]
-    F --> G[Payment & Auto Paid - Thanh toán hóa đơn]
-    G --> H[Class Assignment & Capacity Check]
-    H --> I[Attendance Sheet - Điểm danh theo buổi]
-    G --> J[KPI Dashboard - Phân tích KPI Tuyển sinh]
+graph LR
+    A[1. CRM & Lead] --> B[2. Thi đầu vào]
+    B --> C[3. Đăng ký Portal]
+    C --> D[4. Duyệt & Thu phí]
+    D --> E[5. Điểm danh]
+    E --> F[6. Báo cáo KPI]
 ```
 
-### Bước 1: Quản lý Marketing & Chiến dịch
-* Vào menu **Marketing** -> **Chiến dịch Marketing** -> Kiểm tra chiến dịch mẫu **Chiến dịch Tuyển sinh Hè 2026** (Trạng thái: *Đang chạy*).
-* Truy cập **CRM**, kiểm tra các Leads mẫu đã được phân công nguồn tuyển sinh (Facebook, Website...) và tự động liên kết với chiến dịch này.
+### Trình tự kiểm thử:
 
-### Bước 2: Tổ chức Thi đầu vào & Chấm điểm
-* Vào menu **Tuyển sinh & Đăng ký** -> **Kiểm tra đầu vào** -> Chọn lịch thi mẫu **Kiểm tra trình độ IELTS tháng 5**.
-* Xem danh sách thí sinh làm bài và điểm số 4 kỹ năng (Nghe, Nói, Đọc, Viết). Click **Xác nhận điểm** để chuyển đổi trạng thái thí sinh sang *Chờ xếp lớp*.
-* Nhấn nút **Ghi danh (icon người +)** ở cuối dòng điểm của thí sinh để chuyển hướng tự động tạo Phiếu ghi danh.
+1. **Tiếp nhận Yêu cầu Tư vấn (CRM & Marketing)**:
+   - Truy cập Cổng học viên: `http://localhost:8069/student/portal`.
+   - Vào tab **Đăng ký Tư vấn** -> Nhập thông tin học viên mới và chọn Chiến dịch Marketing quan tâm -> Bấm Gửi yêu cầu.
+   - Kiểm tra Backend Odoo: Một Lead mới được tạo trong CRM kèm thông báo nổ ngay trong **Hộp thư đến (Discuss Inbox)** của Quản lý.
 
-### Bước 3: Tạo Phiếu ghi danh & Áp dụng Ưu đãi
-* Trên phiếu ghi danh nháp vừa tạo, chọn **Lớp học đăng ký** (ví dụ: *IELTS Foundation Class A*).
-* Chọn **Chương trình ưu đãi/Học bổng** (ví dụ: mã *HE2026_10* - giảm 10% hoặc *SCHOLAR_1M* - giảm 1.000.000 VND).
-* Hệ thống sẽ tự động tính toán số tiền được giảm giá và cập nhật tổng tiền học phí thực tế của học viên.
+2. **Thi Đầu vào & Đề xuất Khóa học (Placement Test)**:
+   - Vào menu **Tuyển sinh & Đăng ký** -> **Kiểm tra đầu vào** -> Chọn bài thi đầu vào.
+   - Nhập điểm 4 kỹ năng -> Bấm **Xác nhận điểm** -> Bấm nút **Ghi danh nhanh** để tạo Phiếu ghi danh.
 
-### Bước 4: Xác nhận Ghi danh & Tự động Redirect Kế toán
-* Click **Xác nhận**. Hệ thống tự động chuyển phiếu ghi danh sang trạng thái *Chờ thanh toán*, tự sinh hóa đơn khách hàng (`out_invoice`) và **tự động chuyển hướng màn hình** thẳng đến giao diện hóa đơn đó để bạn thu tiền luôn.
-* Click ghi nhận thanh toán hoàn tất cho hóa đơn này bên Kế toán. Quay lại phiếu ghi danh, bạn sẽ thấy trạng thái đã tự động đổi sang **Đã thanh toán** nhờ cơ chế đồng bộ tự động.
+3. **Học viên Đăng ký Lớp trên Portal**:
+   - Đăng nhập Cổng học viên bằng Mã học viên (ví dụ: `VUS-0008`) và Ngày sinh.
+   - Vào tab **Lớp học & Đăng ký** -> Chọn lớp học mở -> Bấm **Đăng ký học**.
+   - Nếu bị trùng lịch với lớp đang học, hệ thống sẽ hiện Thẻ Alert màu vàng cảnh báo chi tiết lý do trùng lịch.
 
-### Bước 5: Kiểm soát Sĩ số & Giới hạn Khóa học/Giảng viên
-* **Sĩ số lớp:** Mở lớp học *Super Minds 1 Class A* (sĩ số tối đa là 15). Nếu lớp đã đủ học viên đã thanh toán, hệ thống sẽ chặn không cho xác nhận ghi danh mới vào lớp này.
-* **Số lớp tối đa của Khóa học:** Khóa IELTS Foundation được đặt giới hạn tối đa 5 lớp/kỳ học. Khi đạt giới hạn, tên khóa học sẽ tự động biến mất khỏi ô chọn khóa học của lớp mới.
-* **Số lớp dạy tối đa của Giảng viên:** Giáo viên John Smith được đặt giới hạn dạy tối đa 3 lớp/kỳ học. Khi đã phân công đủ 3 lớp, tên giáo viên này sẽ tự động ẩn khỏi danh sách chọn Giảng viên.
+4. **Quản lý Duyệt phiếu & Hạch toán Kế toán**:
+   - Quản lý mở **Hộp thư đến (Discuss Inbox)** trong Odoo -> Nhấp vào nút `👉 Click vào đây để mở và duyệt Phiếu...`.
+   - Màn hình chuyển ngay sang Form phiếu ghi danh nháp -> Bấm **Xác nhận & Tạo hóa đơn**.
+   - Màn hình tự động điều hướng sang Form Hóa đơn bán hàng -> Bấm **Ghi nhận thanh toán**.
 
-### Bước 6: Điểm danh Lớp học hàng loạt
-* Đăng nhập tài khoản Giáo viên (`teacher@vus.edu.vn` / mật khẩu `admin`) hoặc Giáo vụ.
-* Vào menu **Điểm danh** -> **Điểm danh theo buổi** -> Nhấn **Tạo mới**.
-* Chọn **Lớp học** (ví dụ: *IELTS Foundation Class A*).
-* Nhấn nút **Tải danh sách học viên** để tự động nạp toàn bộ học viên đang học trong lớp với trạng thái mặc định là "Có mặt".
-* Giáo viên hoặc giáo viên dạy thay được gán ca học này đều có quyền điểm danh và lưu lại mà không bị lỗi bảo mật.
+5. **Điểm danh & Theo dõi Chuyên cần**:
+   - Giảng viên/Giáo vụ vào menu **Điểm danh** -> **Điểm danh theo buổi** -> Nhấn **Tải danh sách học viên** -> Tiến hành điểm danh 1-Click.
+   - Học viên mở tab **Tổng quan** trên Portal -> Khung Lịch học tương tác dạng ô Lịch tháng tự động hiển thị các buổi học kèm màu chuyên cần (Có mặt: Xanh, Đi trễ: Vàng, Vắng: Đỏ).
 
-### Bước 7: Xem Báo cáo KPI & Dashboard tuyển sinh
-* Truy cập menu **Báo cáo KPI**.
-* Theo dõi các chỉ số trực quan dưới dạng biểu đồ hoặc bảng phân tích Pivot: tổng doanh thu học phí thu được, tỷ lệ chuyển đổi từ Lead sang Học viên thực tế và hiệu quả doanh thu mang lại của từng Chiến dịch Marketing.
+6. **Phân tích Doanh thu & Báo cáo KPI**:
+   - Mở menu **Báo cáo KPI** -> Xem biểu đồ Pivot phân tích doanh thu học phí, số lượng lead chuyển đổi và tỷ suất **ROI (%)** của từng chiến dịch Marketing.
 
 ---
 
-## 🛡️ 5. Phân quyền và Bảo mật (Role-Based Access Control)
+## 🛡️ 7. PHÂN QUYỀN VÀ BẢO MẬT (SECURITY & RBAC)
 
-Hệ thống được tích hợp sẵn cơ chế phân quyền (RBAC) chặt chẽ với 3 vai trò (Role) cốt lõi:
-
-### Các vai trò (Roles) trong hệ thống
-1. **Quản lý (Manager)**: 
-   - Có toàn quyền (Full Access) xem, tạo, sửa, xóa (CRUD) trên toàn bộ các phân hệ của hệ thống.
-   - Được gán bổ sung nhóm **Quản lý Sales (Sales Administrator)** và **Quản lý Billing (Billing Administrator)** của Odoo tiêu chuẩn để xem báo cáo doanh thu & hóa đơn.
-2. **Nhân viên (Staff)**:
-   - Dành cho bộ phận Tư vấn viên, Giáo vụ, Kế toán.
-   - Được quyền truy cập các luồng nghiệp vụ hoạt động hàng ngày (Ghi danh, Chăm sóc Lead, Tổ chức thi đầu vào, Điểm danh).
-   - Được gán bổ sung nhóm **Nhân viên Sales (Sales User: All Documents)** và **Nhân viên Billing (Billing)** để xử lý CRM Leads và Hóa đơn.
-   - Bị hạn chế quyền xóa (Delete) ở một số dữ liệu quan trọng như Hóa đơn, Thông tin Khóa học.
-3. **Giảng viên (Teacher)**:
-   - Bị hạn chế quyền truy cập vào các phân hệ kinh doanh và dữ liệu nhạy cảm (như Marketing, Phiếu ghi danh, Học phí & Ưu đãi, KPI Dashboard).
-   - **Bảo mật cấp bản ghi (Record Rules)**: Giảng viên chỉ được phép xem thông tin **Lớp học** và thực hiện **Điểm danh** cho những lớp mà *chính họ được phân công phụ trách* (hoặc được phân công dạy thay/dạy bù). Họ có quyền đọc học viên lớp họ dạy nhưng có 0 quyền tạo/sửa/xóa phiếu ghi danh.
+Hệ thống được cấu hình phân quyền 3 cấp độ:
+- **Quản lý (Manager)**: Full quyền CRUD trên toàn bộ phân hệ, xem báo cáo doanh thu & KPI.
+- **Nhân viên / Giáo vụ (Staff)**: Quyền tác nghiệp hàng ngày (Ghi danh, Điểm danh, Chăm sóc Lead), hạn chế quyền xóa dữ liệu quan trọng.
+- **Giảng viên (Teacher)**: Chỉ có quyền xem lịch dạy và thực hiện điểm danh cho các lớp mình được phân công (Record Rules), không truy cập dữ liệu doanh thu & tài chính.
 
 ---
-
-## 🛠️ 6. Hướng dẫn xử lý sự cố thường gặp (Troubleshooting)
-
-| Vấn đề | Nguyên nhân phổ biến | Cách khắc phục |
-| :--- | :--- | :--- |
-| **Không tìm thấy module custom trong danh sách ứng dụng** | Sai đường dẫn `addons_path` trong file `odoo.conf` hoặc chưa kích hoạt chế độ Developer Mode để "Cập nhật ứng dụng". | Kiểm tra kỹ đường dẫn trong `odoo.conf`. Đảm bảo khởi động lại dịch vụ Odoo trước khi nhấn nút "Cập nhật danh sách ứng dụng". |
-| **Lỗi thiếu module dependency (`account`, `crm`...)** | Database hiện tại của bạn là database trống chưa được cài các ứng dụng cốt lõi của Odoo. | Hãy vào menu **Ứng dụng** (Apps) cài đặt trước các module **CRM**, **Invoicing / Accounting**, **Contacts** trước khi cài đặt `vus_education_management`. |
-| **Lỗi chạy script `generate_realistic_data.py`** | Sai đường dẫn tệp `config_file` hoặc sai tên `db_name` cấu hình ở đầu script. | Mở file script và sửa chính xác đường dẫn đến file `odoo.conf` trên máy của bạn và tên cơ sở dữ liệu (Database) đang dùng. |
-| **Lỗi Encoding khi chạy script trên PowerShell** | PowerShell mặc định sử dụng encoding ASCII/ANSI nên bị lỗi ký tự Tiếng Việt. | Hãy chạy lệnh thiết lập `$env:PYTHONIOENCODING="utf-8"` trước khi gọi lệnh chạy script Python (như hướng dẫn ở Bước 4). |
-| **Không tự động sinh được hóa đơn khi bấm xác nhận Ghi danh** | Do hệ thống kế toán của Odoo trên Database chưa được thiết lập Sổ nhật ký bán hàng (Sale Journal) mặc định. | Truy cập **Kế toán** -> **Cấu hình** -> Thiết lập ít nhất một Sổ nhật ký loại "Bán hàng" (Sale Journal). |
-
----
-*Chúc bạn cài đặt và trải nghiệm hệ thống thành công! nếu gặp bất kỳ khó khăn nào trong quá trình vận hành, vui lòng liên hệ nhóm phát triển dự án.*
+*Báo cáo được nghiệm thu và phát triển hoàn chỉnh trên nền tảng Odoo 17.0 ERP.*

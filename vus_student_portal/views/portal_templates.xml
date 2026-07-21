@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_home_template" name="VUS Student Portal Home">
+        <t t-translation="off">
+            &lt;!DOCTYPE html&gt;
+            <html lang="vi">
+                <head>
+                    <meta charset="UTF-8"/>
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+                    <title>VUS - Cổng thông tin học viên</title>
+                    <!-- Font Outfit từ Google Fonts -->
+                    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+                    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+                    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+                    <!-- FontAwesome Icons -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+                    <!-- Custom Portal CSS -->
+                    <link rel="stylesheet" href="/vus_student_portal/static/src/css/portal.css?v=14"/>
+                </head>
+                <body>
+                    <!-- Thông báo Toast -->
+                    <div id="toast-container" class="toast-container"></div>
+
+                    <!-- Màn hình Đăng nhập -->
+                    <div id="login-screen" class="login-wrapper">
+                        <div class="login-card">
+                            <div class="login-header">
+                                <div class="vus-logo">VUS</div>
+                                <h2>CỔNG THÔNG TIN HỌC VIÊN</h2>
+                                <p>Hệ thống Đào tạo &amp; Quản lý Anh Văn Hội Việt Mỹ</p>
+                            </div>
+                            <form id="login-form">
+                                <div class="form-group">
+                                    <label for="student_code">Mã Học Viên</label>
+                                    <div class="input-wrapper">
+                                        <i class="fa fa-user-graduate"></i>
+                                        <input type="text" id="student_code" placeholder="Ví dụ: VUS-0040" required="required"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="dob">Ngày Sinh</label>
+                                    <div class="input-wrapper">
+                                        <i class="fa fa-calendar-alt"></i>
+                                        <input type="date" id="dob" required="required"/>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">Đăng Nhập</button>
+                            </form>
+                            <div class="login-footer">
+                                <p>Bạn chưa là học viên? <a href="#" id="go-to-consult">Đăng ký tư vấn ngay</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Màn hình Giao diện chính (Dashboard Portal) -->
+                    <div id="portal-screen" class="portal-wrapper" style="display: none;">
+                        <!-- Thanh Điều hướng (Header Navigation) -->
+                        <header class="portal-header">
+                            <div class="nav-container">
+                                <div class="brand">
+                                    <span class="brand-logo">VUS</span>
+                                    <span class="brand-title">Student Portal</span>
+                                </div>
+                                <nav class="nav-menu">
+                                    <button class="nav-item active" data-tab="overview"><i class="fa fa-home"></i> Tổng quan</button>
+                                    <button class="nav-item" data-tab="my-classes"><i class="fa fa-graduation-cap"></i> Lớp của tôi</button>
+                                    <button class="nav-item" data-tab="classes"><i class="fa fa-school"></i> Lớp học &amp; Đăng ký</button>
+                                    <button class="nav-item" data-tab="tuition"><i class="fa fa-wallet"></i> Học phí &amp; Thanh toán</button>
+                                    <button class="nav-item" data-tab="consult"><i class="fa fa-paper-plane"></i> Đăng ký Tư vấn</button>
+                                </nav>
+                                <div class="user-control">
+                                    <div class="user-info">
+                                        <span id="header-student-name">Học viên</span>
+                                        <small id="header-student-code">STXXXX</small>
+                                    </div>
+                                    <button id="btn-logout" class="btn btn-outline"><i class="fa fa-sign-out-alt"></i> Đăng xuất</button>
+                                </div>
+                            </div>
+                        </header>
+
+                        <!-- Nội dung chính (Main Content) -->
+                        <main class="portal-main">
+                            <!-- Tab 1: Tổng quan -->
+                            <section id="tab-overview" class="tab-content active">
+                                <div class="welcome-banner">
+                                    <div class="banner-text">
+                                        <h1>Chào mừng quay trở lại, <span id="overview-welcome-name">Học viên</span>!</h1>
+                                        <p>Chúc bạn có một buổi học tập thật vui vẻ và tràn đầy năng lượng tại VUS hôm nay.</p>
+                                    </div>
+                                    <div class="banner-badge">
+                                        <span id="overview-student-status" class="badge">Đang học</span>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-3 mt-4">
+                                    <!-- Card thông tin cá nhân -->
+                                    <div class="card col-span-2">
+                                        <div class="card-header">
+                                            <h3><i class="fa fa-id-card text-primary"></i> Thông tin học viên</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="info-grid">
+                                                <div class="info-item">
+                                                    <span class="info-label">Mã số học viên</span>
+                                                    <strong id="overview-student-code" class="info-value">STXXXX</strong>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">Họ và tên</span>
+                                                    <strong id="overview-student-name" class="info-value">Học viên VUS</strong>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">Ngày sinh</span>
+                                                    <strong id="overview-student-dob" class="info-value">--/--/----</strong>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">Số điện thoại</span>
+                                                    <strong id="overview-student-phone" class="info-value">----------</strong>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">Email liên hệ</span>
+                                                    <strong id="overview-student-email" class="info-value">----------</strong>
+                                                </div>
+                                                <div class="info-item">
+                                                    <span class="info-label">Trạng thái</span>
+                                                    <strong id="overview-student-status-text" class="info-value">---</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Card Tóm tắt hoạt động nhanh -->
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3><i class="fa fa-chart-pie text-secondary"></i> Tóm tắt học tập</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="summary-list">
+                                                <div class="summary-item">
+                                                    <div class="summary-icon bg-light-primary"><i class="fa fa-receipt text-primary"></i></div>
+                                                    <div class="summary-info">
+                                                        <span class="summary-label">Học phí chờ đóng</span>
+                                                        <strong id="overview-unpaid-invoices" class="summary-value">0đ</strong>
+                                                    </div>
+                                                </div>
+                                                <div class="summary-item">
+                                                    <div class="summary-icon bg-light-success"><i class="fa fa-calendar-check text-success"></i></div>
+                                                    <div class="summary-info">
+                                                        <span class="summary-label">Độ chuyên cần (Có mặt)</span>
+                                                        <strong id="overview-attendance-rate" class="summary-value">100%</strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Thêm Khung Lịch Học Tương Tác trên Trang Tổng Quan -->
+                                <div class="card mt-4">
+                                    <div class="card-header d-flex justify-content-between align-items-center" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                                        <h3><i class="fa fa-calendar-alt text-primary"></i> Lịch học của tôi</h3>
+                                        <div class="calendar-legend" style="font-size:12px; display:flex; gap:12px;">
+                                            <span><i class="fa fa-circle" style="color:#10B981;"></i> Có mặt</span>
+                                            <span><i class="fa fa-circle" style="color:#F59E0B;"></i> Đi trễ</span>
+                                            <span><i class="fa fa-circle" style="color:#EF4444;"></i> Vắng mặt</span>
+                                            <span><i class="fa fa-circle" style="color:#3B82F6;"></i> Sắp diễn ra</span>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- Interactive Schedule Grid Container -->
+                                        <div id="student-schedule-calendar-container" class="calendar-container">
+                                            <div class="text-center py-4 text-muted">
+                                                <i class="fa fa-spinner fa-spin fa-2x text-primary"></i>
+                                                <p class="mt-2">Đang tải lịch học...</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                                <!-- Tab: Lớp của tôi -->
+                                <section id="tab-my-classes" class="tab-content">
+                                    <div class="section-header">
+                                        <h2>Lớp học của Tôi</h2>
+                                        <p>Danh sách các lớp học bạn đã đăng ký hoặc đang tham gia học tại VUS.</p>
+                                    </div>
+                                    <div id="my-classes-list" class="grid grid-3 mt-4">
+                                        <div class="text-center py-5 col-span-3">
+                                            <i class="fa fa-spinner fa-spin fa-2x text-muted"></i>
+                                            <p class="mt-2">Đang tải danh sách lớp học của bạn...</p>
+                                        </div>
+                                    </div>
+                                </section>
+
+                            <!-- Tab 2: Lớp học & Đăng ký -->
+                            <section id="tab-classes" class="tab-content">
+                                <div class="section-header">
+                                    <h2>Danh sách Lớp học Đang tuyển sinh</h2>
+                                    <p>Chọn lớp học phù hợp với trình độ và lịch học của bạn để tiến hành đăng ký học trực tuyến.</p>
+                                </div>
+                                <div id="classes-list" class="grid grid-3 mt-4">
+                                    <!-- Danh sách lớp học được render động ở đây -->
+                                    <div class="text-center py-5 col-span-3">
+                                        <i class="fa fa-spinner fa-spin fa-2x text-muted"></i>
+                                        <p class="mt-2">Đang tải danh sách lớp học...</p>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <!-- Tab 3: Học phí & Thanh toán -->
+                            <section id="tab-tuition" class="tab-content">
+                                <div class="section-header">
+                                    <h2>Học phí &amp; Thanh toán Trực tuyến</h2>
+                                    <p>Quản lý các phiếu ghi danh, theo dõi hạn nộp học phí và chuyển khoản thanh toán VietQR tự động.</p>
+                                </div>
+
+                                <!-- Thanh Nhắc Nhở Học Viên Động -->
+                                <div id="tuition-reminder-banner" class="vus-alert-box warning mt-4 mb-4">
+                                    <div class="alert-icon">
+                                        <i class="fa fa-bell"></i>
+                                    </div>
+                                    <div class="alert-content">
+                                        <div class="alert-title">Nhắc nhở nộp Học phí &amp; Hướng dẫn Thanh toán</div>
+                                        <div id="tuition-reminder-text" class="alert-message">
+                                            Đang tải thông tin nhắc nhở học phí...
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Layout 2 Cột Cân Đối -->
+                                <div class="tuition-layout-container mt-4">
+                                    <!-- Cột Trái: Bảng Phiếu Ghi Danh & Học Phí -->
+                                    <div class="tuition-left-panel">
+                                        <div class="card tuition-card">
+                                            <div class="tuition-card-header">
+                                                <h3 style="margin:0; font-size:16px; font-weight:700; color:var(--primary-color);">
+                                                    <i class="fa fa-file-invoice-dollar text-primary" style="margin-right:8px;"></i>
+                                                    Danh sách Phiếu ghi danh &amp; Hóa đơn
+                                                </h3>
+                                                <span id="invoice-count-badge" class="badge badge-info">0 phiếu</span>
+                                            </div>
+                                            <div class="card-body p-0">
+                                                <div class="table-responsive">
+                                                    <table class="table tuition-table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width: 50px; text-align: center;">Chọn</th>
+                                                                <th style="min-width: 120px;">Mã phiếu</th>
+                                                                <th style="min-width: 160px;">Khóa học &amp; Lớp</th>
+                                                                <th style="min-width: 100px;">Học phí</th>
+                                                                <th style="min-width: 110px;">Hạn đóng</th>
+                                                                <th style="min-width: 120px;">Trạng thái</th>
+                                                                <th style="min-width: 90px; text-align: right;">Thao tác</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="invoices-table-body">
+                                                            <tr>
+                                                                <td colspan="7" class="text-center py-5 text-muted">
+                                                                    <i class="fa fa-spinner fa-spin fa-2x text-primary"></i>
+                                                                    <p class="mt-2">Đang tải danh sách học phí...</p>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Cột Phải: Khung Thanh Toán VietQR & VNPay Sticky -->
+                                    <div class="tuition-right-panel">
+                                        <div class="card sticky-checkout">
+                                            <!-- Top Header -->
+                                            <div class="checkout-header">
+                                                <div>
+                                                    <div id="selected-inv-title" class="bank-logo-tag">
+                                                        <i class="fa fa-credit-card"></i> THANH TOÁN HỌC PHÍ
+                                                    </div>
+                                                    <small id="selected-inv-subtitle" style="color: rgba(255,255,255,0.85); font-size: 11px;">Bấm chọn 1 phiếu ở danh sách bên trái</small>
+                                                </div>
+                                                <span class="secure-badge"><i class="fa fa-shield-alt"></i> Bảo mật 24/7</span>
+                                            </div>
+
+                                            <div class="checkout-body text-center">
+                                                <!-- Payment Method Selector Tabs -->
+                                                <div class="pay-method-nav mb-3">
+                                                    <button id="btn-tab-vietqr" class="pay-method-btn active" onclick="switchPayMethod('vietqr')">
+                                                        <i class="fa fa-qrcode"></i> VietQR Nhanh
+                                                    </button>
+                                                    <button id="btn-tab-vnpay" class="pay-method-btn" onclick="switchPayMethod('vnpay')">
+                                                        <i class="fa fa-credit-card"></i> Cổng VNPay
+                                                    </button>
+                                                </div>
+
+                                                <!-- Pane 1: VietQR -->
+                                                <div id="pay-pane-vietqr" class="pay-pane active">
+                                                    <div class="qr-frame">
+                                                        <img id="payment-qr" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&amp;data=VUS-TUITION" alt="Mã QR Thanh Toán" class="qr-img"/>
+                                                        <div class="qr-scan-hint"><i class="fa fa-mobile-alt"></i> Quét mã bằng App Ngân hàng / Momo</div>
+                                                    </div>
+
+                                                    <div class="payment-details-box mt-3">
+                                                        <div class="detail-row">
+                                                            <span class="detail-label">Số tài khoản (VCB):</span>
+                                                            <div class="detail-value-group">
+                                                                <strong id="bank-acc-num" style="color:var(--primary-color);">1014567899</strong>
+                                                                <button class="btn-copy-small" onclick="navigator.clipboard.writeText('1014567899'); if(window.showToast) showToast('Đã sao chép Số tài khoản: 1014567899', 'success');" title="Sao chép STK">
+                                                                    <i class="fa fa-copy"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="detail-row">
+                                                            <span class="detail-label">Chủ tài khoản:</span>
+                                                            <span class="detail-value font-medium" style="color:var(--text-color);">ANH VAN HOI VIET MY</span>
+                                                        </div>
+
+                                                        <div class="detail-row memo-row mt-2">
+                                                            <span class="detail-label">Nội dung Chuyển Khoản:</span>
+                                                            <div class="memo-copy-box mt-1">
+                                                                <span id="payment-syntax" class="memo-code">VUS PAY [Mã_Phiếu]</span>
+                                                                <button id="btn-copy-memo" class="btn-copy-memo" title="Sao chép nội dung">
+                                                                    <i class="fa fa-copy"></i> Chép
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Pane 2: VNPay Gateway -->
+                                                <div id="pay-pane-vnpay" class="pay-pane" style="display:none;">
+                                                    <div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px; padding:20px 16px; margin-bottom:16px;">
+                                                        <img src="https://sandbox.vnpayment.vn/paymentv2/Images/brands/logo.svg" alt="VNPay Logo" style="height:36px; margin-bottom:12px;" onerror="this.src='https://vnpay.vn/assets/images/logo-vnpay.svg'"/>
+                                                        <p style="font-size:13px; color:#64748B; margin:4px 0 14px;">Thanh toán tức thì qua Cổng VNPay (Ví VNPay / Thẻ ATM Nội địa / Visa / Mastercard).</p>
+                                                        
+                                                        <!-- VNPay QR Code Display -->
+                                                        <div class="qr-frame mb-3" style="background:#FFF; padding:12px; border-radius:12px; border:1px solid #E2E8F0; display:inline-block; box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                                                            <img id="vnpay-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&amp;data=VNPay_Payment_Demo" alt="Mã QR VNPay" style="width:180px; height:180px; display:block; margin:0 auto;"/>
+                                                            <div class="qr-scan-hint mt-2" style="font-size:11px; color:#475569; font-weight:600;"><i class="fa fa-qrcode text-primary"></i> Quét mã bằng App VNPay / Ngân hàng</div>
+                                                        </div>
+
+                                                        <div style="font-size:14px; font-weight:700; color:#0C2B5C; margin-bottom:16px;">
+                                                            Số tiền thanh toán: <span id="vnpay-amount-text" class="text-primary" style="font-size:18px; font-weight:800;">0 đ</span>
+                                                        </div>
+
+                                                        <!-- Nút Thanh toán Demo Nhanh -->
+                                                        <button id="btn-demo-vnpay" class="btn btn-block" style="background:linear-gradient(135deg, #10B981 0%, #059669 100%); color:#fff; border:none; padding:12px; font-weight:700; font-size:14px; border-radius:8px; margin-bottom:10px; cursor:pointer; box-shadow:0 4px 12px rgba(16,185,129,0.25);">
+                                                            <i class="fa fa-bolt" style="margin-right:6px;"></i> Thanh toán Demo Ngay (Thành công tức thì)
+                                                        </button>
+
+                                                        <small class="text-muted" style="display:block; font-size:11px; margin-top:8px;">Bấm nút trên để mô phỏng hoàn tất thanh toán VNPay và tự động kích hoạt lớp học trong Odoo ERP.</small>
+                                                    </div>
+                                                </div>
+
+                                                <div class="checkout-footer-note mt-3">
+                                                    <i class="fa fa-info-circle text-info"></i> Hệ thống Odoo sẽ nhận thông báo tự động và kích hoạt phiếu ngay sau khi giao dịch thành công.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <!-- Tab 5: Đăng ký tư vấn (Ngoài ra còn có nút bấm ở Login screen) -->
+                            <section id="tab-consult" class="tab-content">
+                                <div class="section-header">
+                                    <h2>Đăng ký Tư vấn khóa học &amp; Đặt lịch thi xếp lớp</h2>
+                                    <p>Để lại thông tin của bạn, các chuyên viên tuyển sinh của VUS sẽ chủ động liên hệ tư vấn lộ trình học phù hợp nhất.</p>
+                                </div>
+                                <div class="card max-w-lg mx-auto mt-4">
+                                    <div class="card-header bg-gradient">
+                                        <h3 class="text-white"><i class="fa fa-edit"></i> Form Đăng ký Thông tin</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="consult-form">
+                                            <div class="form-group">
+                                                <label for="consult_name">Họ và tên người đăng ký <span class="text-danger">*</span></label>
+                                                <div class="input-wrapper">
+                                                    <i class="fa fa-user"></i>
+                                                    <input type="text" id="consult_name" placeholder="Ví dụ: Nguyễn Văn A" required="required"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="consult_phone">Số điện thoại liên hệ <span class="text-danger">*</span></label>
+                                                <div class="input-wrapper">
+                                                    <i class="fa fa-phone"></i>
+                                                    <input type="tel" id="consult_phone" placeholder="Ví dụ: 0901234567" required="required"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="consult_email">Địa chỉ Email</label>
+                                                <div class="input-wrapper">
+                                                    <i class="fa fa-envelope"></i>
+                                                    <input type="email" id="consult_email" placeholder="Ví dụ: student@gmail.com"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="consult_campaign"><i class="fa fa-bullhorn text-primary"></i> Chương trình / Chiến dịch bạn quan tâm</label>
+                                                <div class="input-wrapper">
+                                                    <i class="fa fa-bullhorn"></i>
+                                                    <select id="consult_campaign">
+                                                        <option value="">-- Chọn chương trình / chiến dịch chiêu sinh --</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="consult_notes">Lời nhắn / Yêu cầu tư vấn cụ thể</label>
+                                                <textarea id="consult_notes" rows="4" placeholder="Ví dụ: Tôi muốn thi xếp lớp IELTS vào cuối tuần này..."></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary btn-block"><i class="fa fa-paper-plane"></i> Gửi Yêu Cầu Đăng Ký</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </section>
+                        </main>
+                    </div>
+
+                    <!-- Class Detail Modal -->
+                    <div id="class-detail-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:flex-start; padding-top:40px;">
+                        <div style="background:#fff; border-radius:16px; max-width:800px; width:94%; max-height:82vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+                            <div id="modal-header" style="background:linear-gradient(135deg,#0C2B5C 40%,#E31B23 100%); padding:24px 28px; border-radius:16px 16px 0 0; display:flex; justify-content:space-between; align-items:center;">
+                                <div>
+                                    <h2 id="modal-class-name" style="color:#fff; font-size:20px; font-weight:700; margin:0;">Chi ti&#7871;t L&#7899;p h&#7885;c</h2>
+                                    <p id="modal-class-code" style="color:rgba(255,255,255,0.8); font-size:13px; margin:4px 0 0;"></p>
+                                </div>
+                                <button onclick="document.getElementById('class-detail-modal').style.display='none'" style="background:rgba(255,255,255,0.2); border:none; color:#fff; border-radius:50%; width:36px; height:36px; font-size:18px; cursor:pointer; line-height:36px; text-align:center;">&amp;times;</button>
+                            </div>
+                            <div style="padding:24px 28px;">
+                                <div id="modal-class-info" style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:24px; padding:16px; background:#F8FAFC; border-radius:12px;"></div>
+                                <h3 style="font-size:16px; font-weight:700; color:#0C2B5C; margin-bottom:16px; padding-bottom:10px; border-bottom:2px solid #E2E8F0;">
+                                    <i class="fa fa-calendar-check" style="margin-right:8px; color:#E31B23;"></i>L&#7883;ch s&#7917; &#272;i&#7875;m danh
+                                </h3>
+                                <div id="modal-attendance-summary" style="display:flex; gap:16px; margin-bottom:16px;"></div>
+                                <div style="overflow-x:auto;">
+                                    <table style="width:100%; border-collapse:collapse;">
+                                        <thead>
+                                            <tr style="background:#EFF4FC;">
+                                                <th style="padding:12px 16px; text-align:left; font-size:12px; color:#0C2B5C; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Ng&#224;y</th>
+                                                <th style="padding:12px 16px; text-align:left; font-size:12px; color:#0C2B5C; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Bu&#7893;i</th>
+                                                <th style="padding:12px 16px; text-align:left; font-size:12px; color:#0C2B5C; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Tr&#7841;ng th&#225;i</th>
+                                                <th style="padding:12px 16px; text-align:left; font-size:12px; color:#0C2B5C; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Ghi ch&#250;</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="modal-attendance-body">
+                                            <tr><td colspan="4" style="text-align:center; padding:24px; color:#64748B;"><i class="fa fa-spinner fa-spin"></i> &#272;ang t&#7843;i...</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <footer class="footer-global">
+                        <div class="footer-container">
+                            <p>© 2026 Anh Văn Hội Việt Mỹ (VUS). Tất cả các quyền được bảo lưu.</p>
+                            <p class="text-muted">Hệ thống Cổng thông tin học viên vận hành trên nền tảng Odoo ERP Custom</p>
+                        </div>
+                    </footer>
+                    <!-- Load portal JS -->
+                    <script src="/vus_student_portal/static/src/js/portal.js?v=14"></script>
+                </body>
+            </html>
+        </t>
+    </template>
+</odoo>

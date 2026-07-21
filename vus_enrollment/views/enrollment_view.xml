@@ -6,15 +6,77 @@
         <field name="name">vus.enrollment.tree</field>
         <field name="model">vus.enrollment</field>
         <field name="arch" type="xml">
-            <tree string="Phiếu ghi danh VUS">
+            <tree string="Phiếu ghi danh VUS" decoration-warning="state == 'draft'" decoration-danger="is_near_due">
                 <field name="name"/>
                 <field name="enrollment_date"/>
                 <field name="student_id"/>
                 <field name="course_id"/>
+                <field name="class_id"/>
                 <field name="amount" sum="Tổng doanh thu ghi danh"/>
                 <field name="invoice_id"/>
-                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'confirmed'" decoration-success="state == 'paid'"/>
+                <field name="is_near_due" widget="boolean_toggle" readonly="1" string="Gần/Quá hạn" optional="show"/>
+                <field name="state" widget="badge" 
+                       decoration-info="state == 'draft'" 
+                       decoration-warning="state == 'confirmed'" 
+                       decoration-success="state == 'paid'" 
+                       decoration-danger="state == 'cancel'"/>
+                <button name="action_confirm" string="Duyệt nhanh" type="object" class="btn-primary btn-sm" invisible="state != 'draft'"/>
             </tree>
+        </field>
+    </record>
+
+    <!-- Enrollment Kanban View -->
+    <record id="view_vus_enrollment_kanban" model="ir.ui.view">
+        <field name="name">vus.enrollment.kanban</field>
+        <field name="model">vus.enrollment</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column">
+                <field name="id"/>
+                <field name="name"/>
+                <field name="student_id"/>
+                <field name="course_id"/>
+                <field name="class_id"/>
+                <field name="amount"/>
+                <field name="state"/>
+                <field name="is_near_due"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click p-2 mb-2 bg-white rounded shadow-sm border-top border-4 #{record.is_near_due.raw_value ? 'border-danger' : 'border-primary'}">
+                            <div class="o_kanban_record_top mb-1">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title text-primary" style="font-size:14px;"><t t-esc="record.name.value"/></strong>
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <div><i class="fa fa-user me-1 text-secondary"></i> <strong><t t-esc="record.student_id.value"/></strong></div>
+                                <div><i class="fa fa-book me-1 text-secondary"></i> <t t-esc="record.course_id.value"/></div>
+                                <div><i class="fa fa-school me-1 text-secondary"></i> Lớp: <t t-esc="record.class_id.value or 'Chưa xếp'"/></div>
+                                <div class="mt-1 font-bold text-success"><i class="fa fa-money me-1"></i> <t t-esc="record.amount.value"/> đ</div>
+                                <div t-if="record.is_near_due.raw_value" class="text-danger small font-bold mt-1">
+                                    <i class="fa fa-exclamation-triangle"></i> Hạn nộp sắp/quá hạn!
+                                </div>
+                            </div>
+                            <div class="o_kanban_record_bottom mt-2 pt-2 border-top text-end">
+                                <button name="action_confirm" type="object" class="btn btn-sm btn-primary" t-if="record.state.raw_value == 'draft'">
+                                    <i class="fa fa-check-circle"></i> Duyệt nhanh
+                                </button>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Bulk Confirm Server Action -->
+    <record id="action_server_bulk_confirm_enrollment" model="ir.actions.server">
+        <field name="name">Duyệt &amp; Tạo hóa đơn các phiếu đã chọn</field>
+        <field name="model_id" ref="model_vus_enrollment"/>
+        <field name="binding_model_id" ref="model_vus_enrollment"/>
+        <field name="binding_view_types">list,kanban</field>
+        <field name="state">code</field>
+        <field name="code">
+            records.action_confirm_bulk()
         </field>
     </record>
 
@@ -26,7 +88,7 @@
             <form string="Phiếu ghi danh VUS">
                 <header>
                     <button name="action_confirm" string="Xác nhận &amp; Tạo hóa đơn" type="object" class="oe_highlight" invisible="state != 'draft'"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,paid"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,paid,cancel"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -49,6 +111,7 @@
                             <field name="course_id" placeholder="Chọn khóa học..."/>
                             <field name="class_id" placeholder="Chọn lớp học (không bắt buộc)..."/>
                             <field name="enrollment_date"/>
+                            <field name="is_near_due" readonly="1"/>
                         </group>
                         <group string="Thông tin thanh toán &amp; Hóa đơn">
                             <field name="amount" readonly="1" force_save="1"/>
@@ -56,6 +119,11 @@
                         </group>
                     </group>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
         </field>
     </record>
@@ -69,6 +137,9 @@
                 <field name="student_id"/>
                 <field name="course_id"/>
                 <field name="class_id"/>
+                <filter name="filter_new_portal" string="🚨 Đăng ký mới cần xác nhận" domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_near_due" string="⏰ Hóa đơn gần/quá hạn" domain="[('is_near_due', '=', True)]"/>
+                <separator/>
                 <filter name="state_draft" string="Nháp" domain="[('state', '=', 'draft')]"/>
                 <filter name="state_confirmed" string="Chờ đóng phí" domain="[('state', '=', 'confirmed')]"/>
                 <filter name="state_paid" string="Đã đóng phí" domain="[('state', '=', 'paid')]"/>
@@ -85,16 +156,17 @@
     <record id="action_vus_enrollment" model="ir.actions.act_window">
         <field name="name">Phiếu ghi danh</field>
         <field name="res_model">vus.enrollment</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">kanban,tree,form</field>
         <field name="search_view_id" ref="view_vus_enrollment_search"/>
-        <field name="context">{'search_default_group_by_class': 1}</field>
+        <field name="context">{'search_default_filter_new_portal': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Tạo phiếu ghi danh học viên mới!
             </p>
         </field>
     </record>
-    <!-- Inherit Class Form to add Smart Button -->
+
+    <!-- Inherit Class Form to add Manager Alert Smart Buttons -->
     <record id="view_vus_class_form_inherit_enrollment" model="ir.ui.view">
         <field name="name">vus.class.form.inherit.enrollment</field>
         <field name="model">vus.class</field>
@@ -105,7 +177,27 @@
                     <button name="action_view_students" type="object" class="oe_stat_button" icon="fa-users" invisible="state == 'draft'">
                         <field name="current_student_count" widget="statinfo" string="Học viên"/>
                     </button>
+                    <button name="action_view_new_enrollments" type="object" class="oe_stat_button" icon="fa-bell" invisible="new_enrollment_count == 0">
+                        <field name="new_enrollment_count" widget="statinfo" string="Đăng ký mới"/>
+                    </button>
+                    <button name="action_view_near_due_enrollments" type="object" class="oe_stat_button" icon="fa-exclamation-triangle" invisible="near_due_payment_count == 0">
+                        <field name="near_due_payment_count" widget="statinfo" string="Sắp/Quá hạn"/>
+                    </button>
                 </div>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit Class Tree View to show alerts -->
+    <record id="view_vus_class_tree_inherit_enrollment_alerts" model="ir.ui.view">
+        <field name="name">vus.class.tree.inherit.enrollment.alerts</field>
+        <field name="model">vus.class</field>
+        <field name="inherit_id" ref="vus_class.view_vus_class_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='teacher_id']" position="after">
+                <field name="current_student_count" string="Học viên"/>
+                <field name="new_enrollment_count" string="🚨 Đăng ký mới" widget="badge" decoration-warning="new_enrollment_count &gt; 0" optional="show"/>
+                <field name="near_due_payment_count" string="⏰ Sắp/Quá hạn" widget="badge" decoration-danger="near_due_payment_count &gt; 0" optional="show"/>
             </xpath>
         </field>
     </record>
