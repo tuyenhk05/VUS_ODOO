@@ -11,13 +11,16 @@ class CrmLead(models.Model):
     )
     
     lead_source = fields.Selection([
-        ('web', 'Website VUS'),
-        ('facebook', 'Facebook Fanpage'),
-        ('referral', 'Học viên giới thiệu'),
-        ('direct', 'Trực tiếp tại trung tâm'),
-        ('event', 'Sự kiện / Hội thảo'),
+        ('facebook', 'Facebook Ads / Fanpage'),
+        ('google', 'Google Search / Display (SEM)'),
+        ('web', 'Website VUS / Form Online'),
+        ('event', 'Sự kiện / Workshop / Thi thử'),
+        ('referral', 'Giới thiệu (Referral)'),
+        ('tiktok', 'TikTok Ads / Short Video'),
+        ('direct', 'Trực tiếp tại Trung tâm'),
+        ('email', 'Email Marketing / Zalo OA'),
         ('other', 'Nguồn khác')
-    ], string='Nguồn khách hàng', default='web')
+    ], string='Kênh Marketing / Nguồn Lead', default='web')
     
     follow_up_notes = fields.Text(string='Ghi chú chăm sóc')
 

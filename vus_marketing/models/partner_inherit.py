@@ -6,6 +6,6 @@ class ResPartnerInherit(models.Model):
 
     marketing_audience_ids = fields.Many2many(
         'vus.marketing.audience',
-        string='Phân loại đối tượng',
-        help='Phân loại đối tượng để gửi Email Marketing hướng mục tiêu'
+        string='Đối tượng hướng đến (Phân loại Marketing)',
+        help='Phân loại đối tượng khách hàng / học viên để phục vụ chiến dịch Marketing'
     )

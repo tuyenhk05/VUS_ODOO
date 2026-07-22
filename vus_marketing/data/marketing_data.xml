@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 1. Danh mục Kênh Marketing chuẩn VUS -->
+        <record id="channel_facebook" model="vus.marketing.channel">
+            <field name="name">Facebook Ads / Fanpage</field>
+            <field name="code">FB</field>
+        </record>
+
+        <record id="channel_google" model="vus.marketing.channel">
+            <field name="name">Google Search / Display (SEM)</field>
+            <field name="code">GG</field>
+        </record>
+
+        <record id="channel_website" model="vus.marketing.channel">
+            <field name="name">Website VUS / Form Online</field>
+            <field name="code">WEB</field>
+        </record>
+
+        <record id="channel_event" model="vus.marketing.channel">
+            <field name="name">Sự kiện / Workshop / Thi thử</field>
+            <field name="code">EVENT</field>
+        </record>
+
+        <record id="channel_referral" model="vus.marketing.channel">
+            <field name="name">Giới thiệu (Referral)</field>
+            <field name="code">REF</field>
+        </record>
+
+        <record id="channel_tiktok" model="vus.marketing.channel">
+            <field name="name">TikTok Ads / Short Video</field>
+            <field name="code">TT</field>
+        </record>
+
+        <record id="channel_direct" model="vus.marketing.channel">
+            <field name="name">Trực tiếp tại Trung tâm</field>
+            <field name="code">DIRECT</field>
+        </record>
+
+        <record id="channel_email" model="vus.marketing.channel">
+            <field name="name">Email Marketing / Zalo OA</field>
+            <field name="code">EMAIL</field>
+        </record>
+
+        <!-- 2. Danh mục Đối tượng hướng đến chuẩn VUS -->
+        <record id="audience_kids" model="vus.marketing.audience">
+            <field name="name">SuperKids (Trẻ em 4 - 11 tuổi)</field>
+            <field name="description">Khách hàng mầm non và tiểu học đăng ký chương trình SuperKids</field>
+        </record>
+
+        <record id="audience_teens" model="vus.marketing.audience">
+            <field name="name">Young Leaders (Thiếu niên 11 - 17 tuổi)</field>
+            <field name="description">Học sinh THCS/THPT đăng ký chương trình Young Leaders</field>
+        </record>
+
+        <record id="audience_ielts" model="vus.marketing.audience">
+            <field name="name">IELTS / Luyện thi chứng chỉ quốc tế</field>
+            <field name="description">Học viên luyện thi IELTS, TOEFL, Cambridge FCE/CAE</field>
+        </record>
+
+        <record id="audience_adults" model="vus.marketing.audience">
+            <field name="name">English Hub / Người đi làm (18+ tuổi)</field>
+            <field name="description">Sinh viên và người đi làm học tiếng Anh giao tiếp, công sở</field>
+        </record>
+
+        <record id="audience_parents" model="vus.marketing.audience">
+            <field name="name">Phụ huynh học viên</field>
+            <field name="description">Phụ huynh tìm hiểu và đăng ký khóa học cho con</field>
+        </record>
+
+        <record id="audience_corporate" model="vus.marketing.audience">
+            <field name="name">Doanh nghiệp / Hợp tác đào tạo</field>
+            <field name="description">Các tổ chức, doanh nghiệp đặt hàng đào tạo tiếng Anh doanh nghiệp</field>
+        </record>
+    </data>
+</odoo>

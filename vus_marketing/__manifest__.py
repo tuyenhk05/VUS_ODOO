@@ -8,6 +8,7 @@
     'depends': ['crm', 'vus_student', 'vus_placement_test', 'mass_mailing'],
     'data': [
         'security/ir.model.access.csv',
+        'data/marketing_data.xml',
         'views/marketing_views.xml',
     ],
     'installable': True,
