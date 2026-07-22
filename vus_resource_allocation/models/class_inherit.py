@@ -124,22 +124,44 @@ class VusClassInherit(models.Model):
                         f"cho ca học {rec.time_slot_id.name} trong {rec.term_id.name}!"
                     )
 
+    def write(self, vals):
+        res = super(VusClassInherit, self).write(vals)
+        if 'teacher_id' in vals:
+            for rec in self:
+                if rec.session_ids:
+                    # Update sessions that are regular or have old teacher
+                    rec.session_ids.filtered(lambda s: s.session_status == 'regular' or not s.teacher_id).write({
+                        'teacher_id': vals['teacher_id']
+                    })
+        return res
+
     def action_open_class(self):
         # Kế thừa mở lớp: tự động sinh lịch học chi tiết các buổi học
         super(VusClassInherit, self).action_open_class()
         for rec in self:
             if not rec.closing_date and rec.payment_deadline:
                 rec.closing_date = rec.payment_deadline
-            if rec.term_id and rec.time_slot_id:
+            if rec.time_slot_id:
                 rec.action_generate_sessions()
 
     def action_generate_sessions(self):
+        default_slot = self.env['vus.time.slot'].search([], limit=1)
         for rec in self:
-            if not rec.start_date or not rec.time_slot_id:
+            if not rec.start_date:
                 continue
+            slot = rec.time_slot_id or default_slot
+            if not slot:
+                continue
+
+            # If rec didn't have time_slot_id, set default slot
+            if not rec.time_slot_id and default_slot:
+                rec.time_slot_id = default_slot
             
-            # Xóa các buổi học chi tiết cũ
-            rec.session_ids.unlink()
+            # Xóa các buổi học chi tiết chưa điểm danh
+            sessions_to_delete = rec.session_ids.filtered(lambda s: s.attendance_state != 'done')
+            sessions_to_delete.unlink()
+
+            already_numbered = rec.session_ids.mapped('session_number')
 
             # Lấy danh sách thứ tự ngày học trong tuần (0=Mon, ..., 6=Sun)
             days_map = {
@@ -147,11 +169,11 @@ class VusClassInherit(models.Model):
                 'tts': [1, 3, 5],
                 'ss': [5, 6]
             }
-            active_days = days_map.get(rec.time_slot_id.days_group, [])
+            active_days = days_map.get(slot.days_group, [0, 2, 4])
             
             # Tính toán tổng số buổi dựa trên số tuần và số ca/tuần của khóa học
             sessions_per_week = len(active_days)
-            duration_weeks = rec.course_id.duration_weeks or 12
+            duration_weeks = (rec.course_id.duration_weeks if rec.course_id else 12) or 12
             total_sessions = duration_weeks * sessions_per_week
 
             # Sinh lịch học chi tiết các buổi
@@ -162,16 +184,43 @@ class VusClassInherit(models.Model):
             while session_count < total_sessions:
                 if current_date.weekday() in active_days:
                     session_count += 1
-                    generated_sessions.append({
-                        'class_id': rec.id,
-                        'date': current_date,
-                        'session_number': session_count,
-                        'teacher_id': rec.teacher_id.id if rec.teacher_id else False,
-                    })
+                    if session_count not in already_numbered:
+                        generated_sessions.append({
+                            'class_id': rec.id,
+                            'date': current_date,
+                            'session_number': session_count,
+                            'teacher_id': rec.teacher_id.id if rec.teacher_id else False,
+                        })
                 current_date += datetime.timedelta(days=1)
             
             if generated_sessions:
                 self.env['vus.class.session'].create(generated_sessions)
+
+    @api.model
+    def _auto_generate_missing_sessions(self):
+        classes = self.search([('state', '!=', 'cancelled')])
+        for c in classes:
+            if not c.session_ids and c.start_date:
+                c.action_generate_sessions()
+
+    def action_generate_all_class_sessions(self):
+        classes = self.search([('state', '!=', 'cancelled')])
+        classes.action_generate_sessions()
+        # Force compute datetimes for all sessions
+        sessions = self.env['vus.class.session'].search([])
+        if sessions:
+            sessions._compute_datetimes()
+            sessions._compute_session_count()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Thành công',
+                'message': f"Đã sinh lịch học chi tiết cho tất cả các lớp ({len(classes)} lớp, tổng {len(sessions)} buổi học).",
+                'type': 'success',
+                'sticky': False,
+            }
+        }
 
     @api.model
     def _cron_notify_payment_deadline(self):

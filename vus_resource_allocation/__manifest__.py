@@ -19,6 +19,7 @@
         'security/ir.model.access.csv',
         'security/security.xml',
         'data/cron_data.xml',
+        'data/demo_data.xml',
         'views/academic_term_views.xml',
         'views/time_slot_views.xml',
         'views/teacher_registration_views.xml',

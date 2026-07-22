@@ -19,9 +19,9 @@ class VusClassSession(models.Model):
     
     attendance_sheet_id = fields.Many2one('vus.attendance.sheet', string='Bảng điểm danh liên kết')
     attendance_state = fields.Selection(related='attendance_sheet_id.state', string='Trạng thái điểm danh', store=True)
-    session_count = fields.Integer(string='Số ca dạy', compute='_compute_session_count', store=True)
+    session_count = fields.Integer(string='Số ca dạy', compute='_compute_session_count', store=True, default=1, group_operator='sum')
 
-    @api.depends('class_id')
+    @api.depends('class_id', 'date')
     def _compute_session_count(self):
         for rec in self:
             rec.session_count = 1
@@ -79,22 +79,24 @@ class VusClassSession(models.Model):
             date_str = rec.date.strftime('%d/%m/%Y') if rec.date else ''
             rec.name = f"{class_name} - Buổi {rec.session_number} ({date_str})"
 
-    @api.depends('date', 'time_slot_id.start_time', 'time_slot_id.end_time')
+    @api.depends('date', 'time_slot_id', 'time_slot_id.start_time', 'time_slot_id.end_time', 'class_id.time_slot_id')
     def _compute_datetimes(self):
         # Lấy múi giờ của người dùng để tính toán chính xác giờ UTC lưu vào database
         tz_name = self.env.user.tz or 'Asia/Ho_Chi_Minh'
         local_tz = pytz.timezone(tz_name)
         
         for rec in self:
-            if rec.date and rec.time_slot_id:
+            if rec.date:
                 slot = rec.time_slot_id
+                start_val = slot.start_time if (slot and slot.start_time) else 8.0
+                end_val = slot.end_time if (slot and slot.end_time) else 10.0
                 
                 # Ca học lưu thời gian dưới dạng float (ví dụ: 18.5 -> 18h30)
-                start_hour = int(slot.start_time)
-                start_minute = int(round((slot.start_time - start_hour) * 60))
+                start_hour = int(start_val)
+                start_minute = int(round((start_val - start_hour) * 60))
                 
-                end_hour = int(slot.end_time)
-                end_minute = int(round((slot.end_time - end_hour) * 60))
+                end_hour = int(end_val)
+                end_minute = int(round((end_val - end_hour) * 60))
                 
                 # Tạo datetime naive theo giờ địa phương
                 local_start = datetime.combine(rec.date, time(start_hour, start_minute))
@@ -143,27 +145,30 @@ class VusClassSession(models.Model):
 
     @api.model
     def _cron_notify_today_classes(self):
+        import datetime
         today = fields.Date.today()
-        # Tìm các buổi học diễn ra trong ngày hôm nay của các lớp đang mở
+        tomorrow = today + datetime.timedelta(days=1)
+        
+        # Tìm các buổi học diễn ra trong hôm nay và ngày mai của các lớp đang hoạt động
         sessions = self.search([
-            ('date', '=', today),
-            ('class_id.state', '=', 'opened')
+            ('date', 'in', [today, tomorrow]),
+            ('class_id.state', 'in', ['opened', 'full', 'in_progress'])
         ])
         
         for sess in sessions:
             if not sess.teacher_id:
                 continue
-            # Tìm user liên kết với giáo viên này
-            user = self.env['res.users'].search([('partner_id', '=', sess.teacher_id.id)], limit=1)
-            if not user:
-                continue
-                
-            # Kiểm tra xem đã gửi thông báo hôm nay chưa để tránh gửi trùng lặp
-            summary = f"[VUS] Lịch dạy hôm nay - Lớp {sess.class_id.class_name}"
-            existing_msg = self.env['mail.message'].search([
+            
+            teacher_partner = sess.teacher_id
+            is_today = (sess.date == today)
+            time_label = "HÔM NAY" if is_today else "NGÀY MAI"
+            summary = f"[VUS] Lịch dạy {time_label} - Lớp {sess.class_id.class_name}"
+            
+            # Kiểm tra xem đã gửi thông báo chưa để tránh gửi trùng lặp
+            existing_msg = self.env['mail.message'].sudo().search([
                 ('model', '=', 'vus.class.session'),
                 ('res_id', '=', sess.id),
-                ('partner_ids', 'in', [user.partner_id.id]),
+                ('partner_ids', 'in', [teacher_partner.id]),
                 ('subject', '=', summary)
             ], limit=1)
             
@@ -172,14 +177,14 @@ class VusClassSession(models.Model):
                 date_str = sess.date.strftime('%d/%m/%Y') if sess.date else ''
                 base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url', 'http://localhost:8069')
                 session_link = f"{base_url}/web#id={sess.id}&model=vus.class.session&view_type=form"
-                note = f"<p>📚 <b>THÔNG BÁO LỊCH DẠY HÔM NAY</b></p>" \
-                       f"<p>Kính chào Thầy / Cô <b>{user.name}</b>,</p>" \
-                       f"<p>Hệ thống xin thông báo lịch giảng dạy của bạn trong ngày hôm nay như sau:</p>" \
+                note = f"<p>📚 <b>THÔNG BÁO LỊCH DẠY {time_label}</b></p>" \
+                       f"<p>Kính chào Thầy / Cô <b>{teacher_partner.name}</b>,</p>" \
+                       f"<p>Hệ thống xin thông báo lịch giảng dạy của bạn như sau:</p>" \
                        f"<ul>" \
                        f"  <li><b>Lớp học:</b> {sess.class_id.class_name}</li>" \
                        f"  <li><b>Buổi học:</b> Buổi số {sess.session_number}</li>" \
                        f"  <li><b>Ca học:</b> {slot_name}</li>" \
-                       f"  <li><b>Ngày học:</b> {date_str}</li>" \
+                       f"  <li><b>Ngày học:</b> {date_str} ({time_label})</li>" \
                        f"</ul>" \
                        f"<p style=\"margin-top: 10px;\">" \
                        f"  <a href=\"{session_link}\" target=\"_blank\" style=\"background-color: #0C2B5C; color: #FFFFFF; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 13px; display: inline-block;\">" \
@@ -192,11 +197,11 @@ class VusClassSession(models.Model):
                     'message_type': 'notification',
                     'subject': summary,
                     'body': Markup(note),
-                    'partner_ids': [(6, 0, [user.partner_id.id])],
+                    'partner_ids': [(6, 0, [teacher_partner.id])],
                 })
                 self.env['mail.notification'].sudo().create({
                     'mail_message_id': msg.id,
-                    'res_partner_id': user.partner_id.id,
+                    'res_partner_id': teacher_partner.id,
                     'notification_type': 'inbox',
                     'is_read': False,
                 })

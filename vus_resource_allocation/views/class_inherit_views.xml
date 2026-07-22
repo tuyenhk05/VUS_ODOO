@@ -47,7 +47,8 @@
             <xpath expr="//sheet" position="inside">
                 <notebook>
                     <!-- Tab Lịch học chi tiết -->
-                    <page string="Lịch học chi tiết" groups="vus_student.group_vus_staff,vus_student.group_vus_manager">
+                    <page string="Lịch học chi tiết" groups="vus_student.group_vus_teacher,vus_student.group_vus_staff,vus_student.group_vus_manager">
+                        <button name="action_generate_sessions" string="Tạo / Cập nhật lịch học chi tiết" type="object" class="btn-secondary mb-2" groups="vus_student.group_vus_staff,vus_student.group_vus_manager"/>
                         <field name="session_ids" readonly="1">
                             <tree string="Lịch học chi tiết">
                                 <field name="session_number"/>

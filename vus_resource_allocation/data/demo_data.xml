@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 1. Dữ liệu mẫu: Kỳ học VUS -->
+        <record id="term_2026_q2" model="vus.academic.term">
+            <field name="name">Kỳ 2 - Năm 2026</field>
+            <field name="start_date">2026-07-01</field>
+            <field name="end_date">2026-12-31</field>
+            <field name="registration_deadline">2026-06-25</field>
+            <field name="state">active</field>
+        </record>
+
+        <!-- 2. Dữ liệu mẫu: Khung giờ & Ca học -->
+        <record id="time_slot_mwf_ca1" model="vus.time.slot">
+            <field name="days_group">mwf</field>
+            <field name="shift">ca1</field>
+            <field name="start_time">17.5</field>
+            <field name="end_time">19.0</field>
+        </record>
+
+        <record id="time_slot_mwf_ca2" model="vus.time.slot">
+            <field name="days_group">mwf</field>
+            <field name="shift">ca2</field>
+            <field name="start_time">19.25</field>
+            <field name="end_time">20.75</field>
+        </record>
+
+        <record id="time_slot_tts_ca1" model="vus.time.slot">
+            <field name="days_group">tts</field>
+            <field name="shift">ca1</field>
+            <field name="start_time">17.5</field>
+            <field name="end_time">19.0</field>
+        </record>
+
+        <record id="time_slot_ss_ca3" model="vus.time.slot">
+            <field name="days_group">ss</field>
+            <field name="shift">ca3</field>
+            <field name="start_time">8.0</field>
+            <field name="end_time">9.5</field>
+        </record>
+
+        <!-- 3. Dữ liệu mẫu: Giảng viên VUS -->
+        <record id="partner_teacher_john" model="res.partner">
+            <field name="name">Thầy John Smith</field>
+            <field name="email">john.smith@vus.edu.vn</field>
+            <field name="phone">0901234567</field>
+            <field name="is_teacher">True</field>
+            <field name="max_classes">5</field>
+        </record>
+
+        <record id="partner_teacher_van_anh" model="res.partner">
+            <field name="name">Cô Nguyễn Văn Anh</field>
+            <field name="email">vananh.nguyen@vus.edu.vn</field>
+            <field name="phone">0902345678</field>
+            <field name="is_teacher">True</field>
+            <field name="max_classes">5</field>
+        </record>
+
+        <record id="partner_teacher_david" model="res.partner">
+            <field name="name">Thầy David Beckham</field>
+            <field name="email">david.b@vus.edu.vn</field>
+            <field name="phone">0903456789</field>
+            <field name="is_teacher">True</field>
+            <field name="max_classes">6</field>
+        </record>
+
+        <record id="partner_teacher_mai" model="res.partner">
+            <field name="name">Cô Trần Thị Mai</field>
+            <field name="email">mai.tran@vus.edu.vn</field>
+            <field name="phone">0904567890</field>
+            <field name="is_teacher">True</field>
+            <field name="max_classes">4</field>
+        </record>
+
+        <!-- 3.5 Dữ liệu mẫu: Đăng ký ca rảnh đã duyệt -->
+        <record id="registration_john" model="vus.teacher.registration">
+            <field name="teacher_id" ref="partner_teacher_john"/>
+            <field name="term_id" ref="term_2026_q2"/>
+            <field name="time_slot_ids" eval="[(6, 0, [ref('time_slot_mwf_ca1'), ref('time_slot_mwf_ca2'), ref('time_slot_tts_ca1'), ref('time_slot_ss_ca3')])]"/>
+            <field name="state">approved</field>
+        </record>
+
+        <record id="registration_van_anh" model="vus.teacher.registration">
+            <field name="teacher_id" ref="partner_teacher_van_anh"/>
+            <field name="term_id" ref="term_2026_q2"/>
+            <field name="time_slot_ids" eval="[(6, 0, [ref('time_slot_mwf_ca1'), ref('time_slot_mwf_ca2'), ref('time_slot_tts_ca1'), ref('time_slot_ss_ca3')])]"/>
+            <field name="state">approved</field>
+        </record>
+
+        <record id="registration_david" model="vus.teacher.registration">
+            <field name="teacher_id" ref="partner_teacher_david"/>
+            <field name="term_id" ref="term_2026_q2"/>
+            <field name="time_slot_ids" eval="[(6, 0, [ref('time_slot_mwf_ca1'), ref('time_slot_mwf_ca2'), ref('time_slot_tts_ca1'), ref('time_slot_ss_ca3')])]"/>
+            <field name="state">approved</field>
+        </record>
+
+        <record id="registration_mai" model="vus.teacher.registration">
+            <field name="teacher_id" ref="partner_teacher_mai"/>
+            <field name="term_id" ref="term_2026_q2"/>
+            <field name="time_slot_ids" eval="[(6, 0, [ref('time_slot_mwf_ca1'), ref('time_slot_mwf_ca2'), ref('time_slot_tts_ca1'), ref('time_slot_ss_ca3')])]"/>
+            <field name="state">approved</field>
+        </record>
+
+        <!-- 4. Dữ liệu mẫu: Khóa học VUS -->
+        <record id="course_superkids_1" model="vus.course">
+            <field name="course_name">SuperKids 1 - Tiếng Anh Trẻ Em</field>
+            <field name="code">SK1</field>
+            <field name="level">starter</field>
+            <field name="duration_weeks">12</field>
+            <field name="base_price">2500000</field>
+            <field name="max_classes">10</field>
+            <field name="state">confirmed</field>
+        </record>
+
+        <record id="course_young_leaders_2" model="vus.course">
+            <field name="course_name">Young Leaders 2 - Tiếng Anh Thiếu Niên</field>
+            <field name="code">YL2</field>
+            <field name="level">intermediate</field>
+            <field name="duration_weeks">12</field>
+            <field name="base_price">3200000</field>
+            <field name="max_classes">8</field>
+            <field name="state">confirmed</field>
+        </record>
+
+        <record id="course_ielts_foundation" model="vus.course">
+            <field name="course_name">IELTS Foundation 6.0</field>
+            <field name="code">IELTS</field>
+            <field name="level">advanced</field>
+            <field name="duration_weeks">12</field>
+            <field name="base_price">4500000</field>
+            <field name="max_classes">6</field>
+            <field name="state">confirmed</field>
+        </record>
+
+        <!-- 5. Dữ liệu mẫu: Lớp học VUS -->
+        <record id="class_demo_sk1_01" model="vus.class">
+            <field name="class_name">SuperKids 1 - Lớp SK1-26-001</field>
+            <field name="class_code">SK1-26-001</field>
+            <field name="course_id" ref="course_superkids_1"/>
+            <field name="term_id" ref="term_2026_q2"/>
+            <field name="time_slot_id" ref="time_slot_mwf_ca1"/>
+            <field name="teacher_id" ref="partner_teacher_john"/>
+            <field name="start_date">2026-07-06</field>
+            <field name="classroom">Phòng 101 - VUS Q1</field>
+            <field name="max_students">20</field>
+            <field name="state">opened</field>
+        </record>
+
+        <record id="class_demo_yl2_01" model="vus.class">
+            <field name="class_name">Young Leaders 2 - Lớp YL2-26-001</field>
+            <field name="class_code">YL2-26-001</field>
+            <field name="course_id" ref="course_young_leaders_2"/>
+            <field name="term_id" ref="term_2026_q2"/>
+            <field name="time_slot_id" ref="time_slot_tts_ca1"/>
+            <field name="teacher_id" ref="partner_teacher_van_anh"/>
+            <field name="start_date">2026-07-07</field>
+            <field name="classroom">Phòng 202 - VUS Q3</field>
+            <field name="max_students">20</field>
+            <field name="state">opened</field>
+        </record>
+
+        <record id="class_demo_ielts_01" model="vus.class">
+            <field name="class_name">IELTS 6.0 - Lớp IELTS-26-001</field>
+            <field name="class_code">IELTS-26-001</field>
+            <field name="course_id" ref="course_ielts_foundation"/>
+            <field name="term_id" ref="term_2026_q2"/>
+            <field name="time_slot_id" ref="time_slot_ss_ca3"/>
+            <field name="teacher_id" ref="partner_teacher_david"/>
+            <field name="start_date">2026-07-04</field>
+            <field name="classroom">Phòng 305 - VUS Phú Nhuận</field>
+            <field name="max_students">15</field>
+            <field name="state">opened</field>
+        </record>
+
+        <record id="class_demo_sk1_02" model="vus.class">
+            <field name="class_name">SuperKids 1 - Lớp SK1-26-002</field>
+            <field name="class_code">SK1-26-002</field>
+            <field name="course_id" ref="course_superkids_1"/>
+            <field name="term_id" ref="term_2026_q2"/>
+            <field name="time_slot_id" ref="time_slot_mwf_ca2"/>
+            <field name="teacher_id" ref="partner_teacher_mai"/>
+            <field name="start_date">2026-07-06</field>
+            <field name="classroom">Phòng 102 - VUS Q1</field>
+            <field name="max_students">20</field>
+            <field name="state">opened</field>
+        </record>
+    </data>
+</odoo>

@@ -122,10 +122,10 @@
     <record id="action_vus_class_session" model="ir.actions.act_window">
         <field name="name">Lịch học chi tiết</field>
         <field name="res_model">vus.class.session</field>
-        <field name="view_mode">calendar,tree,pivot,form</field>
+        <field name="view_mode">tree,calendar,pivot,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Xem lịch học chi tiết của các lớp học dưới dạng lịch trực quan.
+                Xem lịch học chi tiết của các lớp học dưới dạng danh sách và lịch trực quan.
             </p>
         </field>
     </record>

@@ -41,6 +41,15 @@
               sequence="90"
               groups="vus_student.group_vus_manager"/>
 
+    <!-- Server Action: Sinh lịch học tất cả các lớp -->
+    <record id="action_server_generate_all_sessions" model="ir.actions.server">
+        <field name="name">Tạo / Làm mới tất cả lịch học</field>
+
+        <field name="model_id" ref="vus_class.model_vus_class"/>
+        <field name="state">code</field>
+        <field name="code">action = env['vus.class'].action_generate_all_class_sessions()</field>
+    </record>
+
     <!-- Menu cháu: Kỳ học -->
     <menuitem id="menu_vus_academic_term_list" 
               name="Kỳ học VUS" 
@@ -54,4 +63,11 @@
               parent="menu_vus_allocation_config" 
               action="action_vus_time_slot"
               sequence="20"/>
+
+    <!-- Menu cháu: Tự động sinh lịch học toàn bộ lớp -->
+    <menuitem id="menu_vus_generate_all_sessions" 
+              name="⚡ Tạo / Làm mới tất cả lịch học" 
+              parent="menu_vus_allocation_config" 
+              action="action_server_generate_all_sessions"
+              sequence="30"/>
 </odoo>

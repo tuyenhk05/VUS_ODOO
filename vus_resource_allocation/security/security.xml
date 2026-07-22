@@ -48,11 +48,11 @@
             <field name="perm_create" eval="1"/>
             <field name="perm_unlink" eval="1"/>
         </record>
-        <!-- Record Rule: Giáo viên chỉ xem buổi học của mình -->
+        <!-- Record Rule: Giáo viên chỉ xem buổi học của mình hoặc lớp của mình -->
         <record id="rule_vus_class_session_teacher" model="ir.rule">
             <field name="name">Giáo viên chỉ thấy các buổi dạy của mình</field>
             <field name="model_id" ref="model_vus_class_session"/>
-            <field name="domain_force">[('teacher_id', '=', user.partner_id.id)]</field>
+            <field name="domain_force">['|', ('teacher_id', '=', user.partner_id.id), ('class_id.teacher_id', '=', user.partner_id.id)]</field>
             <field name="groups" eval="[(4, ref('vus_student.group_vus_teacher'))]"/>
             <field name="perm_read" eval="1"/>
             <field name="perm_write" eval="0"/>
