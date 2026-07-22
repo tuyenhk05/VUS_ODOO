@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 1. Trạng thái: Khách hàng tiềm năng (potential) -->
+        <record id="student_demo_potential_1" model="res.partner">
+            <field name="name">Nguyễn Hoàng Nam</field>
+            <field name="student_code">VUS-STU-0001</field>
+            <field name="email">hoangnam.nguyen@gmail.com</field>
+            <field name="phone">0912111222</field>
+            <field name="dob">2015-05-12</field>
+            <field name="is_student">True</field>
+            <field name="student_status">potential</field>
+        </record>
+
+        <record id="student_demo_potential_2" model="res.partner">
+            <field name="name">Trần Minh Anh</field>
+            <field name="student_code">VUS-STU-0002</field>
+            <field name="email">minhanh.tran@gmail.com</field>
+            <field name="phone">0912222333</field>
+            <field name="dob">2016-08-20</field>
+            <field name="is_student">True</field>
+            <field name="student_status">potential</field>
+        </record>
+
+        <!-- 2. Trạng thái: Chờ xếp lớp (waiting) -->
+        <record id="student_demo_waiting_1" model="res.partner">
+            <field name="name">Lê Hoàng Bảo</field>
+            <field name="student_code">VUS-STU-0003</field>
+            <field name="email">hoangbao.le@gmail.com</field>
+            <field name="phone">0912333444</field>
+            <field name="dob">2014-11-05</field>
+            <field name="is_student">True</field>
+            <field name="student_status">waiting</field>
+        </record>
+
+        <record id="student_demo_waiting_2" model="res.partner">
+            <field name="name">Phạm Gia Huy</field>
+            <field name="student_code">VUS-STU-0004</field>
+            <field name="email">giahuy.pham@gmail.com</field>
+            <field name="phone">0912444555</field>
+            <field name="dob">2015-02-14</field>
+            <field name="is_student">True</field>
+            <field name="student_status">waiting</field>
+        </record>
+
+        <!-- 3. Trạng thái: Đang học (studying) -->
+        <record id="student_demo_studying_1" model="res.partner">
+            <field name="name">Võ Thị Cẩm Tú</field>
+            <field name="student_code">VUS-STU-0005</field>
+            <field name="email">camtu.vo@gmail.com</field>
+            <field name="phone">0912555666</field>
+            <field name="dob">2013-09-30</field>
+            <field name="is_student">True</field>
+            <field name="student_status">studying</field>
+        </record>
+
+        <record id="student_demo_studying_2" model="res.partner">
+            <field name="name">Đặng Quốc Khánh</field>
+            <field name="student_code">VUS-STU-0006</field>
+            <field name="email">quockhanh.dang@gmail.com</field>
+            <field name="phone">0912666777</field>
+            <field name="dob">2014-04-18</field>
+            <field name="is_student">True</field>
+            <field name="student_status">studying</field>
+        </record>
+
+        <record id="student_demo_studying_3" model="res.partner">
+            <field name="name">Bùi Ngọc Diệp</field>
+            <field name="student_code">VUS-STU-0007</field>
+            <field name="email">ngocdiep.bui@gmail.com</field>
+            <field name="phone">0912777888</field>
+            <field name="dob">2012-07-25</field>
+            <field name="is_student">True</field>
+            <field name="student_status">studying</field>
+        </record>
+
+        <!-- 4. Trạng thái: Bảo lưu (reserved) -->
+        <record id="student_demo_reserved_1" model="res.partner">
+            <field name="name">Phan Thanh Sơn</field>
+            <field name="student_code">VUS-STU-0008</field>
+            <field name="email">thanhson.phan@gmail.com</field>
+            <field name="phone">0912888999</field>
+            <field name="dob">2013-12-10</field>
+            <field name="is_student">True</field>
+            <field name="student_status">reserved</field>
+        </record>
+
+        <record id="student_demo_reserved_2" model="res.partner">
+            <field name="name">Trịnh Bảo Ngọc</field>
+            <field name="student_code">VUS-STU-0009</field>
+            <field name="email">baongoc.trinh@gmail.com</field>
+            <field name="phone">0912999000</field>
+            <field name="dob">2015-01-22</field>
+            <field name="is_student">True</field>
+            <field name="student_status">reserved</field>
+        </record>
+
+        <!-- 5. Trạng thái: Đã hoàn thành (completed) -->
+        <record id="student_demo_completed_1" model="res.partner">
+            <field name="name">Đỗ Đức Mạnh</field>
+            <field name="student_code">VUS-STU-0010</field>
+            <field name="email">ducmanh.do@gmail.com</field>
+            <field name="phone">0913000111</field>
+            <field name="dob">2011-03-15</field>
+            <field name="is_student">True</field>
+            <field name="student_status">completed</field>
+        </record>
+
+        <record id="student_demo_completed_2" model="res.partner">
+            <field name="name">Huỳnh Nhật Anh</field>
+            <field name="student_code">VUS-STU-0011</field>
+            <field name="email">nhatanh.huynh@gmail.com</field>
+            <field name="phone">0913111222</field>
+            <field name="dob">2012-10-08</field>
+            <field name="is_student">True</field>
+            <field name="student_status">completed</field>
+        </record>
+    </data>
+</odoo>

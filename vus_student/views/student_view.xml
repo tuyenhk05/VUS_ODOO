@@ -20,6 +20,50 @@
     <!-- Menu chính: Đào tạo VUS (Định nghĩa gốc tại đây) -->
     <menuitem id="menu_vus_root" name="VUS Đào tạo" sequence="10"/>
 
+    <!-- Tree view cho Học viên -->
+    <record id="view_vus_student_tree" model="ir.ui.view">
+        <field name="name">res.partner.student.tree</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <tree string="Danh sách Học viên VUS">
+                <field name="student_code"/>
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="dob"/>
+                <field name="student_status" 
+                       widget="badge" 
+                       decoration-info="student_status == 'potential'" 
+                       decoration-warning="student_status == 'waiting'" 
+                       decoration-success="student_status == 'studying'" 
+                       decoration-danger="student_status == 'reserved'" 
+                       decoration-primary="student_status == 'completed'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search view cho Học viên -->
+    <record id="view_vus_student_search" model="ir.ui.view">
+        <field name="name">res.partner.student.search</field>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <search string="Tìm kiếm Học viên">
+                <field name="name"/>
+                <field name="student_code"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <filter string="Tiềm năng" name="filter_potential" domain="[('student_status', '=', 'potential')]"/>
+                <filter string="Chờ xếp lớp" name="filter_waiting" domain="[('student_status', '=', 'waiting')]"/>
+                <filter string="Đang học" name="filter_studying" domain="[('student_status', '=', 'studying')]"/>
+                <filter string="Bảo lưu" name="filter_reserved" domain="[('student_status', '=', 'reserved')]"/>
+                <filter string="Đã hoàn thành" name="filter_completed" domain="[('student_status', '=', 'completed')]"/>
+                <group expand="0" string="Gom nhóm theo">
+                    <filter string="Trạng thái học viên" name="groupby_student_status" context="{'group_by': 'student_status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <!-- Các Action Quản lý Nhân sự -->
     <record id="action_vus_teacher" model="ir.actions.act_window">
         <field name="name">Giảng viên</field>
@@ -32,9 +76,10 @@
     <record id="action_vus_student" model="ir.actions.act_window">
         <field name="name">Học viên</field>
         <field name="res_model">res.partner</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="domain">[('is_student', '=', True), ('parent_id', '=', False)]</field>
-        <field name="context">{'default_is_student': True, 'default_is_company': False}</field>
+        <field name="search_view_id" ref="view_vus_student_search"/>
+        <field name="context">{'default_is_student': True, 'default_is_company': False, 'search_default_groupby_student_status': 1}</field>
     </record>
 
     <!-- Menu Cấu hình & Nhân sự -->
