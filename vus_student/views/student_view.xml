@@ -31,13 +31,6 @@
                 <field name="phone"/>
                 <field name="email"/>
                 <field name="dob"/>
-                <field name="student_status" 
-                       widget="badge" 
-                       decoration-info="student_status == 'potential'" 
-                       decoration-warning="student_status == 'waiting'" 
-                       decoration-success="student_status == 'studying'" 
-                       decoration-danger="student_status == 'reserved'" 
-                       decoration-primary="student_status == 'completed'"/>
             </tree>
         </field>
     </record>
@@ -52,11 +45,6 @@
                 <field name="student_code"/>
                 <field name="phone"/>
                 <field name="email"/>
-                <filter string="Tiềm năng" name="filter_potential" domain="[('student_status', '=', 'potential')]"/>
-                <filter string="Chờ xếp lớp" name="filter_waiting" domain="[('student_status', '=', 'waiting')]"/>
-                <filter string="Đang học" name="filter_studying" domain="[('student_status', '=', 'studying')]"/>
-                <filter string="Bảo lưu" name="filter_reserved" domain="[('student_status', '=', 'reserved')]"/>
-                <filter string="Đã hoàn thành" name="filter_completed" domain="[('student_status', '=', 'completed')]"/>
                 <group expand="0" string="Gom nhóm theo">
                     <filter string="Trạng thái học viên" name="groupby_student_status" context="{'group_by': 'student_status'}"/>
                 </group>

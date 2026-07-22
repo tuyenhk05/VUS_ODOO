@@ -197,6 +197,33 @@
         </field>
     </record>
 
+    <!-- Kế thừa Student Tree View để hiển thị cột Đối tượng hướng đến -->
+    <record id="view_vus_student_tree_inherit_marketing" model="ir.ui.view">
+        <field name="name">res.partner.student.tree.inherit.marketing</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="vus_student.view_vus_student_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='dob']" position="after">
+                <field name="marketing_audience_ids" widget="many2many_tags" string="Đối tượng hướng đến (Marketing)"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Kế thừa Student Search View để gom nhóm theo Đối tượng hướng đến -->
+    <record id="view_vus_student_search_inherit_marketing" model="ir.ui.view">
+        <field name="name">res.partner.student.search.inherit.marketing</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="vus_student.view_vus_student_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="marketing_audience_ids"/>
+            </xpath>
+            <xpath expr="//group" position="inside">
+                <filter string="Đối tượng hướng đến (Marketing)" name="groupby_marketing_audience" context="{'group_by': 'marketing_audience_ids'}"/>
+            </xpath>
+        </field>
+    </record>
+
     <!-- Định nghĩa Menus -->
     <menuitem id="menu_vus_marketing_root" name="Marketing" parent="vus_student.menu_vus_root" sequence="1"/>
     <menuitem id="menu_vus_marketing_campaign" name="Chiến dịch Marketing" parent="menu_vus_marketing_root" action="action_vus_marketing_campaign" sequence="10"/>

@@ -9,7 +9,7 @@
             <field name="phone">0912111222</field>
             <field name="dob">2016-05-12</field>
             <field name="is_student">True</field>
-            <field name="marketing_audience_ids" eval="[(6, 0, [ref('vus_marketing.audience_kids')])]"/>
+            <field name="marketing_audience_ids" eval="[(6, 0, [ref('audience_kids')])]"/>
         </record>
 
         <record id="student_demo_kids_2" model="res.partner">
@@ -19,7 +19,7 @@
             <field name="phone">0912222333</field>
             <field name="dob">2017-08-20</field>
             <field name="is_student">True</field>
-            <field name="marketing_audience_ids" eval="[(6, 0, [ref('vus_marketing.audience_kids')])]"/>
+            <field name="marketing_audience_ids" eval="[(6, 0, [ref('audience_kids')])]"/>
         </record>
 
         <!-- 2. Đối tượng: Young Leaders (Thiếu niên 11 - 17 tuổi) -->
@@ -30,7 +30,7 @@
             <field name="phone">0912333444</field>
             <field name="dob">2012-11-05</field>
             <field name="is_student">True</field>
-            <field name="marketing_audience_ids" eval="[(6, 0, [ref('vus_marketing.audience_teens')])]"/>
+            <field name="marketing_audience_ids" eval="[(6, 0, [ref('audience_teens')])]"/>
         </record>
 
         <record id="student_demo_teens_2" model="res.partner">
@@ -40,7 +40,7 @@
             <field name="phone">0912444555</field>
             <field name="dob">2013-02-14</field>
             <field name="is_student">True</field>
-            <field name="marketing_audience_ids" eval="[(6, 0, [ref('vus_marketing.audience_teens')])]"/>
+            <field name="marketing_audience_ids" eval="[(6, 0, [ref('audience_teens')])]"/>
         </record>
 
         <!-- 3. Đối tượng: IELTS / Luyện thi chứng chỉ quốc tế -->
@@ -51,7 +51,7 @@
             <field name="phone">0912555666</field>
             <field name="dob">2008-09-30</field>
             <field name="is_student">True</field>
-            <field name="marketing_audience_ids" eval="[(6, 0, [ref('vus_marketing.audience_ielts')])]"/>
+            <field name="marketing_audience_ids" eval="[(6, 0, [ref('audience_ielts')])]"/>
         </record>
 
         <record id="student_demo_ielts_2" model="res.partner">
@@ -61,7 +61,7 @@
             <field name="phone">0912666777</field>
             <field name="dob">2007-04-18</field>
             <field name="is_student">True</field>
-            <field name="marketing_audience_ids" eval="[(6, 0, [ref('vus_marketing.audience_ielts')])]"/>
+            <field name="marketing_audience_ids" eval="[(6, 0, [ref('audience_ielts')])]"/>
         </record>
 
         <!-- 4. Đối tượng: English Hub / Người đi làm (18+ tuổi) -->
@@ -72,7 +72,7 @@
             <field name="phone">0912777888</field>
             <field name="dob">2002-07-25</field>
             <field name="is_student">True</field>
-            <field name="marketing_audience_ids" eval="[(6, 0, [ref('vus_marketing.audience_adults')])]"/>
+            <field name="marketing_audience_ids" eval="[(6, 0, [ref('audience_adults')])]"/>
         </record>
 
         <record id="student_demo_adults_2" model="res.partner">
@@ -82,7 +82,7 @@
             <field name="phone">0912888999</field>
             <field name="dob">2000-12-10</field>
             <field name="is_student">True</field>
-            <field name="marketing_audience_ids" eval="[(6, 0, [ref('vus_marketing.audience_adults')])]"/>
+            <field name="marketing_audience_ids" eval="[(6, 0, [ref('audience_adults')])]"/>
         </record>
 
         <!-- 5. Đối tượng: Phụ huynh học viên -->
@@ -93,7 +93,7 @@
             <field name="phone">0912999000</field>
             <field name="dob">1988-01-22</field>
             <field name="is_student">True</field>
-            <field name="marketing_audience_ids" eval="[(6, 0, [ref('vus_marketing.audience_parents')])]"/>
+            <field name="marketing_audience_ids" eval="[(6, 0, [ref('audience_parents')])]"/>
         </record>
 
         <!-- 6. Đối tượng: Doanh nghiệp / Hợp tác đào tạo -->
@@ -104,7 +104,7 @@
             <field name="phone">0913111222</field>
             <field name="dob">1992-10-08</field>
             <field name="is_student">True</field>
-            <field name="marketing_audience_ids" eval="[(6, 0, [ref('vus_marketing.audience_corporate')])]"/>
+            <field name="marketing_audience_ids" eval="[(6, 0, [ref('audience_corporate')])]"/>
         </record>
     </data>
 </odoo>

@@ -9,6 +9,7 @@
     'data': [
         'security/ir.model.access.csv',
         'data/marketing_data.xml',
+        'data/student_demo_data.xml',
         'views/marketing_views.xml',
     ],
     'installable': True,

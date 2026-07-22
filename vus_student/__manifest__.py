@@ -18,7 +18,6 @@
     'data': [
         'security/vus_security.xml',
         'data/ir_sequence_data.xml',
-        'data/student_demo_data.xml',
         'views/student_view.xml',
     ],
     'installable': True,
