@@ -12,7 +12,6 @@
                 <field name="max_classes" invisible="not is_teacher"/>
                 <field name="student_code" invisible="not is_student" readonly="1"/>
                 <field name="dob" invisible="not is_student"/>
-                <field name="student_status" invisible="not is_student"/>
             </xpath>
         </field>
     </record>
@@ -45,9 +44,6 @@
                 <field name="student_code"/>
                 <field name="phone"/>
                 <field name="email"/>
-                <group expand="0" string="Gom nhóm theo">
-                    <filter string="Trạng thái học viên" name="groupby_student_status" context="{'group_by': 'student_status'}"/>
-                </group>
             </search>
         </field>
     </record>
@@ -67,7 +63,7 @@
         <field name="view_mode">tree,kanban,form</field>
         <field name="domain">[('is_student', '=', True), ('parent_id', '=', False)]</field>
         <field name="search_view_id" ref="view_vus_student_search"/>
-        <field name="context">{'default_is_student': True, 'default_is_company': False, 'search_default_groupby_student_status': 1}</field>
+        <field name="context">{'default_is_student': True, 'default_is_company': False}</field>
     </record>
 
     <!-- Menu Cấu hình & Nhân sự -->

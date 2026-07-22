@@ -217,9 +217,9 @@
         <field name="arch" type="xml">
             <xpath expr="//search" position="inside">
                 <field name="marketing_audience_ids"/>
-            </xpath>
-            <xpath expr="//group" position="inside">
-                <filter string="Đối tượng hướng đến (Marketing)" name="groupby_marketing_audience" context="{'group_by': 'marketing_audience_ids'}"/>
+                <group expand="0" string="Gom nhóm theo">
+                    <filter string="Đối tượng hướng đến (Marketing)" name="groupby_marketing_audience" context="{'group_by': 'marketing_audience_ids'}"/>
+                </group>
             </xpath>
         </field>
     </record>

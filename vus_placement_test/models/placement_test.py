@@ -111,9 +111,6 @@ class VusPlacementTestLine(models.Model):
     def action_confirm_grade(self):
         for rec in self:
             rec.state = 'graded'
-            # Cập nhật trạng thái học viên thành chờ xếp lớp
-            if rec.partner_id and rec.partner_id.student_status == 'potential':
-                rec.partner_id.student_status = 'waiting'
 
     def action_cancel(self):
         self.state = 'cancelled'

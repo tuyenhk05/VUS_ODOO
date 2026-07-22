@@ -34,7 +34,6 @@ class CrmLead(models.Model):
                 'email': self.email_from,
                 'phone': self.phone,
                 'is_student': False,
-                'student_status': 'potential'
             }
             partner = self.env['res.partner'].create(partner_vals)
             self.partner_id = partner.id

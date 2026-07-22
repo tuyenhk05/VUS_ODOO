@@ -26,13 +26,6 @@ class ResPartner(models.Model):
         string='Ngày sinh',
         help="Ngày sinh của học viên"
     )
-    student_status = fields.Selection([
-        ('potential', 'Khách hàng tiềm năng'),
-        ('waiting', 'Chờ xếp lớp'),
-        ('studying', 'Đang học'),
-        ('reserved', 'Bảo lưu'),
-        ('completed', 'Đã hoàn thành')
-    ], string='Trạng thái học viên', default='potential', help="Trạng thái hiện tại của học viên VUS")
 
     @api.model_create_multi
     def create(self, vals_list):

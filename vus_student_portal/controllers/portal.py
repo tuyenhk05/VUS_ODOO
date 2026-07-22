@@ -192,7 +192,7 @@ class StudentPortalController(http.Controller):
                 'dob': str(student.dob),
                 'email': student.email or '',
                 'phone': student.phone or '',
-                'status': dict(student._fields['student_status'].selection).get(student.student_status, '')
+                'status': ', '.join(student.marketing_audience_ids.mapped('name')) if hasattr(student, 'marketing_audience_ids') and student.marketing_audience_ids else ''
             }
         })
 
@@ -218,7 +218,7 @@ class StudentPortalController(http.Controller):
                 'dob': str(student.dob) if student.dob else '',
                 'email': student.email or '',
                 'phone': student.phone or '',
-                'status': dict(student._fields['student_status'].selection).get(student.student_status, '')
+                'status': ', '.join(student.marketing_audience_ids.mapped('name')) if hasattr(student, 'marketing_audience_ids') and student.marketing_audience_ids else ''
             }
         })
 
