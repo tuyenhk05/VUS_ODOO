@@ -22,3 +22,4 @@ access_teacher_leave_line_teacher,teacher.leave.line.teacher,model_vus_teacher_l
 access_class_session_manager,class.session.manager,model_vus_class_session,vus_student.group_vus_manager,1,1,1,1
 access_class_session_staff,class.session.staff,model_vus_class_session,vus_student.group_vus_staff,1,1,1,0
 access_class_session_teacher,class.session.teacher,model_vus_class_session,vus_student.group_vus_teacher,1,0,0,0
+access_class_teacher_suggestion_user,class.teacher.suggestion.user,model_vus_class_teacher_suggestion,base.group_user,1,1,1,1
