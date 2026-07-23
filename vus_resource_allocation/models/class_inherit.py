@@ -291,9 +291,16 @@ class VusClassInherit(models.Model):
 
     @api.depends('term_id', 'time_slot_id', 'eligible_teacher_ids')
     def _compute_suggested_teachers(self):
-        self.env['vus.class.teacher.suggestion'].sudo().search([('class_id', 'in', self.ids)]).unlink()
         for rec in self:
-            suggestions = []
+            # Nếu lớp học chưa được lưu (đang ở dạng form tạo mới), gán bằng False
+            if not rec.id or isinstance(rec.id, models.NewId):
+                rec.suggested_teacher_ids = False
+                continue
+                
+            # Xóa các đề xuất cũ của lớp này
+            self.env['vus.class.teacher.suggestion'].sudo().search([('class_id', '=', rec.id)]).unlink()
+            
+            sug_ids = []
             if rec.term_id and rec.time_slot_id and rec.eligible_teacher_ids:
                 for teacher in rec.eligible_teacher_ids:
                     class_count = self.env['vus.class'].search_count([
@@ -301,13 +308,14 @@ class VusClassInherit(models.Model):
                         ('teacher_id', '=', teacher.id),
                         ('state', '!=', 'cancelled')
                     ])
-                    suggestions.append((0, 0, {
+                    sug = self.env['vus.class.teacher.suggestion'].sudo().create({
+                        'class_id': rec.id,
                         'teacher_id': teacher.id,
                         'active_class_count': class_count,
                         'max_classes': teacher.max_classes
-                    }))
-            rec.suggested_teacher_ids = suggestions
-
+                    })
+                    sug_ids.append(sug.id)
+            rec.suggested_teacher_ids = [(6, 0, sug_ids)]
     def action_assign_optimal_teacher(self):
         self.ensure_one()
         if not self.term_id or not self.time_slot_id:
